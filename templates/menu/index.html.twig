@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Menus{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">Liste des menus</h1>
+
+<a href="{{ path('app_menu_new') }}" class="btn btn-primary mb-3">Créer un menu</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Prix de base</th>
+            <th>Thème</th>
+            <th>Régime</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for menu in menus %}
+            <tr>
+                <td>{{ menu.titre }}</td>
+                <td>{{ menu.prixBase }} €</td>
+                <td>{{ menu.theme ? menu.theme.nom : 'Aucun' }}</td>
+                <td>{{ menu.regime ? menu.regime.nom : 'Aucun' }}</td>
+
+                <td>
+                    <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                    <a href="{{ path('app_menu_edit', {id: menu.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                    <form method="post" action="{{ path('app_menu_delete', {id: menu.id}) }}" style="display:inline-block;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ menu.id) }}">
+                        <button class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ce menu ?')">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

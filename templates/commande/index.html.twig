@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes — Admin{% endblock %}
+
+{% block body %}
+<h1>Liste des commandes</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Statut</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for commande in commandes %}
+            <tr>
+                <td>{{ commande.id }}</td>
+                <td>{{ commande.createdAt|date('d/m/Y H:i') }}</td>
+                <td>{{ commande.total }} €</td>
+                <td>{{ commande.status }}</td>
+                <td>
+                    <a href="{{ path('admin_commandes_show', {id: commande.id}) }}" class="btn btn-primary btn-sm">
+                        Voir
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

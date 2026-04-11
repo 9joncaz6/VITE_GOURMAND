@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ menu.titre }}{% endblock %}
+
+{% block body %}
+<h1>{{ menu.titre }}</h1>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        {% if menu.images is not empty %}
+            <img src="{{ asset('uploads/menus/' ~ menu.images[0]) }}" class="img-fluid rounded">
+        {% else %}
+            <p>Aucune image disponible.</p>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6">
+        <h3>Description</h3>
+        <p>{{ menu.description }}</p>
+
+        <p><strong>Prix :</strong> {{ menu.prixBase }} €</p>
+        <p><strong>Nombre minimum de personnes :</strong> {{ menu.nbPersonnesMin }}</p>
+        <p><strong>Conditions :</strong> {{ menu.conditions }}</p>
+
+        <p><strong>Thème :</strong> {{ menu.theme ? menu.theme.nom : 'Aucun' }}</p>
+        <p><strong>Régime :</strong> {{ menu.regime ? menu.regime.nom : 'Aucun' }}</p>
+
+        <a href="{{ path('app_cart_add', {id: menu.id}) }}" class="btn btn-success btn-lg mt-3">
+            Ajouter au panier
+        </a>
+    </div>
+</div>
+
+<hr>
+
+<h3>Galerie d’images</h3>
+<div class="row">
+    {% for img in menu.images %}
+        <div class="col-3 mb-3">
+            <img src="{{ asset('uploads/menus/' ~ img) }}" class="img-fluid rounded">
+        </div>
+    {% else %}
+        <p>Aucune image disponible.</p>
+    {% endfor %}
+</div>
+
+<hr>
+
+<h3>Plats du menu</h3>
+<ul>
+    {% for plat in menu.plats %}
+        <li>
+            {{ plat.nom }} ({{ plat.type }}) — {{ plat.prix }} €
+            <br>
+            <small>Allergènes :
+                {% for allergene in plat.allergenes %}
+                    {{ allergene.nom }}{% if not loop.last %}, {% endif %}
+                {% else %}
+                    Aucun
+                {% endfor %}
+            </small>
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{{ path('app_menu_index') }}" class="btn btn-secondary mt-4">Retour</a>
+
+{% endblock %}

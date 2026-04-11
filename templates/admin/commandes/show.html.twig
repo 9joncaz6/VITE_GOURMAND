@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande #{{ commande.id }}{% endblock %}
+
+{% block body %}
+<h1>Commande #{{ commande.id }}</h1>
+
+<p><strong>Date :</strong> {{ commande.createdAt|date('d/m/Y H:i') }}</p>
+<p><strong>Statut :</strong> {{ commande.status }}</p>
+<h3>Changer le statut</h3>
+
+<div class="btn-group mb-3">
+    <a href="{{ path('admin_commandes_status', {id: commande.id, status: 'en_attente'}) }}"
+       class="btn btn-outline-secondary">
+        En attente
+    </a>
+
+    <a href="{{ path('admin_commandes_status', {id: commande.id, status: 'en_preparation'}) }}"
+       class="btn btn-outline-primary">
+        En préparation
+    </a>
+
+    <a href="{{ path('admin_commandes_status', {id: commande.id, status: 'livraison'}) }}"
+       class="btn btn-outline-warning">
+        En livraison
+    </a>
+
+    <a href="{{ path('admin_commandes_status', {id: commande.id, status: 'terminee'}) }}"
+       class="btn btn-outline-success">
+        Terminée
+    </a>
+</div>
+<p><strong>Total :</strong> {{ commande.total }} €</p>
+
+<h3>Menus commandés</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Menu</th>
+            <th>Quantité</th>
+            <th>Prix unitaire</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in commande.items %}
+            <tr>
+                <td>{{ item.menu.titre }}</td>
+                <td>{{ item.quantite }}</td>
+                <td>{{ item.prixUnitaire }} €</td>
+                <td>{{ item.total }} €</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('admin_commandes_index') }}" class="btn btn-secondary mt-3">Retour</a>
+{% endblock %}

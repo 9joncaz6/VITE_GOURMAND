@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CommandeStatut index{% endblock %}
+
+{% block body %}
+    <h1>CommandeStatut index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Statut</th>
+                <th>DateMaj</th>
+                <th>Commentaire</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for commande_statut in commande_statuts %}
+            <tr>
+                <td>{{ commande_statut.id }}</td>
+                <td>{{ commande_statut.statut }}</td>
+                <td>{{ commande_statut.dateMaj ? commande_statut.dateMaj|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ commande_statut.commentaire }}</td>
+                <td>
+                    <a href="{{ path('app_commande_statut_show', {'id': commande_statut.id}) }}">show</a>
+                    <a href="{{ path('app_commande_statut_edit', {'id': commande_statut.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_commande_statut_new') }}">Create new</a>
+{% endblock %}

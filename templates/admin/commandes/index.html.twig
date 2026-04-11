@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des commandes{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ asset('styles/admin/commandes.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<h1 class="page-title">Gestion des commandes</h1>
+
+<table class="table-commandes">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Client</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for commande in commandes %}
+            <tr>
+                <td>#{{ commande.id }}</td>
+                <td>{{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}</td>
+                <td>{{ commande.date|date('d/m/Y H:i') }}</td>
+                <td>{{ commande.total }} €</td>
+
+                <td>
+                    <span class="badge badge-{{ commande.statutActuel|lower|replace({' ': '-'}) }}">
+                        {{ commande.statutActuel }}
+                    </span>
+                </td>
+
+                <td>
+                    <a href="{{ path('app_commande_details', { id: commande.id }) }}" class="btn-secondary">
+                        Voir
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

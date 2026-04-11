@@ -1,0 +1,142 @@
+{{ form_start(form) }}
+
+<div class="mb-3">
+    {{ form_label(form.titre) }}
+    {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.titre) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.description) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.nbPersonnesMin) }}
+    {{ form_widget(form.nbPersonnesMin, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.nbPersonnesMin) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.prixBase) }}
+    {{ form_widget(form.prixBase, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.prixBase) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.conditions) }}
+    {{ form_widget(form.conditions, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.conditions) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.stockDisponible) }}
+    {{ form_widget(form.stockDisponible, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.stockDisponible) }}
+</div>
+
+<hr>
+
+<div class="mb-3">
+    <h5>Thème</h5>
+    {{ form_widget(form.theme) }}
+    {{ form_errors(form.theme) }}
+</div>
+
+<div class="mb-3">
+    <h5>Régime</h5>
+    {{ form_widget(form.regime) }}
+    {{ form_errors(form.regime) }}
+</div>
+
+<hr>
+
+<div class="mb-3">
+    <h5>Plats</h5>
+    {{ form_widget(form.plats) }}
+    {{ form_errors(form.plats) }}
+</div>
+
+<hr>
+
+<div class="mb-3">
+    <h5>Images du menu</h5>
+    {{ form_widget(form.images, {
+        'attr': {
+            'class': 'form-control',
+            'multiple': 'multiple',
+            'id': 'menu_images'
+        }
+    }) }}
+    {{ form_errors(form.images) }}
+</div>
+
+<div id="preview" class="row mt-3"></div>
+
+
+
+
+<button class="btn btn-success">
+    {{ button_label|default('Enregistrer') }}
+</button>
+
+{{ form_end(form) }}
+
+<script>
+const input = document.getElementById('menu_images');
+const preview = document.getElementById('preview');
+
+// Fichiers sélectionnés
+let filesArray = [];
+
+// Formats autorisés
+const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+input.addEventListener('change', function (event) {
+    preview.innerHTML = "";
+    filesArray = [];
+
+    const selectedFiles = Array.from(event.target.files);
+
+    selectedFiles.forEach(file => {
+        if (!allowedTypes.includes(file.type)) {
+            alert("Format non autorisé : " + file.name + "\nFormats acceptés : JPG, PNG, WEBP");
+            return; // on ignore ce fichier
+        }
+        filesArray.push(file);
+    });
+
+    updateInputFiles();
+    displayPreviews();
+});
+
+function displayPreviews() {
+    preview.innerHTML = "";
+
+    filesArray.forEach((file, index) => {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const col = document.createElement('div');
+            col.classList.add('col-3', 'mb-3', 'position-relative');
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.classList.add('img-fluid', 'rounded');
+
+            const btn = document.createElement('button');
+            btn.innerHTML = "✖";
+            btn.classList.add('btn', 'btn-danger', 'btn-sm', 'position-absolute');
+            btn.style.top = "5px";
+            btn.style.right = "5px";
+
+            btn.addEventListener('click', function () {
+                filesArray.splice(index, 1);
+                updateInputFiles();
+                displayPreviews();
+            });
+
+            col.appendChild(img);
+            col.appendChild(btn);
+            preview.appendChild

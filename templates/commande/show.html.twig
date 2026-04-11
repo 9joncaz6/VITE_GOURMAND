@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande{% endblock %}
+
+{% block body %}
+    <h1>Commande</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ commande.id }}</td>
+            </tr>
+            <tr>
+                <th>DateCommande</th>
+                <td>{{ commande.dateCommande ? commande.dateCommande|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DatePrestation</th>
+                <td>{{ commande.datePrestation ? commande.datePrestation|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>HeurePrestation</th>
+                <td>{{ commande.heurePrestation ? commande.heurePrestation|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>AdresseLivraison</th>
+                <td>{{ commande.adresseLivraison }}</td>
+            </tr>
+            <tr>
+                <th>VilleLivraison</th>
+                <td>{{ commande.villeLivraison }}</td>
+            </tr>
+            <tr>
+                <th>DistanceKm</th>
+                <td>{{ commande.distanceKm }}</td>
+            </tr>
+            <tr>
+                <th>PrixLivraison</th>
+                <td>{{ commande.prixLivraison }}</td>
+            </tr>
+            <tr>
+                <th>NbPersonnes</th>
+                <td>{{ commande.nbPersonnes }}</td>
+            </tr>
+            <tr>
+                <th>PrixTotal</th>
+                <td>{{ commande.prixTotal }}</td>
+            </tr>
+            <tr>
+                <th>StatutActuel</th>
+                <td>{{ commande.statutActuel }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_commande_index') }}">back to list</a>
+
+    <a href="{{ path('app_commande_edit', {'id': commande.id}) }}">edit</a>
+
+    {{ include('commande/_delete_form.html.twig') }}
+{% endblock %}

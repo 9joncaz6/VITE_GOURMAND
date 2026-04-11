@@ -1,0 +1,39 @@
+.merci-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 1rem;
+}
+
+.merci-card {
+    background: var(--white);
+    padding: 3rem 2rem;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.merci-card .icon {
+    font-size: 4rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.merci-card h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.merci-card p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    color: #555;
+}
+
+.retour-btn {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+}

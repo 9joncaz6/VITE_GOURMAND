@@ -1,0 +1,126 @@
+/* ===========================
+   TITRE
+   =========================== */
+
+.cart-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+/* ===========================
+   PANIER VIDE
+   =========================== */
+
+.empty-cart {
+    text-align: center;
+    color: var(--muted);
+    font-size: 1.1rem;
+}
+
+/* ===========================
+   LISTE DES ARTICLES
+   =========================== */
+
+.cart-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: var(--white);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.cart-item img {
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cart-info {
+    flex: 1;
+}
+
+.cart-info h3 {
+    margin-bottom: 0.3rem;
+}
+
+.cart-info .price {
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+}
+
+/* ===========================
+   QUANTITÉ
+   =========================== */
+
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--white);
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.qty-value {
+    font-weight: 600;
+}
+
+/* ===========================
+   SUPPRESSION
+   =========================== */
+
+.remove-btn {
+    font-size: 1.4rem;
+    color: var(--muted);
+    text-decoration: none;
+}
+
+/* ===========================
+   TOTAL
+   =========================== */
+
+.cart-total {
+    margin-top: 2rem;
+    text-align: right;
+    font-size: 1.2rem;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 768px) {
+
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cart-item img {
+        width: 100%;
+        height: 180px;
+    }
+
+    .cart-total {
+        text-align: center;
+    }
+}

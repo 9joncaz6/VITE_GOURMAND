@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+<h1>Mon compte</h1>
+
+<ul>
+    <li><a href="{{ path('app_compte_commandes') }}">Mes commandes</a></li>
+    <li><a href="#">Mes informations</a></li>
+</ul>
+{% endblock %}

@@ -1,0 +1,54 @@
+{# templates/home/home.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - V & G{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ asset('styles/pages/home.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Vite et Gourmand</h1>
+        <p>Commandez des plats savoureux en quelques clics !</p>
+        <a href="{{ path('app_menu_index') }}" class="btn-primary">Commander</a>
+    </div>
+
+    <div class="hero-image">
+        <img src="{{ asset('images/hero.jpg') }}" alt="Image accueil">
+    </div>
+</section>
+
+<section class="presentation">
+    <h2>Présentation de l’entreprise</h2>
+    <p>
+        Fort de notre savoir faire, nous vous proposons de délicieux menus qui vous combleront
+        de joie au quotidien ou lors de vos évènements.
+    </p>
+</section>
+
+<section class="menus-preview">
+    <h2>Cartes menus</h2>
+
+    <div class="menus-grid">
+        {% for menu in menus %}
+            <div class="menu-card">
+
+                <img src="{{ asset('uploads/menus/' ~ menu.image) }}" alt="{{ menu.titre }}">
+
+                <h3>{{ menu.titre }}</h3>
+
+                <p class="price">{{ menu.prixBase }} €</p>
+
+                <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">
+                    Voir détails
+                </a>
+
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

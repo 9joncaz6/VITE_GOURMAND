@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la commande #{{ commande.id }}{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ asset('styles/pages/details.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<h1 class="page-title">Commande #{{ commande.id }}</h1>
+
+<div class="commande-info">
+    <p><strong>Date :</strong> {{ commande.date|date('d/m/Y H:i') }}</p>
+    <p><strong>Total :</strong> {{ commande.total }} €</p>
+    <p><strong>Nombre d’articles :</strong> {{ items|length }}</p>
+</div>
+
+<section class="items-container">
+
+    {% for item in items %}
+        <div class="item-card">
+            <h2>{{ item.plat.nom }}</h2>
+
+            <p>{{ item.plat.description }}</p>
+
+            <div class="item-details">
+                <span>Quantité : {{ item.quantite }}</span>
+                <span>Prix unitaire : {{ item.prixUnitaire }} €</span>
+                <span>Total : {{ item.total }} €</span>
+            </div>
+        </div>
+    {% endfor %}
+
+</section>
+
+<a href="{{ path('app_commande_historique') }}" class="btn-secondary retour-btn">
+    Retour à l’historique
+</a>
+
+<h2>Historique des statuts</h2>
+
+<ul class="statut-list">
+    {% for s in statuts %}
+        <li>
+            <strong>{{ s.nouveauStatut }}</strong>
+            — {{ s.date|date('d/m/Y H:i') }}
+        </li>
+    {% endfor %}
+</ul>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <h2>Changer le statut</h2>
+
+        <form action="{{ path('app_commande_changer_statut', { id: commande.id }) }}" method="POST" class="statut-form">
+            <select name="statut" class="statut-select">
+                <option value="En attente"        {{ commande.statutActuel == 'En attente' ? 'selected' }}>En attente</option>
+                <option value="En préparation"    {{ commande.statutActuel == 'En préparation' ? 'selected' }}>En préparation</option>
+                <option value="En livraison"      {{ commande.statutActuel == 'En livraison' ? 'selected' }}>En livraison</option>
+                <option value="Livré"             {{ commande.statutActuel == 'Livré' ? 'selected' }}>Livré</option>
+                <option value="Annulé"            {{ commande.statutActuel == 'Annulé' ? 'selected' }}>Annulé</option>
+            </select>
+
+            <span class="badge badge-{{ commande.statutActuel|lower|replace({'     ':'-'}) }}">
+                 {{ commande.statutActuel }}
+            </span>
+
+
+
+            <button type="submit" class="btn-primary">Mettre à jour</button>
+        </form>
+    {% endif %}
+
+
+{% endblock %}

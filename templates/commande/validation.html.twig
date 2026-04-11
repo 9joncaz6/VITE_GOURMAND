@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Validation de la commande{% endblock %}
+
+{% block body %}
+<h1>Validation de la commande</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Menu</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.menu.titre }}</td>
+                <td>{{ item.quantite }}</td>
+                <td>{{ item.menu.prixBase }} €</td>
+                <td>{{ item.subtotal }} €</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Total : {{ total }} €</h3>
+
+<a href="{{ path('app_commande_create') }}" class="btn btn-success">
+    Confirmer la commande
+</a>
+
+{% endblock %}

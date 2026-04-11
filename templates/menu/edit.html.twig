@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un menu{% endblock %}
+
+{% block body %}
+<h1>Modifier le menu</h1>
+
+<h3>Images actuelles</h3>
+
+<div class="row mb-3">
+    {% for img in menu.images %}
+        <div class="col-3 text-center mb-3">
+            <img src="{{ asset('uploads/menus/' ~ img) }}" class="img-fluid rounded mb-2">
+
+            <form method="post"
+                  action="{{ path('app_menu_delete_image', { id: menu.id }) }}"
+                  onsubmit="return confirm('Supprimer cette image ?');">
+
+                <input type="hidden" name="image" value="{{ img }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_image' ~ menu.id) }}">
+
+                <button class="btn btn-danger btn-sm">Supprimer</button>
+            </form>
+        </div>
+    {% else %}
+        <p>Aucune image pour ce menu.</p>
+    {% endfor %}
+</div>
+
+{{ include('menu/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+<a href="{{ path('app_menu_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+{% endblock %}

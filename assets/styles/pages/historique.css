@@ -1,0 +1,32 @@
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.historique-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.commande-card {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.commande-card h2 {
+    margin-bottom: 0.5rem;
+}
+
+.empty {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #777;
+    margin-top: 2rem;
+}

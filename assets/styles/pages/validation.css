@@ -1,0 +1,94 @@
+/* ===========================
+   TITRE
+   =========================== */
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+/* ===========================
+   INFOS UTILISATEUR
+   =========================== */
+
+.user-info {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+}
+
+.user-info h2 {
+    margin-bottom: 1rem;
+}
+
+/* ===========================
+   RÉCAPITULATIF
+   =========================== */
+
+.order-summary {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.order-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.order-item img {
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.order-item .info h3 {
+    margin-bottom: 0.3rem;
+}
+
+.subtotal {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.total {
+    margin-top: 1rem;
+    font-size: 1.3rem;
+    text-align: right;
+}
+
+/* ===========================
+   BOUTON
+   =========================== */
+
+.confirm-btn {
+    display: block;
+    margin: 2rem auto 0;
+    width: fit-content;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 768px) {
+    .order-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .order-item img {
+        width: 100%;
+        height: 180px;
+    }
+
+    .total {
+        text-align: center;
+    }
+}
