@@ -21,6 +21,7 @@ class MenuType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // Informations principales
             ->add('titre', TextType::class, [
                 'label' => 'Titre du menu',
             ])
@@ -40,17 +41,21 @@ class MenuType extends AbstractType
             ->add('stockDisponible', IntegerType::class, [
                 'label' => 'Stock disponible',
             ])
+
+            // Relations
             ->add('theme', EntityType::class, [
                 'class' => Theme::class,
                 'choice_label' => 'nom',
                 'placeholder' => 'Choisir un thème',
                 'required' => false,
+                'label' => 'Thème',
             ])
             ->add('regime', EntityType::class, [
                 'class' => Regime::class,
                 'choice_label' => 'nom',
                 'placeholder' => 'Choisir un régime',
                 'required' => false,
+                'label' => 'Régime',
             ])
             ->add('plats', EntityType::class, [
                 'class' => Plat::class,
@@ -59,10 +64,12 @@ class MenuType extends AbstractType
                 'expanded' => true,
                 'label' => 'Plats du menu',
             ])
+
+            // Upload d’images
             ->add('images', FileType::class, [
                 'label' => 'Images du menu',
                 'multiple' => true,
-                'mapped' => false,
+                'mapped' => false,   // important : les fichiers ne sont pas stockés directement dans l'entité
                 'required' => false,
             ])
         ;

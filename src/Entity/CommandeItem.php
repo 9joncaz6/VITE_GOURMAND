@@ -27,6 +27,10 @@ class CommandeItem
     #[ORM\Column(type: 'float')]
     private float $prixUnitaire = 0;
 
+    // -------------------------
+    // Getters / Setters
+    // -------------------------
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +79,10 @@ class CommandeItem
         $this->prixUnitaire = $prixUnitaire;
         return $this;
     }
+
+    // -------------------------
+    // Calculs
+    // -------------------------
 
     public function getTotal(): float
     {

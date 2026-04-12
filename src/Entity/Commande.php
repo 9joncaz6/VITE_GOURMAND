@@ -24,7 +24,12 @@ class Commande
     #[ORM\Column(type: 'float')]
     private float $total = 0;
 
-    #[ORM\OneToMany(targetEntity: CommandeItem::class, mappedBy: 'commande', cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(
+        targetEntity: CommandeItem::class,
+        mappedBy: 'commande',
+        cascade: ['persist'],
+        orphanRemoval: true
+    )]
     private Collection $items;
 
     #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'commandes')]
@@ -36,6 +41,10 @@ class Commande
         $this->createdAt = new \DateTimeImmutable();
         $this->items = new ArrayCollection();
     }
+
+    // -------------------------
+    // Getters / Setters
+    // -------------------------
 
     public function getId(): ?int
     {
@@ -69,6 +78,10 @@ class Commande
         return $this;
     }
 
+    // -------------------------
+    // Items
+    // -------------------------
+
     /**
      * @return Collection<int, CommandeItem>
      */
@@ -95,6 +108,10 @@ class Commande
         }
         return $this;
     }
+
+    // -------------------------
+    // Utilisateur
+    // -------------------------
 
     public function getUtilisateur(): ?Utilisateur
     {

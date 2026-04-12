@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/menu')]
 final class MenuController extends AbstractController
@@ -23,6 +24,7 @@ final class MenuController extends AbstractController
     }
 
     #[Route('/new', name: 'app_menu_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $menu = new Menu();
@@ -67,6 +69,7 @@ final class MenuController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_menu_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Menu $menu, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(MenuType::class, $menu);
@@ -101,6 +104,7 @@ final class MenuController extends AbstractController
     }
 
     #[Route('/{id}/delete-image', name: 'app_menu_delete_image', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function deleteImage(Request $request, Menu $menu, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isCsrfTokenValid('delete_image' . $menu->getId(), $request->request->get('_token'))) {
@@ -129,6 +133,7 @@ final class MenuController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_menu_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Menu $menu, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $menu->getId(), $request->getPayload()->getString('_token'))) {

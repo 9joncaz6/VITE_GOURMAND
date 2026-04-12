@@ -40,11 +40,11 @@ class Menu
     #[ORM\ManyToOne(inversedBy: 'menus')]
     private ?Regime $regime = null;
 
-    // Plusieurs images (JSON)
+    // Plusieurs images (stockées en JSON)
     #[ORM\Column(type: 'json')]
     private array $images = [];
 
-    // Image principale (pour la homepage)
+    // Image principale (pour affichage rapide)
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
@@ -57,9 +57,12 @@ class Menu
     public function __construct()
     {
         $this->plats = new ArrayCollection();
-        $this->images = []; // ← IMPORTANT
-
+        $this->images = [];
     }
+
+    // -------------------------
+    // Getters / Setters
+    // -------------------------
 
     public function getId(): ?int
     {
@@ -154,6 +157,10 @@ class Menu
         return $this;
     }
 
+    // -------------------------
+    // Plats
+    // -------------------------
+
     /**
      * @return Collection<int, Plat>
      */
@@ -176,6 +183,10 @@ class Menu
         return $this;
     }
 
+    // -------------------------
+    // Images multiples
+    // -------------------------
+
     public function getImages(): array
     {
         return $this->images;
@@ -187,12 +198,16 @@ class Menu
         return $this;
     }
 
+    // -------------------------
+    // Image principale
+    // -------------------------
+
     public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage(?string $image): self
+    public function setImage(?string $image): static
     {
         $this->image = $image;
         return $this;

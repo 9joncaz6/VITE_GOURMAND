@@ -20,6 +20,11 @@ class CommandeController extends AbstractController
     {
         /** @var \App\Entity\Utilisateur $user */
         $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $userId = $user->getId();
 
         $items = $panierManager->getPanierForTwig($userId);
@@ -44,6 +49,11 @@ class CommandeController extends AbstractController
     ): Response {
         /** @var \App\Entity\Utilisateur $user */
         $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $userId = $user->getId();
 
         $items = $panierManager->getPanierForTwig($userId);
@@ -54,8 +64,9 @@ class CommandeController extends AbstractController
             return $this->redirectToRoute('app_panier_show');
         }
 
-        /** @var \App\Entity\Commande $commande */
+        // Création de la commande
         $commande = new Commande();
+        $commande->setUtilisateur($user);
         $commande->setTotal($total);
 
         foreach ($items as $item) {
@@ -74,10 +85,10 @@ class CommandeController extends AbstractController
         $em->persist($commande);
         $em->flush();
 
-        // Email
+        // Email de confirmation
         $email = (new Email())
             ->from('no-reply@vitegourmand.fr')
-            ->to('client@example.com')
+            ->to($user->getEmail())
             ->subject('Confirmation de votre commande')
             ->html(
                 $this->renderView('emails/confirmation_commande.twig', [
@@ -87,7 +98,7 @@ class CommandeController extends AbstractController
 
         $mailer->send($email);
 
-        // Vider panier
+        // Vider le panier
         $panierManager->clearPanier($userId);
 
         return $this->redirectToRoute('app_commande_confirmation', [

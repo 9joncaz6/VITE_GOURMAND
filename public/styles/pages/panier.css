@@ -1,0 +1,305 @@
+/* ===========================
+   TITRE
+   =========================== */
+
+.cart-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* ===========================
+   PANIER VIDE
+   =========================== */
+
+.empty-cart {
+    text-align: center;
+    color: var(--muted);
+    font-size: 1.1rem;
+    padding: 2rem 0;
+}
+
+/* ===========================
+   LISTE DES ARTICLES
+   =========================== */
+
+.cart-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: var(--white);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: 0.2s ease;
+}
+
+.cart-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.cart-item img {
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cart-info {
+    flex: 1;
+}
+
+.cart-info h3 {
+    margin-bottom: 0.3rem;
+    font-size: 1.1rem;
+}
+
+.cart-info .price {
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+}
+
+/* ===========================
+   QUANTITÉ
+   =========================== */
+
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--white);
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-btn:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.qty-value {
+    font-weight: 600;
+}
+
+/* ===========================
+   SUPPRESSION
+   =========================== */
+
+.remove-btn {
+    font-size: 1.4rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.remove-btn:hover {
+    color: var(--danger);
+}
+
+/* ===========================
+   TOTAL
+   =========================== */
+
+.cart-total {
+    margin-top: 2rem;
+    text-align: right;
+    font-size: 1.2rem;
+}
+
+.cart-total strong {
+    color: var(--primary);
+    font-size: 1.4rem;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 768px) {
+
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cart-item img {
+        width: 100%;
+        height: 180px;
+    }
+
+    .cart-total {
+        text-align: center;
+    }
+
+    /* ===========================
+   TITRE
+   =========================== */
+.cart-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+/* ===========================
+   PANIER VIDE
+   =========================== */
+.empty-cart {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-top: 1rem;
+}
+
+/* ===========================
+   LISTE DES ITEMS
+   =========================== */
+.cart-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* ===========================
+   ITEM
+   =========================== */
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    background: var(--white);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    position: relative;
+}
+
+.cart-img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* ===========================
+   INFO
+   =========================== */
+.cart-info h3 {
+    margin-bottom: 0.3rem;
+}
+
+.price {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.subtotal {
+    margin-top: 0.5rem;
+    font-weight: 600;
+}
+
+/* ===========================
+   QUANTITÉ
+   =========================== */
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.6rem 0;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.qty-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.qty-value {
+    font-weight: 600;
+}
+
+/* ===========================
+   SUPPRESSION
+   =========================== */
+.remove-btn {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    font-size: 1.2rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.remove-btn:hover {
+    color: #c0392b;
+}
+
+/* ===========================
+   TOTAL
+   =========================== */
+.cart-total {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+.cart-total p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+@media (max-width: 768px) {
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .remove-btn {
+        top: 10px;
+        right: 10px;
+    }
+
+    .cart-img {
+        width: 100%;
+        height: 180px;
+    }
+}
+}

@@ -5,8 +5,37 @@
 {% block body %}
 <h1>Mon compte</h1>
 
-<ul>
-    <li><a href="{{ path('app_compte_commandes') }}">Mes commandes</a></li>
-    <li><a href="#">Mes informations</a></li>
-</ul>
+<h2>Mes informations</h2>
+<p><strong>Email :</strong> {{ user.email }}</p>
+
+<h2>Mes commandes</h2>
+
+{% if commandes is empty %}
+    <p>Aucune commande pour le moment.</p>
+{% else %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Détails</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commande in commandes %}
+                <tr>
+                    <td>{{ commande.id }}</td>
+                    <td>{{ commande.date|date('d/m/Y H:i') }}</td>
+                    <td>{{ commande.total }} €</td>
+                    <td>
+                        <a href="{{ path('app_commande_confirmation', {id: commande.id}) }}">
+                            Voir
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
 {% endblock %}

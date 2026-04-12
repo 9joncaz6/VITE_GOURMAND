@@ -3,9 +3,23 @@
 {% block title %}Commande confirmée{% endblock %}
 
 {% block body %}
-<h1>Merci pour votre commande !</h1>
 
-<p>Votre commande #{{ commande.id }} a bien été enregistrée.</p>
+<h1 class="mb-4">Merci pour votre commande !</h1>
 
-<a href="{{ path('app_home') }}" class="btn btn-primary">Retour à l'accueil</a>
+<div class="card" style="text-align: center; padding: 2rem;">
+
+    <p class="mb-3">
+        Votre commande <strong>#{{ commande.id }}</strong> a bien été enregistrée.
+    </p>
+
+    <p class="mb-3">
+        Vous recevrez un email de confirmation dans quelques instants.
+    </p>
+
+    <a href="{{ path('app_home') }}" class="btn-primary mt-3">
+        Retour à l'accueil
+    </a>
+
+</div>
+
 {% endblock %}

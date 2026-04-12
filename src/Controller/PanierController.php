@@ -15,6 +15,11 @@ class PanierController extends AbstractController
     {
         /** @var \App\Entity\Utilisateur $user */
         $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $userId = $user->getId();
 
         return $this->render('panier/show.html.twig', [
@@ -29,7 +34,16 @@ class PanierController extends AbstractController
         /** @var \App\Entity\Utilisateur $user */
         $user = $this->getUser();
 
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $panierManager->addItem($user->getId(), $menuId, 1);
+
+        // Gestion du bouton "Commander maintenant"
+        if (isset($_GET['redirect']) && $_GET['redirect'] === 'panier') {
+            return $this->redirectToRoute('app_panier_show');
+        }
 
         return $this->redirectToRoute('app_panier_show');
     }
@@ -39,6 +53,11 @@ class PanierController extends AbstractController
     {
         /** @var \App\Entity\Utilisateur $user */
         $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $userId = $user->getId();
 
         if ($action === 'plus') {
@@ -55,6 +74,10 @@ class PanierController extends AbstractController
     {
         /** @var \App\Entity\Utilisateur $user */
         $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
 
         $panierManager->removeItem($user->getId(), $menuId);
 

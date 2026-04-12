@@ -68,14 +68,17 @@ class PanierManager
 
             $menu = $this->menuRepository->find($item['menuId']);
 
+            // Si le menu n'existe plus → on ignore
             if (!$menu) {
                 continue;
             }
 
+            $quantite = $item['quantite'];
+
             $items[] = [
                 'menu' => $menu,
-                'quantite' => $item['quantite'],
-                'subtotal' => $menu->getPrixBase() * $item['quantite'],
+                'quantite' => $quantite,
+                'subtotal' => $menu->getPrixBase() * $quantite,
             ];
         }
 
@@ -91,7 +94,8 @@ class PanierManager
         $panier = $this->getPanier($userId);
 
         return $panier->getTotal(function ($menuId) {
-            return $this->menuRepository->find($menuId)->getPrixBase();
+            $menu = $this->menuRepository->find($menuId);
+            return $menu ? $menu->getPrixBase() : 0;
         });
     }
 
@@ -102,7 +106,8 @@ class PanierManager
     public function clearPanier(int $userId): void
     {
         $panier = $this->getPanier($userId);
-        $panier->setItems([]); 
+        $panier->setItems([]);
+
         $this->dm->flush();
     }
 }

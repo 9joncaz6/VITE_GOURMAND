@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ asset('styles/pages/contact.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="contact-wrapper">
+
+    <h1>Contactez-nous</h1>
+
+    <label for="message">Votre message :</label>
+    <textarea id="message" maxlength="300"></textarea>
+
+    <p id="counter">0 / 300</p>
+
+    <button id="sendBtn" disabled>Envoyer</button>
+
+</div>
+
+<script src="{{ asset('js/contact.js') }}"></script>
+
+{% endblock %}

@@ -1,5 +1,9 @@
 {{ form_start(form) }}
 
+{# ===========================
+   CHAMPS TEXTE
+   =========================== #}
+
 <div class="mb-3">
     {{ form_label(form.titre) }}
     {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
@@ -38,30 +42,43 @@
 
 <hr>
 
+{# ===========================
+   THÈME & RÉGIME
+   =========================== #}
+
 <div class="mb-3">
     <h5>Thème</h5>
-    {{ form_widget(form.theme) }}
+    {{ form_widget(form.theme, {'attr': {'class': 'form-select'}}) }}
     {{ form_errors(form.theme) }}
 </div>
 
 <div class="mb-3">
     <h5>Régime</h5>
-    {{ form_widget(form.regime) }}
+    {{ form_widget(form.regime, {'attr': {'class': 'form-select'}}) }}
     {{ form_errors(form.regime) }}
 </div>
 
 <hr>
 
+{# ===========================
+   PLATS
+   =========================== #}
+
 <div class="mb-3">
     <h5>Plats</h5>
-    {{ form_widget(form.plats) }}
+    {{ form_widget(form.plats, {'attr': {'class': 'form-control'}}) }}
     {{ form_errors(form.plats) }}
 </div>
 
 <hr>
 
+{# ===========================
+   IMAGES
+   =========================== #}
+
 <div class="mb-3">
     <h5>Images du menu</h5>
+
     {{ form_widget(form.images, {
         'attr': {
             'class': 'form-control',
@@ -69,19 +86,21 @@
             'id': 'menu_images'
         }
     }) }}
+
     {{ form_errors(form.images) }}
 </div>
 
 <div id="preview" class="row mt-3"></div>
 
-
-
-
-<button class="btn btn-success">
+<button class="btn btn-success mt-3">
     {{ button_label|default('Enregistrer') }}
 </button>
 
 {{ form_end(form) }}
+
+{# ===========================
+   SCRIPT PREVIEW IMAGES
+   =========================== #}
 
 <script>
 const input = document.getElementById('menu_images');
@@ -102,7 +121,7 @@ input.addEventListener('change', function (event) {
     selectedFiles.forEach(file => {
         if (!allowedTypes.includes(file.type)) {
             alert("Format non autorisé : " + file.name + "\nFormats acceptés : JPG, PNG, WEBP");
-            return; // on ignore ce fichier
+            return;
         }
         filesArray.push(file);
     });
@@ -139,4 +158,16 @@ function displayPreviews() {
 
             col.appendChild(img);
             col.appendChild(btn);
-            preview.appendChild
+            preview.appendChild(col);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+function updateInputFiles() {
+    const dataTransfer = new DataTransfer();
+    filesArray.forEach(file => dataTransfer.items.add(file));
+    input.files = dataTransfer.files;
+}
+</script>

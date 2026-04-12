@@ -11,41 +11,53 @@
 <h1 class="cart-title">Votre panier</h1>
 
 {% if items is empty %}
+
     <p class="empty-cart">Votre panier est vide.</p>
+
 {% else %}
 
-<section class="cart-list">
+    <section class="cart-list">
 
-    {% for item in items %}
-        <div class="cart-item">
+        {% for item in items %}
+            <div class="cart-item">
 
-            <img src="{{ asset('uploads/menus/' ~ item.menu.image) }}" alt="{{ item.menu.titre }}">
+                {# Image du menu #}
+                <img src="{{ asset('uploads/menus/' ~ item.menu.image) }}"
+                     alt="{{ item.menu.titre }}"
+                     class="cart-img">
 
-            <div class="cart-info">
-                <h3>{{ item.menu.titre }}</h3>
-                <p class="price">{{ item.menu.prixBase }} €</p>
+                <div class="cart-info">
+                    <h3>{{ item.menu.titre }}</h3>
+                    <p class="price">{{ item.menu.prixBase }} €</p>
 
-                <div class="qty-controls">
-                    <a href="{{ path('app_panier_update', {id: item.menu.id, action: 'minus'}) }}" class="qty-btn">-</a>
+                    <div class="qty-controls">
+                        <a href="{{ path('app_panier_update', {menuId: item.menu.id, action: 'minus'}) }}"
+                           class="qty-btn">−</a>
 
-                    <span class="qty-value">{{ item.quantite }}</span>
+                        <span class="qty-value">{{ item.quantite }}</span>
 
-                    <a href="{{ path('app_panier_update', {id: item.menu.id, action: 'plus'}) }}" class="qty-btn">+</a>
+                        <a href="{{ path('app_panier_update', {menuId: item.menu.id, action: 'plus'}) }}"
+                           class="qty-btn">+</a>
+                    </div>
+
+                    <p class="subtotal">Sous-total : {{ item.subtotal }} €</p>
                 </div>
 
-                <p class="subtotal">Sous-total : {{ item.subtotal }} €</p>
+                <a href="{{ path('app_panier_remove', {menuId: item.menu.id}) }}"
+                   class="remove-btn">✕</a>
+
             </div>
+        {% endfor %}
 
-            <a href="{{ path('app_panier_remove', {id: item.menu.id}) }}" class="remove-btn">✕</a>
-        </div>
-    {% endfor %}
+    </section>
 
-</section>
+    <section class="cart-total">
+        <p>Total : <strong>{{ total }} €</strong></p>
 
-<section class="cart-total">
-    <p>Total : <strong>{{ total }} €</strong></p>
-    <a href="{{ path('app_commande_validation') }}" class="btn-primary">Valider la commande</a>
-</section>
+        <a href="{{ path('app_commande_validation') }}" class="btn-primary">
+            Valider la commande
+        </a>
+    </section>
 
 {% endif %}
 

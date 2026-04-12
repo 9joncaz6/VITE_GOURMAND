@@ -58,9 +58,13 @@
                    style="width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;">
         </div>
 
-        <button class="btn-primary" style="width: 100%; margin-top: 1rem;">
+
+
+         <input type="hidden" name="_csrf_token"
+            value="{{ csrf_token('authenticate') }}">
+            <button class="btn-primary" style="width: 100%; margin-top: 1rem;">
             Se connecter
-        </button>
+            </button>
     </form>
 
     <div style="text-align: center; margin-top: 1rem;">
