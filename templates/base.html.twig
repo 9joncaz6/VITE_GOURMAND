@@ -6,6 +6,7 @@
     <title>{% block title %}V & G - Vite et Gourmand{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    {# CSS global #}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     {% block styles %}{% endblock %}
 </head>
@@ -14,49 +15,49 @@
 <div class="page">
 
     {# ============================
-       HEADER
+       HEADER DESKTOP
        ============================ #}
-    <header>
-        <div class="header-inner">
+    <header class="header-desktop">
+        <div class="header-desktop__logo">V & G</div>
 
-            <div class="left">
-                <div class="brand">V &amp; G</div>
-            </div>
+        <nav class="header-desktop__nav">
+            <a href="{{ path('app_home') }}"
+               class="{% if app.request.get('_route') == 'app_home' %}active{% endif %}">
+                Accueil
+            </a>
 
-            <div class="right">
+            <a href="{{ path('app_menus') }}"
+               class="{% if app.request.get('_route') starts with 'app_menus' %}active{% endif %}">
+                Menus
+            </a>
 
-                <nav>
-                    <a href="{{ path('app_home') }}" class="{{ app.current_route starts with 'app_home' ? 'active' }}">Accueil</a>
-                    <a href="{{ path('app_menu_index') }}" class="{{ app.current_route starts with 'app_menu_' ? 'active' }}">Menus</a>
-                    <a href="{{ path('app_contact') }}" class="{{ app.current_route starts with 'app_contact' ? 'active' }}">Contacts</a>
-                </nav>
+            <a href="{{ path('app_contact') }}"
+               class="{% if app.request.get('_route') == 'app_contact' %}active{% endif %}">
+                Contacts
+            </a>
+        </nav>
+    </header>
 
-                <div class="user-menu">
 
-                    {% if app.user %}
-                        <div class="user-connected">
-                            <a href="{{ path('app_compte') }}" class="user-avatar">
-                                <span>👤</span>
-                            </a>
+    {# ============================
+       HEADER MOBILE - ACCUEIL
+       ============================ #}
+    <header class="header-mobile header-mobile--home">
+        <div class="header-mobile__burger">三</div>
+        <div class="header-mobile__logo">V & G</div>
+    </header>
 
-                            <span class="user-name">{{ app.user.prenom }}</span>
-
-                            <a href="{{ path('app_logout') }}" class="logout-link">Déconnexion</a>
-                        </div>
-
-                    {% else %}
-                        <div class="user-disconnected">
-                            <a href="{{ path('app_login') }}" class="login-link">Connexion</a>
-                            <a href="{{ path('app_register') }}" class="register-link">Créer un compte</a>
-                        </div>
-                    {% endif %}
-
-                </div>
-
-            </div>
-
+    {# ============================
+       HEADER MOBILE - PAGES INTERNES
+       (Menus, Détails, etc.)
+       ============================ #}
+    <header class="header-mobile header-mobile--back">
+        <div class="header-mobile__back">‹</div>
+        <div class="header-mobile__title">
+            {% block mobile_page_title %}{% endblock %}
         </div>
     </header>
+
 
     {# ============================
        FLASH MESSAGES
@@ -73,6 +74,7 @@
 
         {% block body %}{% endblock %}
     </main>
+
 
     {# ============================
        FOOTER

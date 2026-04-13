@@ -1,0 +1,116 @@
+/* ============================
+   HEADER DESKTOP
+============================ */
+
+.header-desktop {
+    width: 100%;
+    padding: 25px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.header-desktop__logo {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.header-desktop__nav {
+    display: flex;
+    gap: 40px;
+}
+
+.header-desktop__nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    font-weight: 400;
+    transition: 0.2s ease;
+}
+
+.header-desktop__nav a:hover {
+    color: #ff7a00;
+}
+
+.header-desktop__nav a.active {
+    color: #ff7a00;
+    font-weight: 600;
+}
+
+
+/* ============================
+   HEADER MOBILE (général)
+============================ */
+
+.header-mobile {
+    display: none; /* caché en desktop */
+    width: 100%;
+    padding: 20px 25px;
+    background: white;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 22px;
+}
+
+
+/* ============================
+   HEADER MOBILE - ACCUEIL
+============================ */
+
+.header-mobile--home {
+    justify-content: space-between;
+}
+
+.header-mobile__burger {
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.header-mobile__logo {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin: 0 auto;
+}
+
+
+/* ============================
+   HEADER MOBILE - PAGES INTERNES
+============================ */
+
+.header-mobile--back {
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+.header-mobile__back {
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.header-mobile__title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+/* ============================
+   RESPONSIVE
+============================ */
+
+@media (max-width: 768px) {
+
+    /* On cache le header desktop */
+    .header-desktop {
+        display: none;
+    }
+
+    /* On affiche les headers mobiles */
+    .header-mobile {
+        display: flex;
+    }
+}
