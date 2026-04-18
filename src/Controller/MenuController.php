@@ -16,10 +16,21 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class MenuController extends AbstractController
 {
     #[Route(name: 'app_menu_index', methods: ['GET'])]
-    public function index(MenuRepository $menuRepository): Response
+    public function index(Request $request, MenuRepository $menuRepository): Response
     {
+        $criteria = [
+            'prixMax' => $request->query->get('prixMax'),
+            'prixMin' => $request->query->get('prixMin'),
+            'theme' => $request->query->get('theme'),
+            'regime' => $request->query->get('regime'),
+            'nbPersonnesMin' => $request->query->get('nb'),
+        ];
+
+        $menus = $menuRepository->searchMenus($criteria);
+
         return $this->render('menu/index.html.twig', [
-            'menus' => $menuRepository->findAll(),
+            'menus' => $menus,
+            'criteria' => $criteria,
         ]);
     }
 

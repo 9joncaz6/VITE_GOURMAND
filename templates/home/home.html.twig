@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil - V & G{% endblock %}
+{% block title %}Accueil - Vite & Gourmand{% endblock %}
 
 {% block styles %}
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
@@ -8,62 +8,68 @@
 
 {% block body %}
 
-<section class="hero">
+<main class="home">
 
-    <div class="hero-content">
-        <h1>Vite et Gourmand</h1>
-        <p>Commandez des plats savoureux en quelques clics !</p>
-        <a href="{{ path('app_commander') }}" class="btn-primary">Commander</a>
-    </div>
+    <!-- ===========================
+         HERO
+    ============================ -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Vite et Gourmand</h1>
+            <p>Commander des plats savoureux en quelques clics !</p>
+            <a href="#" class="btn-primary">Commander</a>
+        </div>
 
-    <div class="hero-image">
-        <img src="{{ asset('uploads/accueil/accueil01.jpg') }}" alt="Image accueil principale">
-    </div>
-
-</section>
-
-<section class="presentation">
-
-    <h2>Présentation de l’entreprise</h2>
-
+        <div class="hero-image">
+            <img src="{{ asset('uploads/accueil/accueil01.jpg') }}" alt="Tomates fraîches">
+        </div>
+    </section>
 
 
-    <p>
-        Fort de notre savoir faire, nous vous proposons de délicieux menus qui vous combleront
-        de joie au quotidien ou lors de vos évènements.
-    </p>
+    <!-- ===========================
+         PRÉSENTATION
+    ============================ -->
+    <section class="presentation">
 
     <div class="presentation-image">
-        <img src="{{ asset('uploads/accueil/accueil02.jpg') }}" alt="Présentation">
+        <img src="{{ asset('uploads/accueil/accueil02.jpg') }}" alt="Notre cuisine">
     </div>
 
+    <div class="presentation-text">
+        <h2>Présentation de l’entreprise</h2>
+        <h3>Notre cuisine à votre service</h3>
 
-</section>
-
-<section class="menus-preview">
-
-    <h2>Cartes menus</h2>
-
-    <div class="menus-grid">
-
-        {% for menu in menus %}
-            <div class="menu-card">
-
-                <img src="{{ asset('uploads/menus/' ~ menu.image) }}" alt="{{ menu.titre }}">
-
-                <h3>{{ menu.titre }}</h3>
-
-                <p class="price">{{ menu.prixBase }} €</p>
-
-                <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">
-                    Voir détails
-                </a>
-
-            </div>
-        {% endfor %}
-
+        <p>
+            Fort de notre savoir faire, nous vous proposons de délicieux menus
+            qui vous combleront de joie au quotidien ou lors de vos évènements.
+        </p>
     </div>
 
 </section>
+
+
+
+    <!-- ===========================
+         CARTES MENUS
+    ============================ -->
+    <section class="menus-preview">
+        <h2>Cartes menus</h2>
+
+        <div class="menus-grid">
+           {% for menu in menus %}
+    <article class="menu-card">
+        <img src="{{ asset('uploads/menus/' ~ menu.image) }}" alt="{{ menu.titre }}">
+        <h3>{{ menu.titre }}</h3>
+        <p class="price">{{ menu.prixBase|number_format(2, '.', '') }} €</p>
+        <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">
+            Voir détails
+        </a>
+    </article>
+{% endfor %}
+
+        </div>
+    </section>
+
+</main>
 
 {% endblock %}

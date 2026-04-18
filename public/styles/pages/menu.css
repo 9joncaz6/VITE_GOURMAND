@@ -6,6 +6,8 @@
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
 }
 
 /* ===========================
@@ -14,8 +16,10 @@
 
 .filters {
     display: flex;
+    justify-content: center;
     gap: 1rem;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
 }
 
 .filter-btn {
@@ -30,6 +34,12 @@
 
 .filter-btn:hover {
     background: #f0f0f0;
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
 }
 
 /* ===========================

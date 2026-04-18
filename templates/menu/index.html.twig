@@ -2,72 +2,73 @@
 
 {% block title %}Menus{% endblock %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/pages/menu.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<h1 class="mb-4">Liste des menus</h1>
+<h1 class="page-title">Menus</h1>
 
-{# Bouton créer un menu — réservé aux admins #}
-{% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('app_menu_new') }}" class="btn btn-primary mb-3">
-        Créer un menu
+<div class="filters">
+
+    <a href="{{ path('app_menu_index') }}"
+       class="filter-btn {{ criteria.theme is empty and criteria.regime is empty and criteria.prixMin is empty and criteria.prixMax is empty ? 'active' : '' }}">
+        Tous
     </a>
-{% endif %}
 
-<table class="table table-striped table-hover align-middle">
-    <thead class="table-dark">
-        <tr>
-            <th>Titre</th>
-            <th>Prix de base</th>
-            <th>Thème</th>
-            <th>Régime</th>
-            <th class="text-center">Actions</th>
-        </tr>
-    </thead>
+    <a href="{{ path('app_menu_index', { theme: 1 }) }}"
+       class="filter-btn {{ criteria.theme == 1 ? 'active' : '' }}">
+        Thème 1
+    </a>
 
-    <tbody>
-        {% for menu in menus %}
-            <tr>
-                <td>{{ menu.titre }}</td>
-                <td>{{ menu.prixBase }} €</td>
-                <td>{{ menu.theme ? menu.theme.nom : 'Aucun' }}</td>
-                <td>{{ menu.regime ? menu.regime.nom : 'Aucun' }}</td>
+    <a href="{{ path('app_menu_index', { theme: 2 }) }}"
+       class="filter-btn {{ criteria.theme == 2 ? 'active' : '' }}">
+        Thème 2
+    </a>
 
-                <td class="text-center">
+    <a href="{{ path('app_menu_index', { regime: 1 }) }}"
+       class="filter-btn {{ criteria.regime == 1 ? 'active' : '' }}">
+        Régime 1
+    </a>
 
-                    {# Bouton Voir — visible pour tout le monde #}
-                    <a href="{{ path('app_menu_show', {id: menu.id}) }}"
-                       class="btn btn-info btn-sm me-1">
-                        Voir
-                    </a>
+    <a href="{{ path('app_menu_index', { prixMin: 0, prixMax: 15 }) }}"
+       class="filter-btn {{ criteria.prixMax == 15 ? 'active' : '' }}">
+        -15€
+    </a>
 
-                    {# Boutons admin #}
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('app_menu_edit', {id: menu.id}) }}"
-                           class="btn btn-warning btn-sm me-1">
-                            Modifier
-                        </a>
+    <a href="{{ path('app_menu_index', { prixMin: 15, prixMax: 25 }) }}"
+       class="filter-btn {{ criteria.prixMin == 15 and criteria.prixMax == 25 ? 'active' : '' }}">
+        15–25€
+    </a>
 
-                        <form method="post"
-                              action="{{ path('app_menu_delete', {id: menu.id}) }}"
-                              style="display:inline-block;">
-                            <input type="hidden" name="_token"
-                                   value="{{ csrf_token('delete' ~ menu.id) }}">
-                            <button class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Supprimer ce menu ?')">
-                                Supprimer
-                            </button>
-                        </form>
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5" class="text-center text-muted py-4">
-                    Aucun menu disponible.
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <a href="{{ path('app_menu_index', { prixMin: 25 }) }}"
+       class="filter-btn {{ criteria.prixMin == 25 ? 'active' : '' }}">
+        +25€
+    </a>
+
+</div>
+
+<div class="menus-grid">
+
+    {% for menu in menus %}
+        <div class="menu-card">
+
+            <img src="{{ asset('uploads/menus/' ~ menu.image) }}" alt="{{ menu.titre }}">
+
+            <div class="menu-info">
+                <h3>{{ menu.titre }}</h3>
+                <p>Description du menu</p>
+                <p class="price">Prix TTC {{ menu.prixBase|number_format(2, '.', ' ') }}€</p>
+
+                <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">
+                    Voir détails
+                </a>
+            </div>
+
+        </div>
+    {% endfor %}
+
+</div>
 
 {% endblock %}

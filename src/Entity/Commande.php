@@ -36,15 +36,20 @@ class Commande
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
 
+    // 🔵 AJOUT : relation inverse pour Avis (OneToOne)
+    #[ORM\OneToOne(mappedBy: 'commande', cascade: ['persist', 'remove'])]
+    private ?Avis $avis = null;
+
+    // 🔵 AJOUT : relation inverse pour CommandeStatut (OneToMany)
+    #[ORM\OneToMany(targetEntity: CommandeStatut::class, mappedBy: 'commande', cascade: ['persist', 'remove'])]
+    private Collection $commandeStatuts;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->items = new ArrayCollection();
+        $this->commandeStatuts = new ArrayCollection();
     }
-
-    // -------------------------
-    // Getters / Setters
-    // -------------------------
 
     public function getId(): ?int
     {
@@ -78,13 +83,7 @@ class Commande
         return $this;
     }
 
-    // -------------------------
-    // Items
-    // -------------------------
-
-    /**
-     * @return Collection<int, CommandeItem>
-     */
+    /** ITEMS **/
     public function getItems(): Collection
     {
         return $this->items;
@@ -109,10 +108,7 @@ class Commande
         return $this;
     }
 
-    // -------------------------
-    // Utilisateur
-    // -------------------------
-
+    /** UTILISATEUR **/
     public function getUtilisateur(): ?Utilisateur
     {
         return $this->utilisateur;
@@ -121,6 +117,47 @@ class Commande
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+        return $this;
+    }
+
+    /** AVIS **/
+    public function getAvis(): ?Avis
+    {
+        return $this->avis;
+    }
+
+    public function setAvis(?Avis $avis): self
+    {
+        if ($avis !== null && $avis->getCommande() !== $this) {
+            $avis->setCommande($this);
+        }
+
+        $this->avis = $avis;
+        return $this;
+    }
+
+    /** COMMANDE STATUTS **/
+    public function getCommandeStatuts(): Collection
+    {
+        return $this->commandeStatuts;
+    }
+
+    public function addCommandeStatut(CommandeStatut $commandeStatut): self
+    {
+        if (!$this->commandeStatuts->contains($commandeStatut)) {
+            $this->commandeStatuts->add($commandeStatut);
+            $commandeStatut->setCommande($this);
+        }
+        return $this;
+    }
+
+    public function removeCommandeStatut(CommandeStatut $commandeStatut): self
+    {
+        if ($this->commandeStatuts->removeElement($commandeStatut)) {
+            if ($commandeStatut->getCommande() === $this) {
+                $commandeStatut->setCommande(null);
+            }
+        }
         return $this;
     }
 }

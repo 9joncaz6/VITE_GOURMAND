@@ -99,6 +99,35 @@
 
 
 /* ============================
+   MENU BURGER MOBILE
+============================ */
+
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: white;
+    padding: 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.mobile-menu a {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.mobile-menu a:last-child {
+    border-bottom: none;
+}
+
+.mobile-menu.active {
+    display: flex;
+}
+
+
+/* ============================
    RESPONSIVE
 ============================ */
 
@@ -112,5 +141,14 @@
     /* On affiche les headers mobiles */
     .header-mobile {
         display: flex;
+    }
+}
+
+@media (min-width: 769px) {
+
+    /* On cache le header mobile + menu mobile */
+    .header-mobile,
+    .mobile-menu {
+        display: none !important;
     }
 }

@@ -1,68 +1,95 @@
 /* ===========================
-   PAGE CONTACT
-   =========================== */
-
+   WRAPPER
+=========================== */
 .contact-wrapper {
     max-width: 600px;
-    margin: 2rem auto;
-    background: white;
-    padding: 2rem;
+    margin: 4rem auto;
+    padding: 2.5rem;
+    background: #ffffff;
     border-radius: 16px;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-}
-
-.contact-wrapper h1 {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     text-align: center;
-    margin-bottom: 1.5rem;
 }
 
-/* Champ message */
+/* ===========================
+   TITRE
+=========================== */
+.contact-wrapper h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* ===========================
+   LABELS
+=========================== */
+.contact-wrapper label {
+    display: block;
+    text-align: left;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem;
+    color: #444;
+}
+
+/* ===========================
+   INPUTS
+=========================== */
+.contact-wrapper input,
 .contact-wrapper textarea {
     width: 100%;
-    height: 160px;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    resize: none;
+    padding: 0.9rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
     font-size: 1rem;
-    background: #fafafa;
-}
-
-.contact-wrapper textarea:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-light);
+    transition: border 0.2s ease;
 }
 
-/* Compteur */
+.contact-wrapper input:focus,
+.contact-wrapper textarea:focus {
+    border-color: #e67e22;
+}
+
+/* ===========================
+   TEXTAREA
+=========================== */
+.contact-wrapper textarea {
+    height: 150px;
+    resize: none;
+}
+
+/* ===========================
+   COMPTEUR
+=========================== */
 #counter {
     text-align: right;
-    margin-top: 0.5rem;
-    color: var(--muted);
     font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.3rem;
 }
 
-/* Bouton envoyer */
+/* ===========================
+   BOUTON
+=========================== */
 #sendBtn {
-    width: 100%;
     margin-top: 1.5rem;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    background: var(--primary);
+    width: 100%;
+    padding: 0.9rem;
+    background: #e67e22;
     color: white;
+    border: none;
+    border-radius: 10px;
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: bold;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: background 0.2s ease;
 }
 
 #sendBtn:disabled {
-    background: #ccc;
+    background: #c9c9c9;
     cursor: not-allowed;
 }
 
-#sendBtn:not(:disabled):hover {
-    background: var(--primary-dark);
+#sendBtn:hover:not(:disabled) {
+    background: #cf6d17;
 }

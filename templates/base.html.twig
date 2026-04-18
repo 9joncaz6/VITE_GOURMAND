@@ -1,4 +1,3 @@
-{# templates/base.html.twig #}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,9 +5,10 @@
     <title>{% block title %}V & G - Vite et Gourmand{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {# CSS global #}
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    {% block styles %}{% endblock %}
+
+    {% block stylesheets %}{% endblock %}
 </head>
 
 <body>
@@ -18,49 +18,72 @@
        HEADER DESKTOP
        ============================ #}
     <header class="header-desktop">
-        <div class="header-desktop__logo">V & G</div>
+        <div class="header-inner">
 
-        <nav class="header-desktop__nav">
-            <a href="{{ path('app_home') }}"
-               class="{% if app.request.get('_route') == 'app_home' %}active{% endif %}">
-                Accueil
-            </a>
+            <!-- LOGO -->
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" class="icon">
+                        <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M9 10a3 3 0 1 1 6 0c0 1.5-.75 2.25-1.2 2.7-.45.45-.8 1-.8 1.8v.5h-2v-.5c0-.8-.35-1.35-.8-1.8C9.75 12.25 9 11.5 9 10z"
+                              fill="currentColor"/>
+                    </svg>
+                </div>
+                <span class="logo-text">V &amp; G</span>
+            </div>
 
-            <a href="{{ path('app_menus') }}"
-               class="{% if app.request.get('_route') starts with 'app_menus' %}active{% endif %}">
-                Menus
-            </a>
+            <!-- BLOC DROIT : MENU + ICONE -->
+            <div class="right-side">
 
-            <a href="{{ path('app_contact') }}"
-               class="{% if app.request.get('_route') == 'app_contact' %}active{% endif %}">
-                Contacts
-            </a>
-        </nav>
-    </header>
+                <nav class="main-nav">
+                    <a href="/" class="active">Accueil</a>
+                    <a href="/menu">Menus</a>
+                    <a href="/contact">Contacts</a>
+                </nav>
 
+                <div class="user-menu">
 
-    {# ============================
-       HEADER MOBILE - ACCUEIL
-       ============================ #}
-    <header class="header-mobile header-mobile--home">
-        <div class="header-mobile__burger">三</div>
-        <div class="header-mobile__logo">V & G</div>
-    </header>
+                    {% if app.user %}
 
-    {# ============================
-       HEADER MOBILE - PAGES INTERNES
-       (Menus, Détails, etc.)
-       ============================ #}
-    <header class="header-mobile header-mobile--back">
-        <div class="header-mobile__back">‹</div>
-        <div class="header-mobile__title">
-            {% block mobile_page_title %}{% endblock %}
+                        <div class="user-info">
+                            <span class="user-icon">👤</span>
+                            <span class="user-name">
+                                {{ app.user.prenom }}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <span class="badge-admin">Admin</span>
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <a href="{{ path('app_logout') }}" class="logout-btn">Déconnexion</a>
+
+                    {% else %}
+
+                        <a href="{{ path('app_login') }}" class="user-icon">👤</a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
         </div>
     </header>
 
 
     {# ============================
-       FLASH MESSAGES
+       MENU MOBILE
+       ============================ #}
+    <nav class="mobile-menu">
+        <a href="{{ path('app_home') }}">Accueil</a>
+        <a href="{{ path('app_menu_index') }}">Menus</a>
+        <a href="{{ path('app_contact') }}">Contacts</a>
+        <a href="{{ path('app_login') }}">Mon compte</a>
+    </nav>
+
+
+    {# ============================
+       CONTENU PRINCIPAL
        ============================ #}
     <main>
 

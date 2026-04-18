@@ -1,182 +1,169 @@
 /* ===========================
+   PAGE D'ACCUEIL
+   =========================== */
+
+.home {
+    width: min(1100px, 90%);
+    margin: 2.5rem auto 3.5rem;
+}
+
+/* ===========================
    HERO
    =========================== */
 
 .hero {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
     align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
+    gap: 2.5rem;
+    margin-bottom: 3.5rem;
 }
 
-.hero-content h1 {
+.hero-text h1 {
     font-size: 2.4rem;
-    font-weight: 700;
+    margin-bottom: 0.8rem;
 }
 
-.hero-content p {
-    margin: 1rem 0 1.5rem;
+.hero-text p {
     font-size: 1.1rem;
     color: var(--muted);
+    margin-bottom: 1.4rem;
 }
 
 .hero-image img {
-    width: 420px;
-    border-radius: 12px;
+    width: 100%;
+    border-radius: 14px;
+    display: block;
 }
 
 /* ===========================
-   PRÉSENTATION
+   PRÉSENTATION — VERSION MOCKUP
    =========================== */
 
 .presentation {
-    margin-top: 4rem;
-    text-align: center;
-}
+    background: var(--white);          /* fond blanc comme le mockup */
+    padding: 3rem 2rem;                /* respiration interne */
+    border-radius: 12px;               /* léger arrondi comme le design */
+    
+    display: grid;
+    grid-template-columns: 1fr 1fr;    /* image à gauche, texte à droite */
+    align-items: center;
+    gap: 2.5rem;
 
-.presentation h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-}
-
-.presentation p {
-    max-width: 700px;
-    margin: 0 auto;
-    color: var(--muted);
-}
-
-.presentation-image {
-    width: 100%;
-    display: block;
+    margin: 3rem 0;                    /* espace autour du bloc */
 }
 
 .presentation-image img {
-    width: 420px;
-    height: auto;
+    width: 100%;
+    border-radius: 12px;               /* arrondi identique au mockup */
     display: block;
-    margin: 1.5rem auto;
 }
+
+.presentation-text h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.presentation-text h3 {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.presentation-text p {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
 
 /* ===========================
    CARTES MENUS
    =========================== */
 
 .menus-preview {
-    margin-top: 4rem;
+    margin-bottom: 3rem;
 }
 
-/* On laisse app.css gérer la grille responsive */
-.menus-grid {
-    margin-top: 2rem;
+.menus-preview h2 {
+    text-align: center;
+    margin-bottom: 2rem;
 }
+
+.menus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.menu-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-4px);
+}
+
+.menu-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.menu-card h3 {
+    margin: 1rem 0 0.5rem;
+    font-size: 1.3rem;
+}
+
+.menu-card .price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e67e22;
+    margin-bottom: 1rem;
+}
+
+.menu-card .btn-primary {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: #e67e22;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
 
 /* ===========================
    RESPONSIVE
    =========================== */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+    .hero,
+    .presentation {
+        grid-template-columns: 1fr;
+    }
 
     .hero {
-        flex-direction: column;
         text-align: center;
     }
 
-    .hero-image img {
-        width: 100%;
-    }
-
-    .presentation-image {
-    border: 3px solid blue !important;
-}
-
-.presentation-image img {
-    border: 3px solid green !important;
-}
-
-/* ============================
-   HERO DESKTOP
-============================ */
-
-.hero {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 60px 40px;
-    gap: 40px;
-}
-
-.hero-content {
-    max-width: 500px;
-}
-
-.hero-content h1 {
-    font-size: 48px;
-    font-weight: 700;
-    margin-bottom: 20px;
-}
-
-.hero-content p {
-    font-size: 20px;
-    color: #555;
-    margin-bottom: 30px;
-}
-
-.btn-primary {
-    display: inline-block;
-    background: #ff7a00;
-    color: white;
-    padding: 14px 28px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 18px;
-    transition: 0.2s ease;
-}
-
-.btn-primary:hover {
-    background: #e56d00;
-}
-
-.hero-image img {
-    width: 420px;
-    height: auto;
-    border-radius: 12px;
-    object-fit: cover;
-}
-
-
-/* ============================
-   HERO MOBILE
-============================ */
-
-@media (max-width: 768px) {
-
-    /* On cache le hero desktop */
-    .hero {
-        flex-direction: column;
-        padding: 30px 20px;
-        gap: 20px;
-    }
-
-    .hero-content h1 {
-        font-size: 32px;
+    .presentation-text {
         text-align: center;
     }
 
-    .hero-content p {
-        font-size: 18px;
-        text-align: center;
-    }
-
-    .btn-primary {
-        margin: 0 auto;
-        display: block;
-        text-align: center;
-    }
-
-    .hero-image img {
-        width: 100%;
-        max-width: 320px;
-        margin: 0 auto;
+    .menus-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
+
+@media (max-width: 600px) {
+    .menus-grid {
+        grid-template-columns: 1fr;
+    }
 }

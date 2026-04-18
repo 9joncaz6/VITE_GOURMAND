@@ -2,7 +2,7 @@
 
 {% block title %}Contact{% endblock %}
 
-{% block styles %}
+{% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('styles/pages/contact.css') }}">
 {% endblock %}
 
@@ -12,12 +12,28 @@
 
     <h1>Contactez-nous</h1>
 
-    <label for="message">Votre message :</label>
-    <textarea id="message" maxlength="300"></textarea>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
 
-    <p id="counter">0 / 300</p>
+    {{ form_start(form) }}
 
-    <button id="sendBtn" disabled>Envoyer</button>
+        {{ form_row(form.nom) }}
+        {{ form_row(form.email) }}
+
+        <label for="message">Votre message :</label>
+        {{ form_widget(form.message, {
+            attr: {
+                id: 'message',
+                maxlength: 300
+            }
+        }) }}
+
+        <p id="counter">0 / 300</p>
+
+        <button id="sendBtn" class="btn-primary" disabled>Envoyer</button>
+
+    {{ form_end(form) }}
 
 </div>
 

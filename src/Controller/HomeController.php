@@ -12,13 +12,13 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(MenuRepository $menuRepository): Response
-    {
-        $menus = $menuRepository->findBy([], ['id' => 'DESC'], 4); 
-        // On affiche les 4 derniers menus comme dans ton mockup
+public function index(MenuRepository $menuRepository): Response
+{
+    $menus = $menuRepository->findAll(); // Récupère les 5 menus
 
-        return $this->render('home/home.html.twig', [
-            'menus' => $menus,
-        ]);
-    }
+    return $this->render('home/home.html.twig', [
+        'menus' => $menus, // ENVOI À TWIG
+    ]);
+}
+
 }

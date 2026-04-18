@@ -28,6 +28,7 @@ class Avis
     private ?Utilisateur $utilisateur = null;
 
     #[ORM\OneToOne(inversedBy: 'avis', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Commande $commande = null;
 
     public function getId(): ?int
@@ -43,7 +44,6 @@ class Avis
     public function setNote(int $note): static
     {
         $this->note = $note;
-
         return $this;
     }
 
@@ -55,7 +55,6 @@ class Avis
     public function setCommentaire(string $commentaire): static
     {
         $this->commentaire = $commentaire;
-
         return $this;
     }
 
@@ -67,7 +66,6 @@ class Avis
     public function setValide(bool $valide): static
     {
         $this->valide = $valide;
-
         return $this;
     }
 
@@ -79,7 +77,6 @@ class Avis
     public function setUtilisateur(?Utilisateur $utilisateur): static
     {
         $this->utilisateur = $utilisateur;
-
         return $this;
     }
 
@@ -91,7 +88,6 @@ class Avis
     public function setCommande(?Commande $commande): static
     {
         $this->commande = $commande;
-
         return $this;
     }
 }
