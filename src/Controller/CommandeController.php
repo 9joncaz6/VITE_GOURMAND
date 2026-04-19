@@ -26,14 +26,14 @@ class CommandeController extends AbstractController
         }
 
         $userId = $user->getId();
-
         $items = $panierManager->getPanierForTwig($userId);
-        $total = $panierManager->getTotal($userId);
 
         if (empty($items)) {
             $this->addFlash('warning', 'Votre panier est vide.');
             return $this->redirectToRoute('app_panier_show');
         }
+
+        $total = $panierManager->getTotal($userId);
 
         return $this->render('commande/validation.html.twig', [
             'items' => $items,
@@ -55,19 +55,79 @@ class CommandeController extends AbstractController
         }
 
         $userId = $user->getId();
-
         $items = $panierManager->getPanierForTwig($userId);
-        $total = $panierManager->getTotal($userId);
 
         if (empty($items)) {
             $this->addFlash('warning', 'Votre panier est vide.');
             return $this->redirectToRoute('app_panier_show');
         }
 
-        // Création de la commande
+        // ================================
+        // 1) Vérifications préalables
+        // ================================
+        foreach ($items as $item) {
+            $menu = $item['menu'];
+            $quantity = $item['quantite'];
+
+            // Minimum de personnes
+            if ($quantity < $menu->getNbPersonnesMin()) {
+                $this->addFlash('error', 'Le menu "' . $menu->getTitre() . '" nécessite au minimum ' . $menu->getNbPersonnesMin() . ' personnes.');
+                return $this->redirectToRoute('app_panier_show');
+            }
+
+            // Stock
+            if ($menu->getStockDisponible() <= 0) {
+                $this->addFlash('error', 'Le menu "' . $menu->getTitre() . '" n’est plus disponible.');
+                return $this->redirectToRoute('app_panier_show');
+            }
+        }
+
+        // ================================
+        // 2) Calcul du prix total avancé
+        // ================================
+        $total = 0;
+
+        foreach ($items as $item) {
+            $menu = $item['menu'];
+            $quantity = $item['quantite'];
+
+            // Prix par personne
+            $prixParPersonne = $menu->getPrixBase() / $menu->getNbPersonnesMin();
+
+            // Prix total du menu
+            $prixTotalMenu = $prixParPersonne * $quantity;
+
+            // Réduction 10% si +5 personnes
+            if ($quantity >= $menu->getNbPersonnesMin() + 5) {
+                $prixTotalMenu *= 0.90;
+            }
+
+            $total += $prixTotalMenu;
+        }
+
+        // ================================
+        // 3) Calcul livraison
+        // ================================
+        $adresse = $user->getAdressePostale(); // ✔ correction ici
+
+        $distance = $adresse ? $this->calculerDistance($adresse) : 0;
+
+        $livraison = $distance === 0
+            ? 0
+            : 5 + ($distance * 0.59);
+
+        $total += $livraison;
+
+        // ================================
+        // 4) Création de la commande
+        // ================================
         $commande = new Commande();
         $commande->setUtilisateur($user);
         $commande->setTotal($total);
+
+        if (method_exists($commande, 'setFraisLivraison')) {
+            $commande->setFraisLivraison($livraison);
+        }
 
         foreach ($items as $item) {
             $menu = $item['menu'];
@@ -80,12 +140,17 @@ class CommandeController extends AbstractController
             $commandeItem->setPrixUnitaire($menu->getPrixBase());
 
             $commande->addItem($commandeItem);
+
+            // Décrémentation du stock
+            $menu->setStockDisponible($menu->getStockDisponible() - 1);
         }
 
         $em->persist($commande);
         $em->flush();
 
-        // Email de confirmation
+        // ================================
+        // 5) Email de confirmation
+        // ================================
         $email = (new Email())
             ->from('no-reply@vitegourmand.fr')
             ->to($user->getEmail())
@@ -112,5 +177,18 @@ class CommandeController extends AbstractController
         return $this->render('commande/confirmation.html.twig', [
             'commande' => $commande,
         ]);
+    }
+
+    // ================================
+    // Fonction interne : distance
+    // ================================
+    private function calculerDistance(string $adresse): float
+    {
+        if (stripos($adresse, 'bordeaux') !== false) {
+            return 0;
+        }
+
+        // Distance fictive pour le devoir
+        return 12;
     }
 }

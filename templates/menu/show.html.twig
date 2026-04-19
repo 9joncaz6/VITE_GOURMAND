@@ -25,15 +25,20 @@
 
         <p><strong>Prix :</strong> {{ menu.prixBase }} €</p>
         <p><strong>Nombre minimum de personnes :</strong> {{ menu.nbPersonnesMin }}</p>
+        <p><strong>Stock disponible :</strong> {{ menu.stockDisponible }}</p>
         <p><strong>Conditions :</strong> {{ menu.conditions }}</p>
 
         <p><strong>Thème :</strong> {{ menu.theme ? menu.theme.nom : 'Aucun' }}</p>
         <p><strong>Régime :</strong> {{ menu.regime ? menu.regime.nom : 'Aucun' }}</p>
 
         <!-- Bouton Ajouter au panier -->
-        <a href="{{ path('app_panier_add', {menuId: menu.id}) }}" class="btn btn-success btn-lg mt-3">
-            Ajouter au panier
-        </a>
+        {% if menu.stockDisponible > 0 %}
+            <a href="{{ path('app_panier_add', {menuId: menu.id}) }}" class="btn btn-success btn-lg mt-3">
+                Ajouter au panier
+            </a>
+        {% else %}
+            <span class="badge bg-danger mt-3">Stock épuisé</span>
+        {% endif %}
 
         <!-- Boutons admin -->
         {% if is_granted('ROLE_ADMIN') %}

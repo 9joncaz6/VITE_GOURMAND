@@ -212,4 +212,10 @@ class Menu
         $this->image = $image;
         return $this;
     }
+
+    public function getPrixParPersonne(): float
+{
+    return $this->prixBase / $this->nbPersonnesMin;
+}
+
 }

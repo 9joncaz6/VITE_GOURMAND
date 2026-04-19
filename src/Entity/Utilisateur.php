@@ -7,8 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Commande;
-use App\Entity\Avis;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -163,7 +161,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         // Si tu stockes des données sensibles temporaires, nettoie-les ici
     }
 
-    /** @return Collection<int, Commande> */
+    /** COMMANDES **/
     public function getCommandes(): Collection
     {
         return $this->commandes;
@@ -188,7 +186,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /** @return Collection<int, Avis> */
+    /** AVIS **/
     public function getAvis(): Collection
     {
         return $this->avis;

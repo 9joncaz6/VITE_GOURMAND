@@ -8,3 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+document.querySelectorAll('.filter-input').forEach(input => {
+    input.addEventListener('change', () => {
+
+        const params = new URLSearchParams(new FormData(document.querySelector('#filters')));
+
+        fetch('/menu/filter?' + params.toString())
+            .then(r => r.json())
+            .then(data => {
+                document.querySelector('#menu-list').innerHTML = data.html;
+            });
+    });
+});
+

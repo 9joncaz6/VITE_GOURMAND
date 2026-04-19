@@ -5,8 +5,11 @@ namespace App\Controller;
 use App\Entity\Menu;
 use App\Form\MenuType;
 use App\Repository\MenuRepository;
+use App\Repository\ThemeRepository;
+use App\Repository\RegimeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,9 +18,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/menu')]
 final class MenuController extends AbstractController
 {
-    #[Route(name: 'app_menu_index', methods: ['GET'])]
-    public function index(Request $request, MenuRepository $menuRepository): Response
-    {
+    #[Route('', name: 'app_menu_index', methods: ['GET'])]
+    public function index(
+        Request $request,
+        MenuRepository $menuRepository,
+        ThemeRepository $themeRepo,
+        RegimeRepository $regimeRepo
+    ): Response {
+        // Récupération des critères
         $criteria = [
             'prixMax' => $request->query->get('prixMax'),
             'prixMin' => $request->query->get('prixMin'),
@@ -26,11 +34,26 @@ final class MenuController extends AbstractController
             'nbPersonnesMin' => $request->query->get('nb'),
         ];
 
+        // Recherche filtrée
         $menus = $menuRepository->searchMenus($criteria);
 
         return $this->render('menu/index.html.twig', [
             'menus' => $menus,
             'criteria' => $criteria,
+            'themes' => $themeRepo->findAll(),
+            'regimes' => $regimeRepo->findAll(),
+        ]);
+    }
+
+    #[Route('/filter', name: 'app_menu_filter')]
+    public function filter(Request $request, MenuRepository $repo): JsonResponse
+    {
+        $menus = $repo->searchMenus($request->query->all());
+
+        return $this->json([
+            'html' => $this->renderView('menu/_list.html.twig', [
+                'menus' => $menus
+            ])
         ]);
     }
 

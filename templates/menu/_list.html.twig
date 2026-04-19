@@ -1,0 +1,37 @@
+<div class="menus-grid">
+
+    {% for menu in menus %}
+        <div class="menu-card">
+
+            <img src="{{ asset('uploads/menus/' ~ menu.image) }}" alt="{{ menu.titre }}">
+
+            <div class="menu-info">
+                <h3>{{ menu.titre }}</h3>
+
+                <p class="menu-description">
+                    {{ menu.description|slice(0, 80) ~ '...' }}
+                </p>
+
+                <p class="menu-min">
+                    Minimum : {{ menu.nbPersonnesMin }} personnes
+                </p>
+
+                <p class="menu-stock">
+                    Stock : {{ menu.stockDisponible }}
+                </p>
+
+                <p class="price">
+                    Prix TTC {{ menu.prixBase|number_format(2, '.', ' ') }}€
+                </p>
+
+                <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">
+                    Voir détails
+                </a>
+            </div>
+
+        </div>
+    {% else %}
+        <p class="text-muted">Aucun menu ne correspond à votre recherche.</p>
+    {% endfor %}
+
+</div>

@@ -36,13 +36,17 @@ class Commande
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
 
-    // 🔵 AJOUT : relation inverse pour Avis (OneToOne)
+    // 🔵 Relation inverse pour Avis (OneToOne)
     #[ORM\OneToOne(mappedBy: 'commande', cascade: ['persist', 'remove'])]
     private ?Avis $avis = null;
 
-    // 🔵 AJOUT : relation inverse pour CommandeStatut (OneToMany)
+    // 🔵 Relation inverse pour CommandeStatut (OneToMany)
     #[ORM\OneToMany(targetEntity: CommandeStatut::class, mappedBy: 'commande', cascade: ['persist', 'remove'])]
     private Collection $commandeStatuts;
+
+    // 🔵 Frais de livraison
+    #[ORM\Column(type: 'float')]
+    private ?float $fraisLivraison = 0;
 
     public function __construct()
     {
@@ -158,6 +162,18 @@ class Commande
                 $commandeStatut->setCommande(null);
             }
         }
+        return $this;
+    }
+
+    /** FRAIS LIVRAISON **/
+    public function getFraisLivraison(): ?float
+    {
+        return $this->fraisLivraison;
+    }
+
+    public function setFraisLivraison(float $fraisLivraison): self
+    {
+        $this->fraisLivraison = $fraisLivraison;
         return $this;
     }
 }

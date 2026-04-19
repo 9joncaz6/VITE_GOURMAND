@@ -10,13 +10,18 @@
 
 <h1 class="page-title">Menus</h1>
 
+<!-- ============================
+     FILTRES
+     ============================ -->
 <div class="filters">
 
+    <!-- Tous -->
     <a href="{{ path('app_menu_index') }}"
-       class="filter-btn {{ criteria.theme is empty and criteria.regime is empty and criteria.prixMin is empty and criteria.prixMax is empty ? 'active' : '' }}">
+       class="filter-btn {{ criteria.theme is empty and criteria.regime is empty and criteria.prixMin is empty and criteria.prixMax is empty and criteria.nbPersonnesMin is empty ? 'active' : '' }}">
         Tous
     </a>
 
+    <!-- Thèmes -->
     <a href="{{ path('app_menu_index', { theme: 1 }) }}"
        class="filter-btn {{ criteria.theme == 1 ? 'active' : '' }}">
         Thème 1
@@ -27,11 +32,13 @@
         Thème 2
     </a>
 
+    <!-- Régimes -->
     <a href="{{ path('app_menu_index', { regime: 1 }) }}"
        class="filter-btn {{ criteria.regime == 1 ? 'active' : '' }}">
         Régime 1
     </a>
 
+    <!-- Prix -->
     <a href="{{ path('app_menu_index', { prixMin: 0, prixMax: 15 }) }}"
        class="filter-btn {{ criteria.prixMax == 15 ? 'active' : '' }}">
         -15€
@@ -49,24 +56,46 @@
 
 </div>
 
+<!-- ============================
+     LISTE DES MENUS
+     ============================ -->
 <div class="menus-grid">
 
     {% for menu in menus %}
         <div class="menu-card">
 
+            <!-- Image -->
             <img src="{{ asset('uploads/menus/' ~ menu.image) }}" alt="{{ menu.titre }}">
 
             <div class="menu-info">
+
                 <h3>{{ menu.titre }}</h3>
-                <p>Description du menu</p>
-                <p class="price">Prix TTC {{ menu.prixBase|number_format(2, '.', ' ') }}€</p>
+
+                <p class="menu-description">
+                    {{ menu.description|slice(0, 80) ~ '...' }}
+                </p>
+
+                <p class="menu-min">
+                    Minimum : {{ menu.nbPersonnesMin }} personnes
+                </p>
+
+                <p class="menu-stock">
+                    Stock : {{ menu.stockDisponible }}
+                </p>
+
+                <p class="price">
+                    Prix TTC {{ menu.prixBase|number_format(2, '.', ' ') }}€
+                </p>
 
                 <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">
                     Voir détails
                 </a>
+
             </div>
 
         </div>
+    {% else %}
+        <p class="text-muted">Aucun menu ne correspond à votre recherche.</p>
     {% endfor %}
 
 </div>
