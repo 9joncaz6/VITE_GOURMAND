@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes — Employé{% endblock %}
+
+{% block body %}
+
+<h1 class="mb-4">Commandes</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Statut</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for commande in commandes %}
+        {% set last = commande.commandeStatuts|last %}
+        <tr>
+            <td>#{{ commande.id }}</td>
+            <td>{{ commande.createdAt|date('d/m/Y H:i') }}</td>
+            <td>{{ commande.total|number_format(2, '.', ' ') }} €</td>
+            <td>
+                <span class="badge bg-info">
+                    {{ last.statut }}
+                </span>
+            </td>
+            <td>
+                <a href="{{ path('employe_commandes_show', {id: commande.id}) }}"
+                   class="btn btn-sm btn-primary">
+                    Voir
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

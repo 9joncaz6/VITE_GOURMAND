@@ -69,6 +69,20 @@
 
             <button type="submit" class="btn-primary">Mettre à jour</button>
         </form>
+
+
+        <h4>Suivi de la commande</h4>
+
+<ul class="timeline">
+    {% for s in commande.commandeStatuts %}
+        <li>
+            <strong>{{ s.statut }}</strong>
+            <br>
+            <small class="text-muted">{{ s.date|date('d/m/Y H:i') }}</small>
+        </li>
+    {% endfor %}
+</ul>
+
     {% endif %}
 
 

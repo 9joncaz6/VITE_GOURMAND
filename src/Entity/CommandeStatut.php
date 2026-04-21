@@ -18,7 +18,7 @@ class CommandeStatut
     private ?string $statut = null;
 
     #[ORM\Column]
-    private ?\DateTime $dateMaj = null;
+    private ?\DateTimeImmutable $dateMaj = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = null;
@@ -26,6 +26,11 @@ class CommandeStatut
     #[ORM\ManyToOne(inversedBy: 'commandeStatuts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Commande $commande = null;
+
+    public function __construct()
+    {
+        $this->dateMaj = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -43,12 +48,12 @@ class CommandeStatut
         return $this;
     }
 
-    public function getDateMaj(): ?\DateTime
+    public function getDateMaj(): ?\DateTimeImmutable
     {
         return $this->dateMaj;
     }
 
-    public function setDateMaj(\DateTime $dateMaj): static
+    public function setDateMaj(\DateTimeImmutable $dateMaj): static
     {
         $this->dateMaj = $dateMaj;
         return $this;

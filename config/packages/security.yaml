@@ -27,15 +27,21 @@ security:
 
     access_control:
 
+        # EMPLOYÉ
+        - { path: ^/employe, roles: ROLE_EMPLOYE }
+
+        # ADMIN
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/menu/new, roles: ROLE_ADMIN }
         - { path: ^/menu/edit, roles: ROLE_ADMIN }
         - { path: ^/menu/delete, roles: ROLE_ADMIN }
 
+        # UTILISATEUR CONNECTÉ
         - { path: ^/panier, roles: ROLE_USER }
         - { path: ^/commande, roles: ROLE_USER }
         - { path: ^/compte, roles: ROLE_USER }
 
+        # PUBLIC
         - { path: ^/commander, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }

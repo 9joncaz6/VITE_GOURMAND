@@ -1,38 +1,82 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Validation de commande{% endblock %}
+{% block title %}Validation de la commande{% endblock %}
 
 {% block body %}
 
-<h1 class="mb-4">Validation de votre commande</h1>
+<h1 class="mb-4">Validation de la commande</h1>
 
-<div class="card">
+<div class="card p-4 shadow-sm">
 
-    <table class="table">
+    <h3 class="mb-3">Récapitulatif</h3>
+
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Menu</th>
                 <th>Quantité</th>
-                <th>Sous-total</th>
+                <th>Prix/personne</th>
+                <th>Réduction</th>
+                <th>Total menu</th>
             </tr>
         </thead>
-
         <tbody>
-            {% for item in items %}
-                <tr>
-                    <td>{{ item.menu.titre }}</td>
-                    <td>{{ item.quantite }}</td>
-                    <td>{{ item.subtotal }} €</td>
-                </tr>
-            {% endfor %}
+
+        {% for item in items %}
+            {% set menu = item.menu %}
+            {% set qte = item.quantite %}
+
+            {% set prixParPersonne = menu.prixBase / menu.nbPersonnesMin %}
+            {% set totalMenu = prixParPersonne * qte %}
+            {% set reduction = qte >= menu.nbPersonnesMin + 5 %}
+
+            {% if reduction %}
+                {% set totalMenu = totalMenu * 0.90 %}
+            {% endif %}
+
+            <tr>
+                <td>{{ menu.titre }}</td>
+                <td>{{ qte }}</td>
+                <td>{{ prixParPersonne|number_format(2, '.', ' ') }} €</td>
+                <td>
+                    {% if reduction %}
+                        <span class="badge bg-success">-10%</span>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td><strong>{{ totalMenu|number_format(2, '.', ' ') }} €</strong></td>
+            </tr>
+
+        {% endfor %}
+
         </tbody>
     </table>
 
-    <h3 class="mt-3">Total : {{ total }} €</h3>
+    <hr>
 
-    <a href="{{ path('app_commande_create') }}" class="btn-primary mt-3">
-        Confirmer la commande
-    </a>
+    <h4>Frais de livraison</h4>
+    <p>
+        {% if total > 0 %}
+            <strong>
+                Les frais de livraison seront calculés automatiquement lors de la confirmation.
+            </strong>
+        {% endif %}
+    </p>
+
+    <hr>
+
+    <h3>Total actuel : {{ total|number_format(2, '.', ' ') }} €</h3>
+
+    <div class="mt-4">
+        <a href="{{ path('app_commande_create') }}" class="btn btn-primary btn-lg">
+            Confirmer la commande
+        </a>
+
+        <a href="{{ path('app_panier_show') }}" class="btn btn-secondary ms-2">
+            Retour au panier
+        </a>
+    </div>
 
 </div>
 

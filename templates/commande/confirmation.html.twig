@@ -6,19 +6,63 @@
 
 <h1 class="mb-4">Merci pour votre commande !</h1>
 
-<div class="card" style="text-align: center; padding: 2rem;">
+<div class="card p-4 shadow-sm">
 
-    <p class="mb-3">
-        Votre commande <strong>#{{ commande.id }}</strong> a bien été enregistrée.
+    <h3 class="mb-3">Détails de la commande</h3>
+
+    <p><strong>Numéro :</strong> #{{ commande.id }}</p>
+    <p><strong>Date :</strong> {{ commande.createdAt|date('d/m/Y H:i') }}</p>
+
+    <p><strong>Adresse de livraison :</strong><br>
+        {{ commande.utilisateur.adressePostale }}
     </p>
 
-    <p class="mb-3">
-        Vous recevrez un email de confirmation dans quelques instants.
+    <hr>
+
+    <h4>Menus commandés</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Menu</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% for item in commande.items %}
+            <tr>
+                <td>{{ item.menu.titre }}</td>
+                <td>{{ item.quantite }}</td>
+                <td>{{ item.prixUnitaire|number_format(2, '.', ' ') }} €</td>
+                <td>
+                    {{ (item.prixUnitaire * item.quantite)|number_format(2, '.', ' ') }} €
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <hr>
+
+    <p><strong>Frais de livraison :</strong>
+        {{ commande.fraisLivraison|number_format(2, '.', ' ') }} €
     </p>
 
-    <a href="{{ path('app_home') }}" class="btn-primary mt-3">
-        Retour à l'accueil
-    </a>
+    <h3>Total payé : {{ commande.total|number_format(2, '.', ' ') }} €</h3>
+
+    <div class="mt-4">
+        <a href="{{ path('app_menu_index') }}" class="btn btn-primary">
+            Retour aux menus
+        </a>
+
+        <a href="{{ path('app_commander') }}" class="btn btn-secondary ms-2">
+            Voir mes commandes
+        </a>
+    </div>
 
 </div>
 
