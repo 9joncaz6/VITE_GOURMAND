@@ -42,10 +42,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $actif = null;
 
-    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'utilisateur')]
+    // -------------------------
+    // Relations
+    // -------------------------
+
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Commande::class)]
     private Collection $commandes;
 
-    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'utilisateur')]
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Avis::class)]
     private Collection $avis;
 
     public function __construct()
@@ -53,6 +57,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->commandes = new ArrayCollection();
         $this->avis = new ArrayCollection();
     }
+
+    // -------------------------
+    // Getters / Setters
+    // -------------------------
 
     public function getId(): ?int
     {
@@ -149,7 +157,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /** SECURITY INTERFACE METHODS **/
+    // -------------------------
+    // Security Interface
+    // -------------------------
 
     public function getUserIdentifier(): string
     {
@@ -158,10 +168,16 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // Si tu stockes des données sensibles temporaires, nettoie-les ici
+        // Nettoyage éventuel
     }
 
-    /** COMMANDES **/
+    // -------------------------
+    // Commandes
+    // -------------------------
+
+    /**
+     * @return Collection<int, Commande>
+     */
     public function getCommandes(): Collection
     {
         return $this->commandes;
@@ -186,7 +202,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /** AVIS **/
+    // -------------------------
+    // Avis
+    // -------------------------
+
+    /**
+     * @return Collection<int, Avis>
+     */
     public function getAvis(): Collection
     {
         return $this->avis;
@@ -203,11 +225,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeAvi(Avis $avi): static
     {
-        if ($this->avis->removeElement($avi)) {
-            if ($avi->getUtilisateur() === $this) {
-                $avi->setUtilisateur(null);
-            }
-        }
+        $this->avis->removeElement($avi);
         return $this;
     }
 }

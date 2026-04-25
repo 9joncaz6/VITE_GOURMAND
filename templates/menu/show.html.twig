@@ -92,6 +92,86 @@
     {% endfor %}
 </ul>
 
+<hr>
+
+<h3 class="mt-5">Avis des clients</h3>
+
+{% if moyenne %}
+    <p class="fs-5">
+        ⭐ Moyenne : {{ moyenne|number_format(1, '.', ',') }}/5
+    </p>
+{% else %}
+    <p class="text-muted">Aucun avis pour le moment.</p>
+{% endif %}
+
+<div class="mt-4">
+    {% for a in avis %}
+        <div class="border rounded p-3 mb-3 shadow-sm">
+            <strong>
+                {% for i in 1..a.note %}
+                    ⭐
+                {% endfor %}
+            </strong>
+
+            <p class="mt-2">{{ a.commentaire }}</p>
+
+            <small class="text-muted">
+                Le {{ a.date|date('d/m/Y') }}
+            </small>
+        </div>
+    {% endfor %}
+</div>
+
+<hr>
+
+<h3 class="mt-5">Avis des clients</h3>
+
+{% if moyenne %}
+    <p class="fs-5">
+        <div class="d-flex align-items-center gap-2">
+    {% include 'components/stars.html.twig' with { note: moyenne|round(0, 'floor') } %}
+    <span class="fs-5">{{ moyenne|number_format(1) }}/5</span>
+</div>
+
+    </p>
+{% else %}
+    <p class="text-muted">Aucun avis pour le moment.</p>
+{% endif %}
+
+{% if aDejaLaisseAvis %}
+    <div class="alert alert-info mb-4">
+        Vous avez déjà laissé un avis pour ce menu.
+        <a href="{{ path('compte_avis_modifier', { id: avisExistant.id }) }}" class="btn btn-sm btn-warning ms-2">
+            Modifier mon avis
+        </a>
+    </div>
+{% endif %}
+
+{% if peutLaisserAvis %}
+    <a href="{{ path('compte_avis', { id: commandeEligible.id }) }}"
+       class="btn btn-primary mb-4">
+        Laisser un avis
+    </a>
+{% endif %}
+
+
+<div class="mt-4">
+    {% for a in avis %}
+        <div class="border rounded p-3 mb-3 shadow-sm">
+            <strong>
+                {% include 'components/stars.html.twig' with { note: a.note } %}
+
+            </strong>
+
+            <p class="mt-2">{{ a.commentaire }}</p>
+
+            <small class="text-muted">
+                Le {{ a.date|date('d/m/Y') }}
+            </small>
+        </div>
+    {% endfor %}
+</div>
+
 <!-- Retour -->
 <a href="{{ path('app_commander') }}" class="btn btn-secondary mt-4">Retour</a>
 

@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\AvisRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AvisRepository::class)]
@@ -17,19 +16,23 @@ class Avis
     #[ORM\Column]
     private ?int $note = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: 'text')]
     private ?string $commentaire = null;
 
     #[ORM\Column]
-    private ?bool $valide = null;
+    private ?\DateTimeImmutable $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'avis')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $utilisateur = null;
+     private ?Menu $menu = null;
 
     #[ORM\OneToOne(inversedBy: 'avis', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Commande $commande = null;
+
+    #[ORM\ManyToOne(inversedBy: 'avis')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Utilisateur $utilisateur = null;
 
     public function getId(): ?int
     {
@@ -58,25 +61,14 @@ class Avis
         return $this;
     }
 
-    public function isValide(): ?bool
+    public function getDate(): ?\DateTimeImmutable
     {
-        return $this->valide;
+        return $this->date;
     }
 
-    public function setValide(bool $valide): static
+    public function setDate(\DateTimeImmutable $date): static
     {
-        $this->valide = $valide;
-        return $this;
-    }
-
-    public function getUtilisateur(): ?Utilisateur
-    {
-        return $this->utilisateur;
-    }
-
-    public function setUtilisateur(?Utilisateur $utilisateur): static
-    {
-        $this->utilisateur = $utilisateur;
+        $this->date = $date;
         return $this;
     }
 
@@ -85,9 +77,31 @@ class Avis
         return $this->commande;
     }
 
-    public function setCommande(?Commande $commande): static
+    public function setCommande(Commande $commande): static
     {
         $this->commande = $commande;
         return $this;
     }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(Utilisateur $utilisateur): static
+    {
+        $this->utilisateur = $utilisateur;
+        return $this;
+    }
+
+    public function getMenu(): ?Menu
+{
+    return $this->menu;
+}
+
+public function setMenu(?Menu $menu): static
+{
+    $this->menu = $menu;
+    return $this;
+}
 }

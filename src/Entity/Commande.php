@@ -165,6 +165,18 @@ class Commande
         return $this;
     }
 
+public function getStatutActuel(): ?string
+{
+    if ($this->commandeStatuts->isEmpty()) {
+        return null;
+    }
+
+    // On récupère le dernier statut ajouté
+    $dernier = $this->commandeStatuts->last();
+    return $dernier->getStatut();
+}
+
+
     /** FRAIS LIVRAISON **/
     public function getFraisLivraison(): ?float
     {
@@ -176,4 +188,8 @@ class Commande
         $this->fraisLivraison = $fraisLivraison;
         return $this;
     }
+
+
+
+
 }

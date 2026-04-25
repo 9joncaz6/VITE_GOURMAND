@@ -94,13 +94,64 @@ final class MenuController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_menu_show', methods: ['GET'])]
-    public function show(Menu $menu): Response
-    {
-        return $this->render('menu/show.html.twig', [
-            'menu' => $menu,
-        ]);
+ #[Route('/{id}', name: 'app_menu_show', methods: ['GET'])]
+public function show(Menu $menu): Response
+{
+    // Récupération des avis liés au menu
+    $avis = $menu->getAvis();
+
+    // Calcul de la moyenne des notes
+    $moyenne = null;
+    if (count($avis) > 0) {
+        $total = 0;
+        foreach ($avis as $a) {
+            $total += $a->getNote();
+        }
+        $moyenne = $total / count($avis);
     }
+
+    // Vérifier si l'utilisateur peut laisser un avis
+    /** @var \App\Entity\Utilisateur $utilisateur */
+    $utilisateur = $this->getUser();
+    $peutLaisserAvis = false;
+    $commandeEligible = null;
+    $aDejaLaisseAvis = false;
+    $avisExistant = null;
+
+    if ($utilisateur) {
+        foreach ($utilisateur->getCommandes() as $commande) {
+
+            foreach ($commande->getItems() as $item) {
+                if ($item->getMenu() === $menu) {
+
+                    // Si un avis existe déjà
+                    if ($commande->getAvis()) {
+                        $aDejaLaisseAvis = true;
+                        $avisExistant = $commande->getAvis();
+                    }
+
+                    // Sinon, commande terminée et pas d'avis
+                    if ($commande->getStatutActuel() === 'terminée' && !$commande->getAvis()) {
+                        $peutLaisserAvis = true;
+                        $commandeEligible = $commande;
+                    }
+                }
+            }
+        }
+    }
+
+    return $this->render('menu/show.html.twig', [
+        'menu' => $menu,
+        'avis' => $avis,
+        'moyenne' => $moyenne,
+        'peutLaisserAvis' => $peutLaisserAvis,
+        'commandeEligible' => $commandeEligible,
+        'aDejaLaisseAvis' => $aDejaLaisseAvis,
+        'avisExistant' => $avisExistant,
+    ]);
+}
+
+
 
     #[Route('/{id}/edit', name: 'app_menu_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Avis;
 use App\Repository\MenuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -40,6 +41,8 @@ class Menu
     #[ORM\ManyToOne(inversedBy: 'menus')]
     private ?Regime $regime = null;
 
+
+
     // Plusieurs images (stockées en JSON)
     #[ORM\Column(type: 'json')]
     private array $images = [];
@@ -48,16 +51,26 @@ class Menu
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+
+
     /**
      * @var Collection<int, Plat>
      */
     #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'menus')]
     private Collection $plats;
 
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: Avis::class, cascade: ['remove'])]
+    private Collection $avis;
+
+
+
+
     public function __construct()
     {
         $this->plats = new ArrayCollection();
         $this->images = [];
+        $this->avis = new ArrayCollection();
+
     }
 
     // -------------------------
@@ -217,5 +230,33 @@ class Menu
 {
     return $this->prixBase / $this->nbPersonnesMin;
 }
+
+/**
+ * @return Collection<int, Avis>
+ */
+public function getAvis(): Collection
+{
+    return $this->avis;
+}
+
+public function addAvi(Avis $avi): static
+{
+    if (!$this->avis->contains($avi)) {
+        $this->avis->add($avi);
+        $avi->setMenu($this);
+    }
+    return $this;
+}
+
+public function removeAvi(Avis $avi): static
+{
+    if ($this->avis->removeElement($avi)) {
+        if ($avi->getMenu() === $this) {
+            $avi->setMenu(null);
+        }
+    }
+    return $this;
+}
+
 
 }
