@@ -167,3 +167,54 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ===========================
+   AVIS HOMEPAGE (DESKTOP)
+=========================== */
+
+.home-avis {
+    padding: 40px 0;
+}
+
+.home-avis h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.avis-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.avis-card {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.avis-avatar {
+    width: 50px;
+    height: 50px;
+    background: #ddd;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.avis-content h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.avis-content p {
+    margin: 5px 0 10px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.avis-stars svg {
+    width: 18px;
+    height: 18px;
+}

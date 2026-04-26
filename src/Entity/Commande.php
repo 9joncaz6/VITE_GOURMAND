@@ -36,15 +36,12 @@ class Commande
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
 
-    // 🔵 Relation inverse pour Avis (OneToOne)
     #[ORM\OneToOne(mappedBy: 'commande', cascade: ['persist', 'remove'])]
     private ?Avis $avis = null;
 
-    // 🔵 Relation inverse pour CommandeStatut (OneToMany)
     #[ORM\OneToMany(targetEntity: CommandeStatut::class, mappedBy: 'commande', cascade: ['persist', 'remove'])]
     private Collection $commandeStatuts;
 
-    // 🔵 Frais de livraison
     #[ORM\Column(type: 'float')]
     private ?float $fraisLivraison = 0;
 
@@ -165,17 +162,16 @@ class Commande
         return $this;
     }
 
-public function getStatutActuel(): ?string
-{
-    if ($this->commandeStatuts->isEmpty()) {
-        return null;
+    /** STATUT ACTUEL (calculé via CommandeStatut) **/
+    public function getStatutActuel(): ?string
+    {
+        if ($this->commandeStatuts->isEmpty()) {
+            return $this->status; // fallback
+        }
+
+        $dernier = $this->commandeStatuts->last();
+        return $dernier->getStatut();
     }
-
-    // On récupère le dernier statut ajouté
-    $dernier = $this->commandeStatuts->last();
-    return $dernier->getStatut();
-}
-
 
     /** FRAIS LIVRAISON **/
     public function getFraisLivraison(): ?float
@@ -188,8 +184,4 @@ public function getStatutActuel(): ?string
         $this->fraisLivraison = $fraisLivraison;
         return $this;
     }
-
-
-
-
 }

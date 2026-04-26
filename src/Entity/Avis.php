@@ -24,7 +24,7 @@ class Avis
 
     #[ORM\ManyToOne(inversedBy: 'avis')]
     #[ORM\JoinColumn(nullable: false)]
-     private ?Menu $menu = null;
+    private ?Menu $menu = null;
 
     #[ORM\OneToOne(inversedBy: 'avis', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
@@ -95,13 +95,13 @@ class Avis
     }
 
     public function getMenu(): ?Menu
-{
-    return $this->menu;
-}
+    {
+        return $this->menu;
+    }
 
-public function setMenu(?Menu $menu): static
-{
-    $this->menu = $menu;
-    return $this;
-}
+    public function setMenu(?Menu $menu): static
+    {
+        $this->menu = $menu;
+        return $this;
+    }
 }

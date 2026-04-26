@@ -31,22 +31,35 @@
     ============================ -->
     <section class="presentation">
 
-    <div class="presentation-image">
-        <img src="{{ asset('uploads/accueil/accueil02.jpg') }}" alt="Notre cuisine">
-    </div>
+        <div class="presentation-image">
+            <img src="{{ asset('uploads/accueil/accueil02.jpg') }}" alt="Notre cuisine">
+        </div>
 
-    <div class="presentation-text">
-        <h2>Présentation de l’entreprise</h2>
-        <h3>Notre cuisine à votre service</h3>
+        <div class="presentation-text">
+            <h2>Présentation de l’entreprise</h2>
+            <h3>Notre cuisine à votre service</h3>
 
-        <p>
-            Fort de notre savoir faire, nous vous proposons de délicieux menus
-            qui vous combleront de joie au quotidien ou lors de vos évènements.
-        </p>
-    </div>
+            <p>
+                Fort de notre savoir faire, nous vous proposons de délicieux menus
+                qui vous combleront de joie au quotidien ou lors de vos évènements.
+            </p>
+        </div>
 
-</section>
+    </section>
 
+
+    <!-- ===========================
+         AVIS CLIENTS
+    ============================ -->
+    <section class="home-avis">
+        <h2>Les avis de nos chers clients :</h2>
+
+        <div class="avis-list">
+            {% for avi in avis|slice(0, 3) %}
+                {% include 'components/avis_home_card.html.twig' with { avi: avi } %}
+            {% endfor %}
+        </div>
+    </section>
 
 
     <!-- ===========================
@@ -56,18 +69,26 @@
         <h2>Cartes menus</h2>
 
         <div class="menus-grid">
-           {% for menu in menus %}
+    {% for menu in menus %}
     <article class="menu-card">
-        <img src="{{ asset('uploads/menus/' ~ menu.image) }}" alt="{{ menu.titre }}">
+
+        {% if menu.images is not empty %}
+            <img src="{{ asset('uploads/menus/' ~ menu.images[0]) }}" alt="{{ menu.titre }}">
+        {% else %}
+            <img src="{{ asset('uploads/menus/default.jpg') }}" alt="Image indisponible">
+        {% endif %}
+
         <h3>{{ menu.titre }}</h3>
         <p class="price">{{ menu.prixBase|number_format(2, '.', '') }} €</p>
+
         <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">
             Voir détails
         </a>
     </article>
 {% endfor %}
 
-        </div>
+</div>
+
     </section>
 
 </main>

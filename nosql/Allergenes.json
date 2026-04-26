@@ -1,0 +1,246 @@
+{
+    "31": {
+        "menuId": 1,
+        "allergenes": [
+            "moutarde"
+        ]
+    },
+    "32": {
+        "menuId": 2,
+        "allergenes": [
+            "s\u00e9same",
+            "\u0153ufs"
+        ]
+    },
+    "33": {
+        "menuId": 3,
+        "allergenes": [
+            "arachides"
+        ]
+    },
+    "34": {
+        "menuId": 4,
+        "allergenes": []
+    },
+    "35": {
+        "menuId": 5,
+        "allergenes": [
+            "s\u00e9same",
+            "soja",
+            "moutarde",
+            "arachides"
+        ]
+    },
+    "36": {
+        "menuId": 6,
+        "allergenes": [
+            "\u0153ufs",
+            "poisson",
+            "lactose",
+            "arachides"
+        ]
+    },
+    "37": {
+        "menuId": 7,
+        "allergenes": [
+            "lactose"
+        ]
+    },
+    "38": {
+        "menuId": 8,
+        "allergenes": [
+            "gluten"
+        ]
+    },
+    "39": {
+        "menuId": 9,
+        "allergenes": [
+            "fruits \u00e0 coque"
+        ]
+    },
+    "40": {
+        "menuId": 10,
+        "allergenes": [
+            "gluten",
+            "soja",
+            "lactose"
+        ]
+    },
+    "41": {
+        "menuId": 11,
+        "allergenes": [
+            "soja",
+            "fruits \u00e0 coque"
+        ]
+    },
+    "42": {
+        "menuId": 12,
+        "allergenes": [
+            "moutarde",
+            "soja",
+            "fruits \u00e0 coque",
+            "lactose"
+        ]
+    },
+    "43": {
+        "menuId": 13,
+        "allergenes": [
+            "arachides"
+        ]
+    },
+    "44": {
+        "menuId": 14,
+        "allergenes": [
+            "gluten",
+            "\u0153ufs",
+            "poisson",
+            "lactose"
+        ]
+    },
+    "45": {
+        "menuId": 15,
+        "allergenes": [
+            "lactose",
+            "arachides"
+        ]
+    },
+    "46": {
+        "menuId": 16,
+        "allergenes": [
+            "gluten"
+        ]
+    },
+    "47": {
+        "menuId": 17,
+        "allergenes": [
+            "lactose",
+            "soja",
+            "\u0153ufs"
+        ]
+    },
+    "48": {
+        "menuId": 18,
+        "allergenes": [
+            "poisson"
+        ]
+    },
+    "49": {
+        "menuId": 19,
+        "allergenes": [
+            "s\u00e9same"
+        ]
+    },
+    "50": {
+        "menuId": 20,
+        "allergenes": [
+            "gluten",
+            "s\u00e9same"
+        ]
+    },
+    "51": {
+        "menuId": 21,
+        "allergenes": [
+            "soja",
+            "arachides",
+            "gluten"
+        ]
+    },
+    "52": {
+        "menuId": 22,
+        "allergenes": [
+            "fruits \u00e0 coque",
+            "s\u00e9same",
+            "moutarde",
+            "soja"
+        ]
+    },
+    "53": {
+        "menuId": 23,
+        "allergenes": [
+            "poisson"
+        ]
+    },
+    "54": {
+        "menuId": 24,
+        "allergenes": [
+            "\u0153ufs",
+            "arachides",
+            "s\u00e9same"
+        ]
+    },
+    "55": {
+        "menuId": 25,
+        "allergenes": [
+            "poisson"
+        ]
+    },
+    "56": {
+        "menuId": 26,
+        "allergenes": [
+            "lactose"
+        ]
+    },
+    "57": {
+        "menuId": 27,
+        "allergenes": [
+            "lactose",
+            "\u0153ufs"
+        ]
+    },
+    "58": {
+        "menuId": 28,
+        "allergenes": [
+            "s\u00e9same",
+            "moutarde",
+            "lactose"
+        ]
+    },
+    "59": {
+        "menuId": 29,
+        "allergenes": []
+    },
+    "60": {
+        "menuId": 30,
+        "allergenes": []
+    },
+    "61": {
+        "menuId": 31,
+        "allergenes": [
+            "poisson",
+            "\u0153ufs",
+            "moutarde",
+            "soja"
+        ]
+    },
+    "62": {
+        "menuId": 32,
+        "allergenes": [
+            "lactose"
+        ]
+    },
+    "63": {
+        "menuId": 33,
+        "allergenes": [
+            "fruits \u00e0 coque",
+            "s\u00e9same",
+            "poisson"
+        ]
+    },
+    "64": {
+        "menuId": 34,
+        "allergenes": [
+            "s\u00e9same",
+            "lactose"
+        ]
+    },
+    "65": {
+        "menuId": 35,
+        "allergenes": []
+    },
+    "66": {
+        "menuId": 36,
+        "allergenes": [
+            "poisson"
+        ]
+    }
+}

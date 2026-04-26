@@ -118,3 +118,54 @@
     .badge-livré { background: #198754; }
     .badge-annulé { background: #dc3545; }
 }
+
+/* ===========================
+   AVIS PAGE DÉTAILS
+=========================== */
+
+.details-avis {
+    padding: 40px 0;
+}
+
+.details-avis h2 {
+    margin-bottom: 25px;
+}
+
+.avis-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.avis-card {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.avis-avatar {
+    width: 50px;
+    height: 50px;
+    background: #ddd;
+    border-radius: 50%;
+}
+
+.avis-content h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.avis-content p {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.avis-stars svg {
+    width: 18px;
+    height: 18px;
+}

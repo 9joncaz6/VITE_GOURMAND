@@ -29,8 +29,6 @@ class Menu
     #[ORM\Column]
     private ?float $prixBase = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $conditions = null;
 
     #[ORM\Column]
     private ?int $stockDisponible = null;
@@ -126,16 +124,7 @@ class Menu
         return $this;
     }
 
-    public function getConditions(): ?string
-    {
-        return $this->conditions;
-    }
 
-    public function setConditions(string $conditions): static
-    {
-        $this->conditions = $conditions;
-        return $this;
-    }
 
     public function getStockDisponible(): ?int
     {

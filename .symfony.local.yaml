@@ -1,0 +1,3 @@
+server:
+    document_root: public
+    allow_http: true
