@@ -28,6 +28,19 @@
             {{ menu.description }}
         </p>
 
+   {% if moyenne %}
+    {% set full = moyenne|round(0, 'floor') %}
+    {% set empty = 5 - full %}
+
+    <p class="menu-rating">
+        {% for i in 1..full %}★{% endfor %}
+        {% for i in 1..empty %}☆{% endfor %}
+        ({{ moyenne|number_format(1, '.', ' ') }}/5)
+    </p>
+{% endif %}
+
+
+
         <p class="menu-price">{{ menu.prixBase }}€ TTC</p>
 
         {% if menu.stockDisponible > 0 %}
@@ -77,16 +90,7 @@
 
 <hr>
 
-<h3 class="mt-5">Avis des clients</h3>
 
-{% if moyenne %}
-    <div class="d-flex align-items-center gap-2 mb-3">
-        {% include 'components/stars.html.twig' with { note: moyenne|round(0, 'floor') } %}
-        <span class="fs-5">{{ moyenne|number_format(1) }}/5</span>
-    </div>
-{% else %}
-    <p class="text-muted">Aucun avis pour le moment.</p>
-{% endif %}
 
 {% if aDejaLaisseAvis %}
     <div class="alert alert-info mb-4">
@@ -108,7 +112,9 @@
     {% for a in avis %}
         <div class="avis-card">
 
-            <div class="mb-2">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="avatar-default"></div>
+
                 {% include 'components/stars.html.twig' with { note: a.note } %}
             </div>
 
@@ -119,6 +125,7 @@
         </div>
     {% endfor %}
 </div>
+
 
 <a href="{{ path('app_commander') }}" class="btn btn-secondary mt-4">Retour</a>
 

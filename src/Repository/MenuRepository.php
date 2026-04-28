@@ -13,45 +13,41 @@ class MenuRepository extends ServiceEntityRepository
         parent::__construct($registry, Menu::class);
     }
 
-    /**
-     * Recherche dynamique utilisée par la vue globale + AJAX
-     */
-    public function searchMenus(array $criteria): array
-    {
-        $qb = $this->createQueryBuilder('m');
+    
 
-        // Prix maximum
-        if (!empty($criteria['prixMax'])) {
-            $qb->andWhere('m.prixBase <= :prixMax')
-               ->setParameter('prixMax', $criteria['prixMax']);
-        }
+ public function findByCriteria(array $criteria): array
+{
+    $qb = $this->createQueryBuilder('m');
 
-        // Prix minimum
-        if (!empty($criteria['prixMin'])) {
-            $qb->andWhere('m.prixBase >= :prixMin')
-               ->setParameter('prixMin', $criteria['prixMin']);
-        }
-
-        // Thème
-        if (!empty($criteria['theme'])) {
-            $qb->andWhere('m.theme = :theme')
-               ->setParameter('theme', $criteria['theme']);
-        }
-
-        // Régime
-        if (!empty($criteria['regime'])) {
-            $qb->andWhere('m.regime = :regime')
-               ->setParameter('regime', $criteria['regime']);
-        }
-
-        // Nombre minimum de personnes
-        if (!empty($criteria['nbPersonnesMin'])) {
-            $qb->andWhere('m.nbPersonnesMin <= :nb')
-               ->setParameter('nb', $criteria['nbPersonnesMin']);
-        }
-
-        return $qb->orderBy('m.prixBase', 'ASC')
-                  ->getQuery()
-                  ->getResult();
+    // Filtre : Thème (ManyToOne → ID)
+    if (!empty($criteria['theme'])) {
+        $qb->andWhere('IDENTITY(m.theme) = :theme')
+           ->setParameter('theme', $criteria['theme']);
     }
+
+    // Filtre : Régime (ManyToOne → ID)
+    if (!empty($criteria['regime'])) {
+        $qb->andWhere('IDENTITY(m.regime) = :regime')
+           ->setParameter('regime', $criteria['regime']);
+    }
+
+    // Filtre : Prix minimum
+    if (!empty($criteria['prixMin'])) {
+        $qb->andWhere('m.prixBase >= :prixMin')
+           ->setParameter('prixMin', $criteria['prixMin']);
+    }
+
+    // Filtre : Prix maximum
+    if (!empty($criteria['prixMax'])) {
+        $qb->andWhere('m.prixBase <= :prixMax')
+           ->setParameter('prixMax', $criteria['prixMax']);
+    }
+
+    return $qb->orderBy('m.prixBase', 'ASC')
+              ->getQuery()
+              ->getResult();
+}
+
+
+
 }

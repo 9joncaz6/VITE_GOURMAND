@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Menu;
+use Symfony\Component\HttpFoundation\Request;
+
 use App\Repository\MenuRepository;
 use App\Repository\AvisRepository;
 use App\Repository\CommandeRepository;
@@ -15,19 +17,36 @@ class MenuController extends AbstractController
 {
     #[Route('/menus', name: 'app_menu_index')]
     public function index(
+        Request $request,
         MenuRepository $menuRepository,
         AvisRepository $avisRepository,
         AllergeneService $allergeneService
     ): Response {
-        $menus = $menuRepository->findAll();
+
+        // 1) On récupère les critères depuis l’URL
+        $criteria = [
+        'theme' => $request->query->getInt('theme'),
+        'regime' => $request->query->getInt('regime'),
+        'prixMin' => $request->query->get('prixMin'),
+        'prixMax' => $request->query->get('prixMax'),
+        ];
+
+        // 2) On filtre les menus
+        $menus = $menuRepository->findByCriteria($criteria);
+
+        // 3) On récupère les avis
         $avis = $avisRepository->findLatestAvis(3);
 
+        // 4) On envoie tout au template
         return $this->render('menu/index.html.twig', [
             'menus' => $menus,
             'avis' => $avis,
+            'criteria' => $criteria,
             'allergeneService' => $allergeneService,
         ]);
     }
+
+
 
     #[Route('/menu/{id}', name: 'app_menu_show')]
     public function show(

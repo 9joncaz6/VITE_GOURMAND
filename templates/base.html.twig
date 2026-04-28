@@ -36,9 +36,22 @@
             <div class="right-side">
 
                 <nav class="main-nav">
-                    <a href="/" class="active">Accueil</a>
-                    <a href="/menu">Menus</a>
-                    <a href="/contact">Contacts</a>
+
+                    <a href="{{ path('app_home') }}"
+                       class="{% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">
+                        Accueil
+                    </a>
+
+                    <a href="{{ path('app_menu_index') }}"
+                       class="{% if app.request.attributes.get('_route') starts with 'app_menu' %}active{% endif %}">
+                        Menus
+                    </a>
+
+                    <a href="{{ path('app_contact') }}"
+                       class="{% if app.request.attributes.get('_route') == 'app_contact' %}active{% endif %}">
+                        Contacts
+                    </a>
+
                 </nav>
 
                 <div class="user-menu">
@@ -75,10 +88,27 @@
        MENU MOBILE
        ============================ #}
     <nav class="mobile-menu">
-        <a href="{{ path('app_home') }}">Accueil</a>
-        <a href="{{ path('app_menu_index') }}">Menus</a>
-        <a href="{{ path('app_contact') }}">Contacts</a>
-        <a href="{{ path('app_login') }}">Mon compte</a>
+
+        <a href="{{ path('app_home') }}"
+           class="{% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">
+            Accueil
+        </a>
+
+        <a href="{{ path('app_menu_index') }}"
+           class="{% if app.request.attributes.get('_route') starts with 'app_menu' %}active{% endif %}">
+            Menus
+        </a>
+
+        <a href="{{ path('app_contact') }}"
+           class="{% if app.request.attributes.get('_route') == 'app_contact' %}active{% endif %}">
+            Contacts
+        </a>
+
+        <a href="{{ path('app_login') }}"
+           class="{% if app.request.attributes.get('_route') == 'app_login' %}active{% endif %}">
+            Mon compte
+        </a>
+
     </nav>
 
 

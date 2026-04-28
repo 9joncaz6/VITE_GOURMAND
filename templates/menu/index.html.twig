@@ -16,7 +16,7 @@
 <div class="filters">
 
     <a href="{{ path('app_menu_index') }}"
-       class="filter-btn {{ criteria.theme is empty and criteria.regime is empty and criteria.prixMin is empty and criteria.prixMax is empty and criteria.nbPersonnesMin is empty ? 'active' : '' }}">
+       class="filter-btn {{ criteria.theme is empty and criteria.regime is empty and criteria.prixMin is empty and criteria.prixMax is empty ? 'active' : '' }}">
         Tous
     </a>
 
@@ -52,61 +52,14 @@
 
 </div>
 
+
 <!-- ============================
-     LISTE DES MENUS
+     LISTE DES MENUS (AJAX)
 ============================ -->
-<div class="menus-grid">
-
-    {% for menu in menus %}
-        <div class="menu-card">
-
-            <!-- Image -->
-            {% if menu.images is not empty %}
-                <img src="{{ asset('uploads/menus/' ~ menu.images[0]) }}" alt="{{ menu.titre }}">
-            {% else %}
-                <img src="{{ asset('uploads/menus/default.jpg') }}" alt="Image indisponible">
-            {% endif %}
-
-            <div class="menu-info">
-
-                <h3>{{ menu.titre }}</h3>
-
-                <p class="menu-description">
-                    {{ menu.description|slice(0, 80) ~ '...' }}
-                </p>
-
-                <!-- Allergènes NoSQL -->
-                {% set allergenes = allergeneService.getAllergenesForMenu(menu.id) %}
-                {% if allergenes %}
-                    <p class="small text-muted">
-                        Allergènes : {{ allergenes|join(', ') }}
-                    </p>
-                {% endif %}
-
-                <p class="menu-min">
-                    Minimum : {{ menu.nbPersonnesMin }} personnes
-                </p>
-
-                <p class="menu-stock">
-                    Stock : {{ menu.stockDisponible }}
-                </p>
-
-                <p class="price">
-                    Prix TTC {{ menu.prixBase|number_format(2, '.', ' ') }}€
-                </p>
-
-                <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">
-                    Voir détails
-                </a>
-
-            </div>
-
-        </div>
-    {% else %}
-        <p class="text-muted">Aucun menu ne correspond à votre recherche.</p>
-    {% endfor %}
-
+<div id="menu-list">
+    {% include 'menu/_list.html.twig' with { menus: menus } %}
 </div>
+
 
 <!-- ===========================
      AVIS CLIENTS

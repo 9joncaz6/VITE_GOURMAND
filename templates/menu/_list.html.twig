@@ -3,7 +3,11 @@
     {% for menu in menus %}
         <div class="menu-card">
 
-            <img src="{{ asset('uploads/menus/' ~ menu.image) }}" alt="{{ menu.titre }}">
+            {% if menu.images is not empty %}
+                <img src="{{ asset('uploads/menus/' ~ menu.images[0]) }}" alt="{{ menu.titre }}">
+            {% else %}
+                <img src="{{ asset('uploads/menus/default.jpg') }}" alt="Image indisponible">
+            {% endif %}
 
             <div class="menu-info">
                 <h3>{{ menu.titre }}</h3>
