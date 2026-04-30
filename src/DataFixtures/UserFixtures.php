@@ -68,7 +68,7 @@ class UserFixtures extends Fixture
             $user->setActif(true);
             $user->setRoles(["ROLE_USER"]);
             $user->setPassword($this->hasher->hashPassword($user, 'password'));
-
+            $user->setActif(true);
             $manager->persist($user);
         }
 
