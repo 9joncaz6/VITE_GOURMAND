@@ -56,27 +56,43 @@
 
                 <div class="user-menu">
 
-                    {% if app.user %}
+    {% if app.user %}
 
-                        <div class="user-info">
-                            <span class="user-icon">👤</span>
-                            <span class="user-name">
-                                {{ app.user.prenom }}
-                                {% if is_granted('ROLE_ADMIN') %}
-                                    <span class="badge-admin">Admin</span>
-                                {% endif %}
-                            </span>
-                        </div>
+        <div class="user-info">
+            <span class="user-icon">👤</span>
+            <span class="user-name">
+                {{ app.user.prenom }}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <span class="badge-admin">Admin</span>
+                {% endif %}
+                {% if is_granted('ROLE_EMPLOYE') %}
+                    <span class="badge-admin">Employé</span>
+                {% endif %}
+            </span>
+        </div>
 
-                        <a href="{{ path('app_logout') }}" class="logout-btn">Déconnexion</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('admin_dashboard') }}" class="admin-link">Dashboard admin</a>
+            <a href="{{ path('admin_commandes_index') }}" class="admin-link">Commandes</a>
+            <a href="{{ path('admin_avis_index') }}" class="admin-link">Avis</a>
+        {% endif %}
 
-                    {% else %}
+        {% if is_granted('ROLE_EMPLOYE') %}
+            <a href="{{ path('employe_commandes') }}" class="admin-link">Commandes employé</a>
+        {% endif %}
 
-                        <a href="{{ path('app_login') }}" class="user-icon">👤</a>
+        <a href="{{ path('app_logout') }}" class="logout-btn">Déconnexion</a>
 
-                    {% endif %}
+    {% else %}
 
-                </div>
+        <a href="{{ path('app_login') }}" class="user-icon">👤</a>
+
+    {% endif %}
+
+</div>
+
+
+
 
             </div>
 

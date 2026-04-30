@@ -34,6 +34,23 @@ class Avis
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
 
+
+#[ORM\Column(type: 'boolean')]
+private bool $valide = true;
+
+public function isValide(): bool
+{
+    return $this->valide;
+}
+
+public function setValide(bool $valide): static
+{
+    $this->valide = $valide;
+    return $this;
+}
+
+
+
     public function getId(): ?int
     {
         return $this->id;

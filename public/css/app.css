@@ -325,3 +325,15 @@ textarea:focus {
     color: orange;
 }
 
+.admin-link {
+    margin-right: 12px;
+    color: #ff8800;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.admin-link:hover {
+    color: #cc6e00;
+}
+
+

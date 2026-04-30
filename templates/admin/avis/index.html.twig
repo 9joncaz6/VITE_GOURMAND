@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des avis{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/admin/avis.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<h1 class="page-title">Gestion des avis</h1>
+
+
+<form method="get" class="filters">
+    <div>
+        <label>Note :</label>
+        <select name="note">
+            <option value="">Toutes</option>
+            {% for n in 1..5 %}
+                <option value="{{ n }}" {% if noteSelected == n %}selected{% endif %}>
+                    {{ n }}/5
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label>Menu :</label>
+        <select name="menu">
+            <option value="">Tous</option>
+            {% for m in menus %}
+                <option value="{{ m.id }}" {% if menuSelected == m.id %}selected{% endif %}>
+                    {{ m.titre }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit" class="btn-secondary">Filtrer</button>
+</form>
+
+
+
+<table class="table-commandes">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Client</th>
+            <th>Menu</th>
+            <th>Note</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for a in avis %}
+            <tr>
+                <td>#{{ a.id }}</td>
+                <td>{{ a.utilisateur.email }}</td>
+                <td>{{ a.menu.titre }}</td>
+                <td>{{ a.note }}/5</td>
+                <td>{{ a.date|date('d/m/Y H:i') }}</td>
+                <td>
+
+
+                    <a href="{{ path('admin_avis_show', { id: a.id }) }}" class="btn-secondary">Voir</a>
+
+{% if a.valide %}
+    <a href="{{ path('admin_avis_toggle', { id: a.id }) }}" class="btn-warning">Masquer</a>
+{% else %}
+    <a href="{{ path('admin_avis_toggle', { id: a.id }) }}" class="btn-success">Valider</a>
+{% endif %}
+
+<a href="{{ path('admin_avis_delete', { id: a.id }) }}" class="btn-danger"
+   onclick="return confirm('Supprimer cet avis ?')">
+    Supprimer
+</a>
+
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

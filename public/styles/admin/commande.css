@@ -42,3 +42,43 @@
 .badge-en-livraison { background: #fd7e14; }
 .badge-livré { background: #198754; }
 .badge-annulé { background: #dc3545; }
+
+.commande-details {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.commande-info {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    flex: 1;
+}
+
+.commande-info p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.commande-status-update {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    flex: 1;
+}
+
+.status-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.section-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+}

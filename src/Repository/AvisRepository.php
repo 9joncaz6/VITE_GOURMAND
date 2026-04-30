@@ -24,4 +24,25 @@ class AvisRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+public function searchAvis(?int $note, ?int $menuId): array
+{
+    $qb = $this->createQueryBuilder('a')
+        ->orderBy('a.date', 'DESC');
+
+    if ($note !== null) {
+        $qb->andWhere('a.note = :note')
+           ->setParameter('note', $note);
+    }
+
+    if ($menuId !== null) {
+        $qb->andWhere('a.menu = :menu')
+           ->setParameter('menu', $menuId);
+    }
+
+    return $qb->getQuery()->getResult();
 }
+
+}
+

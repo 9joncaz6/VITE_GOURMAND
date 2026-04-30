@@ -2,39 +2,45 @@
 
 {% block title %}Commande #{{ commande.id }}{% endblock %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/admin/commande.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>Commande #{{ commande.id }}</h1>
 
-<p><strong>Date :</strong> {{ commande.createdAt|date('d/m/Y H:i') }}</p>
-<p><strong>Statut :</strong> {{ commande.status }}</p>
-<h3>Changer le statut</h3>
+<h1 class="page-title">Commande #{{ commande.id }}</h1>
 
-<div class="btn-group mb-3">
-    <a href="{{ path('admin_commandes_status', {id: commande.id, status: 'en_attente'}) }}"
-       class="btn btn-outline-secondary">
-        En attente
-    </a>
+<div class="commande-details">
 
-    <a href="{{ path('admin_commandes_status', {id: commande.id, status: 'en_preparation'}) }}"
-       class="btn btn-outline-primary">
-        En préparation
-    </a>
+    <div class="commande-info">
+        <p><strong>Date :</strong> {{ commande.createdAt|date('d/m/Y H:i') }}</p>
 
-    <a href="{{ path('admin_commandes_status', {id: commande.id, status: 'livraison'}) }}"
-       class="btn btn-outline-warning">
-        En livraison
-    </a>
+        <p>
+            <strong>Statut :</strong>
+            <span class="badge badge-{{ commande.statutActuel|lower|replace({' ': '-'}) }}">
+                {{ commande.statutActuel }}
+            </span>
+        </p>
 
-    <a href="{{ path('admin_commandes_status', {id: commande.id, status: 'terminee'}) }}"
-       class="btn btn-outline-success">
-        Terminée
-    </a>
+        <p><strong>Total :</strong> {{ commande.total }} €</p>
+    </div>
+
+    <div class="commande-status-update">
+        <h3>Changer le statut</h3>
+
+        <div class="status-buttons">
+            <a href="{{ path('admin_commandes_status', { id: commande.id, status: 'En attente' }) }}" class="btn-secondary">En attente</a>
+            <a href="{{ path('admin_commandes_status', { id: commande.id, status: 'En préparation' }) }}" class="btn-secondary">En préparation</a>
+            <a href="{{ path('admin_commandes_status', { id: commande.id, status: 'En livraison' }) }}" class="btn-secondary">En livraison</a>
+            <a href="{{ path('admin_commandes_status', { id: commande.id, status: 'Terminée' }) }}" class="btn-secondary">Terminée</a>
+        </div>
+    </div>
+
 </div>
-<p><strong>Total :</strong> {{ commande.total }} €</p>
 
-<h3>Menus commandés</h3>
+<h2 class="section-title">Menus commandés</h2>
 
-<table class="table">
+<table class="table-commandes">
     <thead>
         <tr>
             <th>Menu</th>
@@ -50,11 +56,15 @@
                 <td>{{ item.menu.titre }}</td>
                 <td>{{ item.quantite }}</td>
                 <td>{{ item.prixUnitaire }} €</td>
-                <td>{{ item.total }} €</td>
+                <td>{{ item.prixUnitaire * item.quantite }} €</td>
+
             </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<a href="{{ path('admin_commandes_index') }}" class="btn btn-secondary mt-3">Retour</a>
+<a href="{{ path('admin_commandes_index') }}" class="btn-secondary" style="margin-top: 2rem; display: inline-block;">
+    Retour
+</a>
+
 {% endblock %}

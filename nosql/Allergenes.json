@@ -242,5 +242,47 @@
         "allergenes": [
             "poisson"
         ]
+    },
+    "67": {
+        "menuId": 37,
+        "allergenes": [
+            "s\u00e9same",
+            "poisson"
+        ]
+    },
+    "68": {
+        "menuId": 38,
+        "allergenes": [
+            "fruits \u00e0 coque",
+            "s\u00e9same",
+            "moutarde"
+        ]
+    },
+    "69": {
+        "menuId": 39,
+        "allergenes": [
+            "lactose",
+            "s\u00e9same"
+        ]
+    },
+    "70": {
+        "menuId": 40,
+        "allergenes": [
+            "lactose",
+            "moutarde",
+            "soja",
+            "\u0153ufs"
+        ]
+    },
+    "71": {
+        "menuId": 41,
+        "allergenes": [
+            "poisson",
+            "soja"
+        ]
+    },
+    "72": {
+        "menuId": 42,
+        "allergenes": []
     }
 }

@@ -2,8 +2,8 @@
 
 {% block title %}Gestion des commandes{% endblock %}
 
-{% block styles %}
-<link rel="stylesheet" href="{{ asset('styles/admin/commandes.css') }}">
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/admin/commande.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -26,8 +26,11 @@
         {% for commande in commandes %}
             <tr>
                 <td>#{{ commande.id }}</td>
+
                 <td>{{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}</td>
-                <td>{{ commande.date|date('d/m/Y H:i') }}</td>
+
+                <td>{{ commande.createdAt|date('d/m/Y H:i') }}</td>
+
                 <td>{{ commande.total }} €</td>
 
                 <td>
@@ -37,7 +40,7 @@
                 </td>
 
                 <td>
-                    <a href="{{ path('app_commande_details', { id: commande.id }) }}" class="btn-secondary">
+                    <a href="{{ path('admin_commandes_show', { id: commande.id }) }}" class="btn-secondary">
                         Voir
                     </a>
                 </td>

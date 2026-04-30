@@ -2,8 +2,13 @@
 
 {% block title %}Dashboard Admin{% endblock %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/admin/dashboard.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>Dashboard Administrateur</h1>
+
+<h1 class="page-title">Dashboard Administrateur</h1>
 
 <section class="stats">
     <div class="stat-box">
@@ -27,10 +32,9 @@
     </div>
 </section>
 
-<hr>
+<h2 class="section-title">Dernières commandes</h2>
 
-<h2>Dernières commandes</h2>
-<table class="table">
+<table class="table-dashboard">
     <thead>
         <tr>
             <th>ID</th>
@@ -42,28 +46,28 @@
     <tbody>
         {% for c in commandes %}
             <tr>
-                <td>{{ c.id }}</td>
+                <td>#{{ c.id }}</td>
                 <td>{{ c.createdAt|date('d/m/Y H:i') }}</td>
                 <td>{{ c.total }} €</td>
-                <td>{{ c.status }}</td>
+                <td>
+                    <span class="badge badge-{{ c.status|lower|replace({' ': '-'}) }}">
+                        {{ c.status }}
+                    </span>
+                </td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<hr>
-
-<h2>Derniers utilisateurs</h2>
-<ul>
+<h2 class="section-title">Derniers utilisateurs</h2>
+<ul class="list-dashboard">
     {% for u in users %}
         <li>{{ u.email }}</li>
     {% endfor %}
 </ul>
 
-<hr>
-
-<h2>Derniers menus ajoutés</h2>
-<ul>
+<h2 class="section-title">Derniers menus ajoutés</h2>
+<ul class="list-dashboard">
     {% for m in menus %}
         <li>{{ m.titre }}</li>
     {% endfor %}
