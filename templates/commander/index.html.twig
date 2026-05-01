@@ -27,8 +27,8 @@
                     Ajouter au panier
                 </a>
 
-                {# Commander maintenant = ajouter + redirection panier #}
-                <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'panier'}) }}"
+                {# Commander maintenant = ajouter + redirection vers validation #}
+                <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'validation'}) }}"
                    class="btn-primary w-100 mt-2">
                     Commander maintenant
                 </a>

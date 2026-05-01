@@ -6,6 +6,8 @@ use App\Service\PanierManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 #[Route('/panier')]
 class PanierController extends AbstractController
@@ -28,25 +30,41 @@ class PanierController extends AbstractController
         ]);
     }
 
-    #[Route('/add/{menuId}', name: 'app_panier_add')]
-    public function add(int $menuId, PanierManager $panierManager): Response
-    {
-        /** @var \App\Entity\Utilisateur $user */
-        $user = $this->getUser();
+   #[Route('/add/{menuId}', name: 'app_panier_add')]
+public function add(int $menuId, PanierManager $panierManager, EntityManagerInterface $em): Response
+{
+    /** @var \App\Entity\Utilisateur $user */
+    $user = $this->getUser();
 
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
+    if (!$user) {
+        return $this->redirectToRoute('app_login');
+    }
 
-        $panierManager->addItem($user->getId(), $menuId, 1);
+    // Récupérer le menu pour connaître le minimum
+    $menu = $em->getRepository(\App\Entity\Menu::class)->find($menuId);
 
-        // Gestion du bouton "Commander maintenant"
-        if (isset($_GET['redirect']) && $_GET['redirect'] === 'panier') {
-            return $this->redirectToRoute('app_panier_show');
-        }
-
+    if (!$menu) {
+        $this->addFlash('error', 'Menu introuvable.');
         return $this->redirectToRoute('app_panier_show');
     }
+
+    // Quantité minimum
+    $quantite = $menu->getNbPersonnesMin() ?? 1;
+
+    // Ajouter au panier avec la quantité minimum
+    $panierManager->addItem($user->getId(), $menuId, $quantite);
+
+    // Gestion du bouton "Commander maintenant"
+    $redirect = $_GET['redirect'] ?? null;
+
+    if ($redirect === 'validation') {
+        return $this->redirectToRoute('app_commande_validation');
+    }
+
+    return $this->redirectToRoute('app_panier_show');
+}
+
+
 
     #[Route('/update/{menuId}/{action}', name: 'app_panier_update')]
     public function update(int $menuId, string $action, PanierManager $panierManager): Response

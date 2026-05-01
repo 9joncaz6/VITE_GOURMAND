@@ -1,94 +1,109 @@
-/* ===========================
-   TITRE
-   =========================== */
+/* ================================
+   PAGE VALIDATION COMMANDE — V&G
+   ================================ */
 
-.page-title {
+.order-validation-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Titre */
+.validation-title {
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 2rem;
+    text-align: center;
 }
 
-/* ===========================
-   INFOS UTILISATEUR
-   =========================== */
-
-.user-info {
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid var(--border);
+/* Bloc récap */
+.recap-box {
+    background: #fff;
+    padding: 1.8rem;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
     margin-bottom: 2rem;
 }
 
-.user-info h2 {
-    margin-bottom: 1rem;
-}
-
-/* ===========================
-   RÉCAPITULATIF
-   =========================== */
-
-.order-summary {
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-}
-
-.order-item {
-    display: flex;
-    gap: 1rem;
+/* Tableau */
+.recap-table {
+    width: 100%;
+    border-collapse: collapse;
     margin-bottom: 1.5rem;
 }
 
-.order-item img {
-    width: 120px;
-    height: 90px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.order-item .info h3 {
-    margin-bottom: 0.3rem;
-}
-
-.subtotal {
+.recap-table th {
+    text-align: left;
+    padding: 0.8rem;
     font-weight: 600;
-    color: var(--primary);
+    background: #f7f7f7;
+    border-bottom: 2px solid #eee;
 }
 
-.total {
+.recap-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #eee;
+}
+
+/* Frais de livraison */
+.delivery-info {
     margin-top: 1rem;
-    font-size: 1.3rem;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+/* Total */
+.total-box {
     text-align: right;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
 }
 
-/* ===========================
-   BOUTON
-   =========================== */
-
-.confirm-btn {
-    display: block;
-    margin: 2rem auto 0;
-    width: fit-content;
+/* Boutons */
+.validation-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
-/* ===========================
-   RESPONSIVE
-   =========================== */
+.btn-primary {
+    padding: 0.8rem 1.4rem;
+    background: #e67e22;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
 
+.btn-primary:hover {
+    background: #cf6d1a;
+}
+
+.btn-secondary {
+    padding: 0.8rem 1.4rem;
+    background: #ddd;
+    color: #333;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #ccc;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .order-item {
+    .validation-buttons {
         flex-direction: column;
-        text-align: center;
+        align-items: stretch;
     }
 
-    .order-item img {
-        width: 100%;
-        height: 180px;
-    }
-
-    .total {
+    .total-box {
         text-align: center;
     }
 }

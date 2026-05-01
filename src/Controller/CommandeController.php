@@ -51,6 +51,7 @@ class CommandeController extends AbstractController
         }
 
         $items = $panierManager->getPanierForTwig($user->getId());
+
         if (empty($items)) {
             $this->addFlash('warning', 'Votre panier est vide.');
             return $this->redirectToRoute('app_panier_show');
@@ -83,6 +84,9 @@ class CommandeController extends AbstractController
         foreach ($items as $item) {
             $menu = $item['menu'];
             $qte  = $item['quantite'];
+
+
+
 
             $prixParPersonne = $menu->getPrixBase() / $menu->getNbPersonnesMin();
             $prixTotalMenu   = $prixParPersonne * $qte;
@@ -136,14 +140,14 @@ class CommandeController extends AbstractController
             ->from('no-reply@vitegourmand.fr')
             ->to($user->getEmail())
             ->subject('Confirmation de votre commande')
-            ->html($this->renderView('emails/confirmation_commande.twig', [
+            ->html($this->renderView('emails/confirmation_commande.html.twig', [
+                'user' => $user,
                 'commande' => $commande,
+                'items' => $items,
+                'total' => $total
             ]));
 
         $mailer->send($email);
-
-        // 7) Vider le panier
-        $panierManager->clearPanier($user->getId());
 
         return $this->redirectToRoute('app_commande_confirmation', [
             'id' => $commande->getId(),
@@ -151,8 +155,10 @@ class CommandeController extends AbstractController
     }
 
     #[Route('/confirmation/{id}', name: 'app_commande_confirmation')]
-    public function confirmation(Commande $commande): Response
+    public function confirmation(Commande $commande, PanierManager $panierManager): Response
     {
+        $panierManager->clearPanier($commande->getUtilisateur()->getId());
+
         return $this->render('commande/confirmation.html.twig', [
             'commande' => $commande,
         ]);
@@ -166,7 +172,7 @@ class CommandeController extends AbstractController
         return 12;
     }
 
-    #[Route('/mes-commandes', name: 'app_commander')]
+    #[Route('/mes-commandes', name: 'app_commande_mes_commandes')]
     public function mesCommandes(): Response
     {
         /** @var Utilisateur|null $user */

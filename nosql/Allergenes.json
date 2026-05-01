@@ -284,5 +284,44 @@
     "72": {
         "menuId": 42,
         "allergenes": []
+    },
+    "73": {
+        "menuId": 43,
+        "allergenes": [
+            "soja"
+        ]
+    },
+    "74": {
+        "menuId": 44,
+        "allergenes": [
+            "arachides",
+            "gluten"
+        ]
+    },
+    "75": {
+        "menuId": 45,
+        "allergenes": [
+            "fruits \u00e0 coque",
+            "soja",
+            "lactose"
+        ]
+    },
+    "76": {
+        "menuId": 46,
+        "allergenes": [
+            "s\u00e9same",
+            "lactose",
+            "soja"
+        ]
+    },
+    "77": {
+        "menuId": 47,
+        "allergenes": []
+    },
+    "78": {
+        "menuId": 48,
+        "allergenes": [
+            "gluten"
+        ]
     }
 }

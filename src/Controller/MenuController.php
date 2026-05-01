@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Menu;
 use Symfony\Component\HttpFoundation\Request;
-
 use App\Repository\MenuRepository;
 use App\Repository\AvisRepository;
 use App\Repository\CommandeRepository;
@@ -23,25 +22,24 @@ class MenuController extends AbstractController
         AllergeneService $allergeneService
     ): Response {
 
-        // 1) On récupère les critères depuis l’URL
+        // 1) Critères de filtrage
         $criteria = [
-        'theme' => $request->query->getInt('theme'),
-        'regime' => $request->query->getInt('regime'),
-        'prixMin' => $request->query->get('prixMin'),
-        'prixMax' => $request->query->get('prixMax'),
+            'theme'   => $request->query->getInt('theme'),
+            'regime'  => $request->query->getInt('regime'),
+            'prixMin' => $request->query->get('prixMin'),
+            'prixMax' => $request->query->get('prixMax'),
         ];
 
-        // 2) On filtre les menus
+        // 2) Menus filtrés
         $menus = $menuRepository->findByCriteria($criteria);
 
-        // 3) On récupère les avis
+        // 3) Derniers avis
         $avis = $avisRepository->findLatestAvis(3);
 
-        // 4) On envoie tout au template
         return $this->render('menu/index.html.twig', [
-            'menus' => $menus,
-            'avis' => $avis,
-            'criteria' => $criteria,
+            'menus'            => $menus,
+            'avis'             => $avis,
+            'criteria'         => $criteria,
             'allergeneService' => $allergeneService,
         ]);
     }
@@ -60,13 +58,16 @@ class MenuController extends AbstractController
         $allergenesMenu = $allergeneService->getAllergenesForMenu($menu->getId());
 
         // Avis du menu
-        $avis = $avisRepository->findBy(['menu' => $menu], ['date' => 'DESC']);
+        $avis = $avisRepository->findBy(
+            ['menu' => $menu],
+            ['date' => 'DESC']
+        );
 
         // Moyenne des notes
         $notes = array_map(fn($a) => $a->getNote(), $avis);
         $moyenne = count($notes) > 0 ? array_sum($notes) / count($notes) : null;
 
-        // Variables pour le template
+        // Variables template
         $aDejaLaisseAvis = false;
         $peutLaisserAvis = false;
         $avisExistant = null;
@@ -77,8 +78,8 @@ class MenuController extends AbstractController
 
             // 1) Vérifier s'il a déjà laissé un avis
             $avisExistant = $avisRepository->findOneBy([
-                'menu' => $menu,
-                'user' => $this->getUser()
+                'menu'        => $menu,
+                'utilisateur' => $this->getUser()   // ✅ CORRECTION ICI
             ]);
 
             if ($avisExistant) {
@@ -97,13 +98,13 @@ class MenuController extends AbstractController
         }
 
         return $this->render('menu/show.html.twig', [
-            'menu' => $menu,
-            'allergenesMenu' => $allergenesMenu,
-            'avis' => $avis,
-            'moyenne' => $moyenne,
-            'aDejaLaisseAvis' => $aDejaLaisseAvis,
-            'peutLaisserAvis' => $peutLaisserAvis,
-            'avisExistant' => $avisExistant,
+            'menu'             => $menu,
+            'allergenesMenu'   => $allergenesMenu,
+            'avis'             => $avis,
+            'moyenne'          => $moyenne,
+            'aDejaLaisseAvis'  => $aDejaLaisseAvis,
+            'peutLaisserAvis'  => $peutLaisserAvis,
+            'avisExistant'     => $avisExistant,
             'commandeEligible' => $commandeEligible,
         ]);
     }

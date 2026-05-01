@@ -43,13 +43,14 @@ class CommandeRepository extends ServiceEntityRepository
     public function findCommandeEligiblePourAvis($user, $menu)
 {
     return $this->createQueryBuilder('c')
-        ->join('c.menus', 'm')
-        ->where('c.user = :user')
+        ->join('c.items', 'i')
+        ->join('i.menu', 'm')
+        ->where('c.utilisateur = :user')
         ->andWhere('m = :menu')
-        ->andWhere('c.statut = :statut')
+        ->andWhere('c.status = :status')
         ->setParameter('user', $user)
         ->setParameter('menu', $menu)
-        ->setParameter('statut', 'terminee')
+        ->setParameter('status', 'terminée')
         ->setMaxResults(1)
         ->getQuery()
         ->getOneOrNullResult();

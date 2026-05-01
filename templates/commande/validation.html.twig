@@ -2,78 +2,80 @@
 
 {% block title %}Validation de la commande{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/pages/validation.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<h1 class="mb-4">Validation de la commande</h1>
+<div class="order-validation-container">
 
-<div class="card p-4 shadow-sm">
+    <h1 class="validation-title">Validation de la commande</h1>
 
-    <h3 class="mb-3">Récapitulatif</h3>
+    <div class="recap-box">
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Menu</th>
-                <th>Quantité</th>
-                <th>Prix/personne</th>
-                <th>Réduction</th>
-                <th>Total menu</th>
-            </tr>
-        </thead>
-        <tbody>
+        <h2 class="section-title">Récapitulatif</h2>
 
-        {% for item in items %}
-            {% set menu = item.menu %}
-            {% set qte = item.quantite %}
+        <table class="recap-table">
+            <thead>
+                <tr>
+                    <th>Menu</th>
+                    <th>Quantité</th>
+                    <th>Prix/personne</th>
+                    <th>Réduction</th>
+                    <th>Total menu</th>
+                </tr>
+            </thead>
 
-            {% set prixParPersonne = menu.prixBase / menu.nbPersonnesMin %}
-            {% set totalMenu = prixParPersonne * qte %}
-            {% set reduction = qte >= menu.nbPersonnesMin + 5 %}
+            <tbody>
+            {% for item in items %}
+                {% set menu = item.menu %}
+                {% set qte = item.quantite %}
 
-            {% if reduction %}
-                {% set totalMenu = totalMenu * 0.90 %}
-            {% endif %}
+                {% set prixParPersonne = menu.prixBase / menu.nbPersonnesMin %}
+                {% set totalMenu = prixParPersonne * qte %}
+                {% set reduction = qte >= menu.nbPersonnesMin + 5 %}
 
-            <tr>
-                <td>{{ menu.titre }}</td>
-                <td>{{ qte }}</td>
-                <td>{{ prixParPersonne|number_format(2, '.', ' ') }} €</td>
-                <td>
-                    {% if reduction %}
-                        <span class="badge bg-success">-10%</span>
-                    {% else %}
-                        —
-                    {% endif %}
-                </td>
-                <td><strong>{{ totalMenu|number_format(2, '.', ' ') }} €</strong></td>
-            </tr>
+                {% if reduction %}
+                    {% set totalMenu = totalMenu * 0.90 %}
+                {% endif %}
 
-        {% endfor %}
+                <tr>
+                    <td>{{ menu.titre }}</td>
+                    <td>{{ qte }}</td>
+                    <td>{{ prixParPersonne|number_format(2, '.', ' ') }} €</td>
+                    <td>
+                        {% if reduction %}
+                            <span class="badge bg-success">-10%</span>
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ totalMenu|number_format(2, '.', ' ') }} €</strong></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-        </tbody>
-    </table>
-
-    <hr>
-
-    <h4>Frais de livraison</h4>
-    <p>
-        {% if total > 0 %}
-            <strong>
+        <div class="delivery-info">
+            <h3>Frais de livraison</h3>
+            <p>
                 Les frais de livraison seront calculés automatiquement lors de la confirmation.
-            </strong>
-        {% endif %}
-    </p>
+            </p>
+        </div>
 
-    <hr>
+        <div class="total-box">
+            Total actuel : <strong>{{ total|number_format(2, '.', ' ') }} €</strong>
+        </div>
 
-    <h3>Total actuel : {{ total|number_format(2, '.', ' ') }} €</h3>
+    </div>
 
-    <div class="mt-4">
-        <a href="{{ path('app_commande_create') }}" class="btn btn-primary btn-lg">
+    <div class="validation-buttons">
+        <a href="{{ path('app_commande_create') }}" class="btn-primary">
             Confirmer la commande
         </a>
 
-        <a href="{{ path('app_panier_show') }}" class="btn btn-secondary ms-2">
+        <a href="{{ path('app_panier_show') }}" class="btn-secondary">
             Retour au panier
         </a>
     </div>
