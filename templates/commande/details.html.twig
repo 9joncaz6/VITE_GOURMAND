@@ -2,88 +2,92 @@
 
 {% block title %}Détails de la commande #{{ commande.id }}{% endblock %}
 
-{% block styles %}
-    <link rel="stylesheet" href="{{ asset('styles/pages/details.css') }}">
-{% endblock %}
-
 {% block body %}
 
-<h1 class="page-title">Commande #{{ commande.id }}</h1>
+<h1 class="mb-4">Détails de la commande #{{ commande.id }}</h1>
 
-<div class="commande-info">
-    <p><strong>Date :</strong> {{ commande.date|date('d/m/Y H:i') }}</p>
-    <p><strong>Total :</strong> {{ commande.total }} €</p>
-    <p><strong>Nombre d’articles :</strong> {{ items|length }}</p>
+<div class="card p-4 shadow-sm">
+
+    <h3 class="mb-3">Informations générales</h3>
+
+    <p><strong>Date :</strong> {{ commande.createdAt|date('d/m/Y H:i') }}</p>
+
+    <p>
+        <strong>Statut :</strong>
+        {% if commande.commandeStatuts|length > 0 %}
+            {% set last = commande.commandeStatuts|last %}
+            <span class="badge bg-primary">{{ last.statut }}</span>
+        {% else %}
+            <span class="badge bg-secondary">En attente</span>
+        {% endif %}
+    </p>
+
+    <p><strong>Adresse de livraison :</strong> {{ commande.adresseLivraison }}</p>
+
+    <hr>
+
+    <h3 class="mb-3">Menus commandés</h3>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Menu</th>
+                <th>Quantité</th>
+                <th>Prix/personne</th>
+                <th>Réduction</th>
+                <th>Total menu</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for item in commande.items %}
+            {% set menu = item.menu %}
+            {% set qte = item.quantite %}
+
+            {% set prixParPersonne = menu.prixBase / menu.nbPersonnesMin %}
+            {% set totalMenu = prixParPersonne * qte %}
+            {% set reduction = qte >= menu.nbPersonnesMin + 5 %}
+
+            {% if reduction %}
+                {% set totalMenu = totalMenu * 0.90 %}
+            {% endif %}
+
+            <tr>
+                <td>{{ menu.titre }}</td>
+                <td>{{ qte }}</td>
+                <td>{{ prixParPersonne|number_format(2, '.', ' ') }} €</td>
+                <td>
+                    {% if reduction %}
+                        <span class="badge bg-success">-10%</span>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td><strong>{{ totalMenu|number_format(2, '.', ' ') }} €</strong></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h3 class="mb-3">Résumé</h3>
+
+    <p><strong>Total menus :</strong> {{ commande.total|number_format(2, '.', ' ') }} €</p>
+
+    <p><strong>Frais de livraison :</strong>
+        {{ commande.fraisLivraison|number_format(2, '.', ' ') }} €
+    </p>
+
+    <p class="mt-3 fs-5">
+        <strong>Total final :</strong>
+        {{ (commande.total + commande.fraisLivraison)|number_format(2, '.', ' ') }} €
+    </p>
+
 </div>
 
-<section class="items-container">
-
-    {% for item in items %}
-        <div class="item-card">
-            <h2>{{ item.plat.nom }}</h2>
-
-            <p>{{ item.plat.description }}</p>
-
-            <div class="item-details">
-                <span>Quantité : {{ item.quantite }}</span>
-                <span>Prix unitaire : {{ item.prixUnitaire }} €</span>
-                <span>Total : {{ item.total }} €</span>
-            </div>
-        </div>
-    {% endfor %}
-
-</section>
-
-<a href="{{ path('app_commande_historique') }}" class="btn-secondary retour-btn">
+<a href="{{ path('app_compte_historique') }}" class="btn btn-secondary mt-3">
     Retour à l’historique
 </a>
-
-<h2>Historique des statuts</h2>
-
-<ul class="statut-list">
-    {% for s in statuts %}
-        <li>
-            <strong>{{ s.nouveauStatut }}</strong>
-            — {{ s.date|date('d/m/Y H:i') }}
-        </li>
-    {% endfor %}
-</ul>
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <h2>Changer le statut</h2>
-
-        <form action="{{ path('app_commande_changer_statut', { id: commande.id }) }}" method="POST" class="statut-form">
-            <select name="statut" class="statut-select">
-                <option value="En attente"        {{ commande.statutActuel == 'En attente' ? 'selected' }}>En attente</option>
-                <option value="En préparation"    {{ commande.statutActuel == 'En préparation' ? 'selected' }}>En préparation</option>
-                <option value="En livraison"      {{ commande.statutActuel == 'En livraison' ? 'selected' }}>En livraison</option>
-                <option value="Livré"             {{ commande.statutActuel == 'Livré' ? 'selected' }}>Livré</option>
-                <option value="Annulé"            {{ commande.statutActuel == 'Annulé' ? 'selected' }}>Annulé</option>
-            </select>
-
-            <span class="badge badge-{{ commande.statutActuel|lower|replace({'     ':'-'}) }}">
-                 {{ commande.statutActuel }}
-            </span>
-
-
-
-            <button type="submit" class="btn-primary">Mettre à jour</button>
-        </form>
-
-
-        <h4>Suivi de la commande</h4>
-
-<ul class="timeline">
-    {% for s in commande.commandeStatuts %}
-        <li>
-            <strong>{{ s.statut }}</strong>
-            <br>
-            <small class="text-muted">{{ s.date|date('d/m/Y H:i') }}</small>
-        </li>
-    {% endfor %}
-</ul>
-
-    {% endif %}
-
 
 {% endblock %}

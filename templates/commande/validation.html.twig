@@ -59,14 +59,24 @@
 
         <div class="delivery-info">
             <h3>Frais de livraison</h3>
-            <p>
-                Les frais de livraison seront calculés automatiquement lors de la confirmation.
-            </p>
+
+            {% if livraison is defined %}
+                <p><strong>{{ livraison|number_format(2, '.', ' ') }} €</strong></p>
+            {% else %}
+                <p>Les frais de livraison seront calculés automatiquement lors de la confirmation.</p>
+            {% endif %}
         </div>
 
         <div class="total-box">
             Total actuel : <strong>{{ total|number_format(2, '.', ' ') }} €</strong>
         </div>
+
+        {% if livraison is defined %}
+            <div class="total-box mt-2">
+                Total avec livraison :
+                <strong>{{ (total + livraison)|number_format(2, '.', ' ') }} €</strong>
+            </div>
+        {% endif %}
 
     </div>
 

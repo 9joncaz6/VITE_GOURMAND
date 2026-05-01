@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des commandes{% endblock %}
+
+{% block body %}
+
+<h1 class="mb-4">Historique de mes commandes</h1>
+
+{% if commandes is empty %}
+    <div class="alert alert-info">
+        Vous n'avez encore passé aucune commande.
+    </div>
+{% else %}
+
+    <div class="card p-4 shadow-sm">
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Commande</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for commande in commandes %}
+                <tr>
+                    <td>#{{ commande.id }}</td>
+                    <td>{{ commande.createdAt|date('d/m/Y H:i') }}</td>
+
+                    <td>
+                        {% if commande.commandeStatuts|length > 0 %}
+                            {% set last = commande.commandeStatuts|last %}
+                            <span class="badge bg-primary">{{ last.statut }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">En attente</span>
+                        {% endif %}
+                    </td>
+
+                    <td>{{ commande.total|number_format(2, '.', ' ') }} €</td>
+
+                    <td>
+                        <a href="{{ path('app_commande_details', {id: commande.id}) }}"
+                           class="btn btn-sm btn-outline-primary">
+                            Voir détails
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+{% endif %}
+
+<a href="{{ path('app_compte_index') }}" class="btn btn-secondary mt-3">
+    Retour à mon compte
+</a>
+
+{% endblock %}

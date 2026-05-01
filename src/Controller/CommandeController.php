@@ -185,4 +185,19 @@ class CommandeController extends AbstractController
             'commandes' => $user->getCommandes(),
         ]);
     }
+
+    #[Route('/commande/details/{id}', name: 'app_commande_details')]
+public function details(Commande $commande): Response
+{
+    $user = $this->getUser();
+
+    if ($commande->getUtilisateur() !== $user) {
+        throw $this->createAccessDeniedException();
+    }
+
+    return $this->render('commande/details.html.twig', [
+        'commande' => $commande,
+    ]);
+}
+
 }
