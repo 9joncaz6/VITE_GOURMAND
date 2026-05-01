@@ -77,6 +77,13 @@
             <a href="{{ path('admin_avis_index') }}" class="admin-link">Avis</a>
         {% endif %}
 
+        {% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('admin_employes_index') }}" class="admin-link">
+        Gestion des comptes
+    </a>
+{% endif %}
+
+
         {% if is_granted('ROLE_EMPLOYE') %}
             <a href="{{ path('employe_commandes') }}" class="admin-link">Commandes employé</a>
         {% endif %}

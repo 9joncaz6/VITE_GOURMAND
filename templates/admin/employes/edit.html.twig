@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/admin/admin_employe.css') }}">
+{% endblock %}
+
+{% block title %}Modifier un employé{% endblock %}
+
+{% block body %}
+<div class="admin-edit-container">
+
+    <h1 class="admin-edit-title">
+        Modifier l’employé<br>
+        <span class="admin-edit-subtitle">{{ employe.prenom }} {{ employe.nom }}</span>
+    </h1>
+
+    {% for message in app.flashes('success') %}
+        <div style="
+            background: #e6ffed;
+            border: 1px solid #b2f5c0;
+            color: #1b7f3a;
+            padding: 0.9rem 1.2rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        ">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {{ form_start(form) }}
+
+        <div class="admin-field">
+            {{ form_label(form.prenom) }}
+            {{ form_widget(form.prenom) }}
+            <div class="admin-error">{{ form_errors(form.prenom) }}</div>
+        </div>
+
+        <div class="admin-field">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom) }}
+            <div class="admin-error">{{ form_errors(form.nom) }}</div>
+        </div>
+
+        <div class="admin-field">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email) }}
+            <div class="admin-error">{{ form_errors(form.email) }}</div>
+        </div>
+
+        {# --- STATUT DU COMPTE --- #}
+        <div class="admin-box">
+            {{ form_label(form.actif) }}
+            <div class="admin-options">
+                {{ form_widget(form.actif) }}
+            </div>
+            <div class="admin-error">{{ form_errors(form.actif) }}</div>
+        </div>
+
+        {# --- ROLES --- #}
+        <div class="admin-box">
+            {{ form_label(form.roles) }}
+            <div class="admin-options">
+                {{ form_widget(form.roles) }}
+            </div>
+            <div class="admin-error">{{ form_errors(form.roles) }}</div>
+        </div>
+
+        <button class="admin-submit">Enregistrer</button>
+
+    {{ form_end(form) }}
+
+    <div class="admin-back">
+        <a href="{{ path('admin_employes_index') }}">Retour</a>
+    </div>
+
+</div>
+{% endblock %}

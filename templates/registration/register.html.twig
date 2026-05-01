@@ -2,48 +2,90 @@
 
 {% block title %}Créer un compte{% endblock %}
 
-{% block stylesheets %}
-<link rel="stylesheet" href="{{ asset('styles/security/register.css') }}">
-{% endblock %}
-
 {% block body %}
+<div style="
+    max-width: 420px;
+    margin: 0 auto;
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+">
 
-<div class="register-container">
-    <div class="register-card">
+    <h1 style="margin-bottom: 1.5rem; font-size: 1.6rem; font-weight: 700;">
+        Créer un compte
+    </h1>
 
-        <h1>Créer un compte</h1>
-
-        {{ form_start(form) }}
-
-            <div class="form-group">
-                {{ form_label(form.prenom) }}
-                {{ form_widget(form.prenom) }}
-            </div>
-
-            <div class="form-group">
-                {{ form_label(form.nom) }}
-                {{ form_widget(form.nom) }}
-            </div>
-
-            <div class="form-group">
-                {{ form_label(form.email) }}
-                {{ form_widget(form.email) }}
-            </div>
-
-            <div class="form-group">
-                {{ form_label(form.plainPassword) }}
-                {{ form_widget(form.plainPassword) }}
-            </div>
-
-            <button class="btn-submit">Créer mon compte</button>
-
-        {{ form_end(form) }}
-
-        <p class="login-link">
-            Déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a>
-        </p>
-
+    {# 🔥 Affiche les erreurs globales (dont UniqueEntity) #}
+    <div style="color: #b30000; margin-bottom: 1rem; font-size: 0.9rem;">
+        {{ form_errors(form) }}
     </div>
-</div>
 
+    {{ form_start(form) }}
+
+        {# Champ prénom #}
+        <div style="margin-bottom: 1rem;">
+            {{ form_label(form.prenom) }}
+            {{ form_widget(form.prenom, {
+                attr: {
+                    style: 'width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;'
+                }
+            }) }}
+            <div style="color: #b30000; font-size: 0.85rem;">
+                {{ form_errors(form.prenom) }}
+            </div>
+        </div>
+
+        {# Champ nom #}
+        <div style="margin-bottom: 1rem;">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom, {
+                attr: {
+                    style: 'width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;'
+                }
+            }) }}
+            <div style="color: #b30000; font-size: 0.85rem;">
+                {{ form_errors(form.nom) }}
+            </div>
+        </div>
+
+        {# Champ email + erreurs (🔥 ici s'affiche "Cet email est déjà utilisé") #}
+        <div style="margin-bottom: 1rem;">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, {
+                attr: {
+                    style: 'width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;'
+                }
+            }) }}
+            <div style="color: #b30000; font-size: 0.85rem;">
+                {{ form_errors(form.email) }}
+            </div>
+        </div>
+
+        {# Mot de passe #}
+        <div style="margin-bottom: 1rem;">
+            {{ form_label(form.plainPassword) }}
+            {{ form_widget(form.plainPassword, {
+                attr: {
+                    style: 'width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;'
+                }
+            }) }}
+            <div style="color: #b30000; font-size: 0.85rem;">
+                {{ form_errors(form.plainPassword) }}
+            </div>
+        </div>
+
+        <button class="btn-primary" style="width: 100%; margin-top: 1rem;">
+            Créer mon compte
+        </button>
+
+    {{ form_end(form) }}
+
+    <div style="text-align: center; margin-top: 1rem;">
+        <a href="{{ path('app_login') }}" style="color: var(--primary); font-size: 0.9rem;">
+            Déjà un compte ? Se connecter
+        </a>
+    </div>
+
+</div>
 {% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des employés{% endblock %}
+
+{% block body %}
+<h1>Gestion des comptes</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom complet</th>
+            <th>Email</th>
+            <th>Actif</th>
+            <th>Rôles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for employe in employes %}
+            <tr>
+                <td>{{ employe.id }}</td>
+                <td>{{ employe.prenom }} {{ employe.nom }}</td>
+                <td>{{ employe.email }}</td>
+                <td>
+                    {% if employe.actif %}
+                        <span style="color: green;">Actif</span>
+                    {% else %}
+                        <span style="color: red;">Inactif</span>
+                    {% endif %}
+                </td>
+                <td>{{ employe.roles|join(', ') }}</td>
+                <td>
+                    <a href="{{ path('admin_employes_edit', {id: employe.id}) }}" class="btn btn-primary btn-sm">
+                        Modifier
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

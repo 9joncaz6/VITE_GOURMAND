@@ -21,15 +21,19 @@ class RegistrationController extends AbstractController
     ): Response {
         $user = new Utilisateur();
 
+        // Valeur par défaut pour éviter NULL sur "actif"
+        $user->setActif(true);
+
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // Hash du mot de passe
             $hashed = $passwordHasher->hashPassword(
                 $user,
                 $form->get('plainPassword')->getData()
             );
-
             $user->setPassword($hashed);
 
             $em->persist($user);
