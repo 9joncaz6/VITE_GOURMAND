@@ -42,8 +42,8 @@
                         Accueil
                     </a>
 
-                    <a href="{{ path('app_menu_index') }}"
-                       class="{% if app.request.attributes.get('_route') starts with 'app_menu' %}active{% endif %}">
+                    <a href="{{ path('admin_menu_index') }}"
+                       class="{% if app.request.attributes.get('_route') starts with 'admin_menu' %}active{% endif %}">
                         Menus
                     </a>
 
@@ -56,50 +56,41 @@
 
                 <div class="user-menu">
 
-    {% if app.user %}
+                    {% if app.user %}
 
-        <div class="user-info">
-            <span class="user-icon">👤</span>
-            <span class="user-name">
-                {{ app.user.prenom }}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <span class="badge-admin">Admin</span>
-                {% endif %}
-                {% if is_granted('ROLE_EMPLOYE') %}
-                    <span class="badge-admin">Employé</span>
-                {% endif %}
-            </span>
-        </div>
+                        <div class="user-info">
+                            <span class="user-icon">👤</span>
+                            <span class="user-name">
+                                {{ app.user.prenom }}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <span class="badge-admin">Admin</span>
+                                {% endif %}
+                                {% if is_granted('ROLE_EMPLOYE') %}
+                                    <span class="badge-admin">Employé</span>
+                                {% endif %}
+                            </span>
+                        </div>
 
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('admin_dashboard') }}" class="admin-link">Dashboard admin</a>
-            <a href="{{ path('admin_commandes_index') }}" class="admin-link">Commandes</a>
-            <a href="{{ path('admin_avis_index') }}" class="admin-link">Avis</a>
-        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('admin_dashboard') }}" class="admin-link">Dashboard admin</a>
+                            <a href="{{ path('admin_commandes_index') }}" class="admin-link">Commandes</a>
+                            <a href="{{ path('admin_avis_index') }}" class="admin-link">Avis</a>
+                            <a href="{{ path('admin_employes_index') }}" class="admin-link">Gestion des comptes</a>
+                        {% endif %}
 
-        {% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('admin_employes_index') }}" class="admin-link">
-        Gestion des comptes
-    </a>
-{% endif %}
+                        {% if is_granted('ROLE_EMPLOYE') %}
+                            <a href="{{ path('employe_commandes') }}" class="admin-link">Commandes employé</a>
+                        {% endif %}
 
+                        <a href="{{ path('app_logout') }}" class="logout-btn">Déconnexion</a>
 
-        {% if is_granted('ROLE_EMPLOYE') %}
-            <a href="{{ path('employe_commandes') }}" class="admin-link">Commandes employé</a>
-        {% endif %}
+                    {% else %}
 
-        <a href="{{ path('app_logout') }}" class="logout-btn">Déconnexion</a>
+                        <a href="{{ path('app_login') }}" class="user-icon">👤</a>
 
-    {% else %}
+                    {% endif %}
 
-        <a href="{{ path('app_login') }}" class="user-icon">👤</a>
-
-    {% endif %}
-
-</div>
-
-
-
+                </div>
 
             </div>
 
@@ -117,8 +108,8 @@
             Accueil
         </a>
 
-        <a href="{{ path('app_menu_index') }}"
-           class="{% if app.request.attributes.get('_route') starts with 'app_menu' %}active{% endif %}">
+        <a href="{{ path('admin_menu_index') }}"
+           class="{% if app.request.attributes.get('_route') starts with 'admin_menu' %}active{% endif %}">
             Menus
         </a>
 
@@ -166,8 +157,8 @@
 </div>
 
 {% block javascripts %}
-<script src="{{ asset('js/main.js') }}"></script>
-<script src="{{ asset('js/menu-filters.js') }}"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('js/menu-filters.js') }}"></script>
 {% endblock %}
 
 </body>

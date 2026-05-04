@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un plat{% endblock %}
+
+{% block body %}
+<h1>Créer un plat</h1>
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-primary mt-3">Créer</button>
+{{ form_end(form) }}
+
+<a href="{{ path('admin_plat_index') }}" class="btn btn-secondary mt-3">Retour</a>
+{% endblock %}

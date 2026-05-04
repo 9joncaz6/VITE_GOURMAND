@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block body %}
+
+<h1 class="mb-4">Statistiques & Chiffre d'affaires</h1>
+
+<div class="card p-4 shadow-sm mb-4">
+
+    <h3 class="mb-3">Nombre de commandes par menu</h3>
+
+    <canvas id="chartCommandes" height="120"></canvas>
+
+</div>
+
+<div class="card p-4 shadow-sm">
+
+    <h3 class="mb-3">Chiffre d'affaires par menu</h3>
+
+    <canvas id="chartCA" height="120"></canvas>
+
+</div>
+
+<a href="{{ path('admin_dashboard') }}" class="btn btn-secondary mt-3">
+    Retour au tableau de bord
+</a>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const labels = {{ labels|raw }};
+    const commandes = {{ commandes|raw }};
+    const ca = {{ ca|raw }};
+
+    new Chart(document.getElementById('chartCommandes'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Commandes',
+                data: commandes,
+                backgroundColor: '#0d6efd'
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('chartCA'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Chiffre d\'affaires (€)',
+                data: ca,
+                backgroundColor: '#198754'
+            }]
+        }
+    });
+</script>
+
+
+{% endblock %}

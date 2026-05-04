@@ -7,6 +7,7 @@ use App\Entity\CommandeItem;
 use App\Entity\CommandeStatut;
 use App\Entity\Utilisateur;
 use App\Service\PanierManager;
+use App\Service\StatsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,8 @@ class CommandeController extends AbstractController
     public function create(
         PanierManager $panierManager,
         EntityManagerInterface $em,
-        MailerInterface $mailer
+        MailerInterface $mailer,
+        StatsService $statsService
     ): Response {
         /** @var Utilisateur|null $user */
         $user = $this->getUser();
@@ -84,9 +86,6 @@ class CommandeController extends AbstractController
         foreach ($items as $item) {
             $menu = $item['menu'];
             $qte  = $item['quantite'];
-
-
-
 
             $prixParPersonne = $menu->getPrixBase() / $menu->getNbPersonnesMin();
             $prixTotalMenu   = $prixParPersonne * $qte;
@@ -135,7 +134,22 @@ class CommandeController extends AbstractController
         $em->persist($statut);
         $em->flush();
 
-        // 6) Email
+        // 6) Mise à jour des stats NoSQL (par menu)
+        foreach ($items as $item) {
+            $menu = $item['menu'];
+            $qte  = $item['quantite'];
+
+            $prixParPersonne = $menu->getPrixBase() / $menu->getNbPersonnesMin();
+            $prixTotalMenu   = $prixParPersonne * $qte;
+
+            if ($qte >= $menu->getNbPersonnesMin() + 5) {
+                $prixTotalMenu *= 0.90;
+            }
+
+            $statsService->updateMenuStats($menu->getId(), $prixTotalMenu);
+        }
+
+        // 7) Email
         $email = (new Email())
             ->from('no-reply@vitegourmand.fr')
             ->to($user->getEmail())
@@ -187,17 +201,16 @@ class CommandeController extends AbstractController
     }
 
     #[Route('/commande/details/{id}', name: 'app_commande_details')]
-public function details(Commande $commande): Response
-{
-    $user = $this->getUser();
+    public function details(Commande $commande): Response
+    {
+        $user = $this->getUser();
 
-    if ($commande->getUtilisateur() !== $user) {
-        throw $this->createAccessDeniedException();
+        if ($commande->getUtilisateur() !== $user) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->render('commande/details.html.twig', [
+            'commande' => $commande,
+        ]);
     }
-
-    return $this->render('commande/details.html.twig', [
-        'commande' => $commande,
-    ]);
-}
-
 }

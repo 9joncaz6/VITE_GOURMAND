@@ -30,7 +30,7 @@ class DashboardController extends AbstractController
             'caTotal' => $commandeRepo->getTotalCA(), // méthode à créer
         ];
 
-        return $this->render('admin/dashboard/index.html.twig', [
+        return $this->render('admin/dashboard.html.twig', [
             'commandes' => $commandes,
             'menus' => $menus,
             'users' => $users,
