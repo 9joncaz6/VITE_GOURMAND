@@ -1,0 +1,117 @@
+/* ============================
+   TITRES & STRUCTURE
+   ============================ */
+
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+.account-wrapper {
+    max-width: 650px;
+    margin: auto;
+}
+
+.card {
+    border-radius: 12px;
+    background: #fff;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* ============================
+   SECTIONS
+   ============================ */
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* ============================
+   GRILLE D’INFOS
+   ============================ */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 20px;
+    margin-bottom: 25px;
+}
+
+.info-item.full {
+    grid-column: span 2;
+}
+
+.label {
+    font-weight: 600;
+    color: #555;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.value {
+    font-size: 16px;
+    color: #222;
+}
+
+/* ============================
+   FORMULAIRES
+   ============================ */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-grid .full {
+    grid-column: span 2;
+}
+
+.form-control {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* ============================
+   BOUTONS
+   ============================ */
+
+.actions a,
+button.btn-primary,
+button.btn-outline-primary,
+button.btn-outline-secondary {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+/* ============================
+   HISTORIQUE COMMANDES
+   ============================ */
+
+.order-history {
+    margin-top: 20px;
+}
+
+.order-item {
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: #fafafa;
+}
+
+.order-item strong {
+    display: block;
+    margin-bottom: 4px;
+}

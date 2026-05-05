@@ -133,22 +133,10 @@ class CommandeController extends AbstractController
         $em->persist($commande);
         $em->persist($statut);
         $em->flush();
+        $statsService->updateStats($commande);
 
-        // 6) Mise à jour des stats NoSQL (par menu)
-        foreach ($items as $item) {
-            $menu = $item['menu'];
-            $qte  = $item['quantite'];
 
-            $prixParPersonne = $menu->getPrixBase() / $menu->getNbPersonnesMin();
-            $prixTotalMenu   = $prixParPersonne * $qte;
-
-            if ($qte >= $menu->getNbPersonnesMin() + 5) {
-                $prixTotalMenu *= 0.90;
-            }
-
-            $statsService->updateMenuStats($menu->getId(), $prixTotalMenu);
-        }
-
+        
         // 7) Email
         $email = (new Email())
             ->from('no-reply@vitegourmand.fr')
@@ -213,4 +201,17 @@ class CommandeController extends AbstractController
             'commande' => $commande,
         ]);
     }
+
+    #[Route('/admin/commandes/{id}/delete', name: 'admin_commandes_delete', methods: ['POST'])]
+public function delete(Commande $commande, EntityManagerInterface $em): Response
+{
+    $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+    $em->remove($commande);
+    $em->flush();
+
+    $this->addFlash('success', 'Commande supprimée.');
+    return $this->redirectToRoute('admin_commandes_index');
+}
+
 }

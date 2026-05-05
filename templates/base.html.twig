@@ -32,7 +32,7 @@
                 <span class="logo-text">V &amp; G</span>
             </div>
 
-            <!-- BLOC DROIT : MENU + ICONE -->
+            <!-- NAVIGATION -->
             <div class="right-side">
 
                 <nav class="main-nav">
@@ -42,8 +42,8 @@
                         Accueil
                     </a>
 
-                    <a href="{{ path('admin_menu_index') }}"
-                       class="{% if app.request.attributes.get('_route') starts with 'admin_menu' %}active{% endif %}">
+                    <a href="{{ path('app_menu_index') }}"
+                       class="{% if app.request.attributes.get('_route') starts with 'app_menu' %}active{% endif %}">
                         Menus
                     </a>
 
@@ -54,6 +54,7 @@
 
                 </nav>
 
+                <!-- USER MENU -->
                 <div class="user-menu">
 
                     {% if app.user %}
@@ -64,23 +65,24 @@
                                 {{ app.user.prenom }}
                                 {% if is_granted('ROLE_ADMIN') %}
                                     <span class="badge-admin">Admin</span>
-                                {% endif %}
-                                {% if is_granted('ROLE_EMPLOYE') %}
+                                {% elseif is_granted('ROLE_EMPLOYE') %}
                                     <span class="badge-admin">Employé</span>
                                 {% endif %}
                             </span>
                         </div>
 
+                        {# ADMIN : lien vers le dashboard #}
                         {% if is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('admin_dashboard') }}" class="admin-link">Dashboard admin</a>
-                            <a href="{{ path('admin_commandes_index') }}" class="admin-link">Commandes</a>
-                            <a href="{{ path('admin_avis_index') }}" class="admin-link">Avis</a>
-                            <a href="{{ path('admin_employes_index') }}" class="admin-link">Gestion des comptes</a>
                         {% endif %}
 
-                        {% if is_granted('ROLE_EMPLOYE') %}
-                            <a href="{{ path('employe_commandes') }}" class="admin-link">Commandes employé</a>
+                        {# EMPLOYÉ : uniquement commandes #}
+                        {% if is_granted('ROLE_EMPLOYE') and not is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('employe_commandes_index') }}" class="admin-link">Commandes employé</a>
                         {% endif %}
+
+                        {# UTILISATEUR CONNECTÉ #}
+                        <a href="{{ path('app_compte_index') }}">Mon compte</a>
 
                         <a href="{{ path('app_logout') }}" class="logout-btn">Déconnexion</a>
 
@@ -108,8 +110,8 @@
             Accueil
         </a>
 
-        <a href="{{ path('admin_menu_index') }}"
-           class="{% if app.request.attributes.get('_route') starts with 'admin_menu' %}active{% endif %}">
+        <a href="{{ path('app_menu_index') }}"
+           class="{% if app.request.attributes.get('_route') starts with 'app_menu' %}active{% endif %}">
             Menus
         </a>
 
@@ -118,10 +120,24 @@
             Contacts
         </a>
 
-        <a href="{{ path('app_login') }}"
-           class="{% if app.request.attributes.get('_route') == 'app_login' %}active{% endif %}">
-            Mon compte
-        </a>
+        {% if app.user %}
+
+            {# ADMIN #}
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('admin_dashboard') }}">Dashboard admin</a>
+            {% endif %}
+
+            {# EMPLOYÉ #}
+            {% if is_granted('ROLE_EMPLOYE') and not is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('employe_commandes_index') }}">Commandes employé</a>
+            {% endif %}
+
+            <a href="{{ path('app_compte_index') }}">Mon compte</a>
+            <a href="{{ path('app_logout') }}">Déconnexion</a>
+
+        {% else %}
+            <a href="{{ path('app_login') }}">Connexion</a>
+        {% endif %}
 
     </nav>
 

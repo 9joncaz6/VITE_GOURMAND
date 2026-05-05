@@ -1,0 +1,39 @@
+<div class="table-wrapper">
+
+    <table class="orders-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for commande in commandes %}
+            <tr>
+                <td>{{ commande.id }}</td>
+                <td>{{ commande.createdAt|date('d/m/Y H:i') }}</td>
+                <td>{{ commande.total }} €</td>
+                <td>
+                    <span class="badge badge-{{ commande.statutActuel|lower|replace({' ': '-'}) }}">
+                        {{ commande.statutActuel }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ path(app.request.attributes.get('_route') starts with 'admin' 
+                        ? 'admin_commandes_show' 
+                        : 'employe_commandes_show', 
+                        {id: commande.id}) }}" 
+                        class="btn-view">
+                        Voir
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>

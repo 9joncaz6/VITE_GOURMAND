@@ -21,12 +21,12 @@ class AdminEmployeController extends AbstractController
     {
         $employes = $em->getRepository(Utilisateur::class)->findAll();
 
-        return $this->render('admin/employes/index.html.twig', [
+        return $this->render('admin/employe/index.html.twig', [
             'employes' => $employes,
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'admin_employes_edit')]
+    #[Route('/edit/{id}', name: 'admin_employe_edit')]
     public function edit(
         Utilisateur $employe,
         Request $request,
@@ -40,10 +40,10 @@ class AdminEmployeController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Employé mis à jour avec succès.');
-            return $this->redirectToRoute('admin_employes_index');
+            return $this->redirectToRoute('admin_employe_index');
         }
 
-        return $this->render('admin/employes/edit.html.twig', [
+        return $this->render('admin/employe/edit.html.twig', [
             'form' => $form->createView(),
             'employe' => $employe,
         ]);

@@ -2,36 +2,68 @@
 
 {% block title %}Mon compte{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/compte.css') }}">
+{% endblock %}
+
+
 {% block body %}
 
-<h1 class="mb-4">Mon compte</h1>
+<h1 class="page-title mb-4">Mon compte</h1>
 
-<div class="card p-4 shadow-sm">
+<div class="account-wrapper">
 
-    <h3 class="mb-3">Mes informations</h3>
+    <div class="card p-4 shadow-sm profile-card">
 
-    <p><strong>Nom :</strong> {{ app.user.nom }}</p>
-    <p><strong>Prénom :</strong> {{ app.user.prenom }}</p>
-    <p><strong>Email :</strong> {{ app.user.email }}</p>
-    <p><strong>Téléphone :</strong> {{ app.user.gsm ?: 'Non renseigné' }}</p>
-    <p><strong>Adresse :</strong> {{ app.user.adressePostale ?: 'Non renseignée' }}</p>
+        <h2 class="section-title">Mes informations</h2>
 
-    <div class="mt-4 d-flex flex-column gap-2">
+        <div class="info-grid">
 
-        <a href="{{ path('app_compte_edit') }}" class="btn btn-primary">
-            Modifier mes informations
-        </a>
+            <div class="info-item">
+                <span class="label">Nom :</span>
+                <span class="value">{{ app.user.nom }}</span>
+            </div>
 
-        <a href="{{ path('app_compte_password') }}" class="btn btn-secondary">
-            Changer mon mot de passe
-        </a>
+            <div class="info-item">
+                <span class="label">Prénom :</span>
+                <span class="value">{{ app.user.prenom }}</span>
+            </div>
 
-        <a href="{{ path('app_compte_historique') }}" class="btn btn-outline-primary">
-            Historique de mes commandes
-        </a>
+            <div class="info-item">
+                <span class="label">Email :</span>
+                <span class="value">{{ app.user.email }}</span>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Téléphone :</span>
+                <span class="value">{{ app.user.gsm }}</span>
+            </div>
+
+            <div class="info-item full">
+                <span class="label">Adresse :</span>
+                <span class="value">{{ app.user.adressePostale }}</span>
+            </div>
+
+        </div>
+
+        <div class="actions">
+            <a href="{{ path('app_compte_edit') }}" class="btn btn-primary w-100 mb-2">
+                Modifier mes informations
+            </a>
+
+            <a href="{{ path('app_compte_password') }}" class="btn btn-outline-primary w-100 mb-2">
+                Changer mon mot de passe
+            </a>
+
+            <a href="{{ path('app_compte_historique') }}" class="btn btn-outline-secondary w-100">
+                Historique de mes commandes
+            </a>
+        </div>
 
     </div>
 
 </div>
+
+
 
 {% endblock %}

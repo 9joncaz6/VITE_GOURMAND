@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Commande;
+use App\Repository\CommandeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\CommandeStatut;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,15 +17,31 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class EmployeCommandeController extends AbstractController
 {
     #[Route('', name: 'employe_commandes_index')]
-    public function index(EntityManagerInterface $em): Response
+    public function index(Request $request, CommandeRepository $repo): Response
     {
-        $commandes = $em->getRepository(Commande::class)
-                        ->findBy([], ['createdAt' => 'DESC']);
+        $statutFiltre = $request->query->get('statut');
+
+        if ($statutFiltre) {
+            $commandes = $repo->findByStatutActuel($statutFiltre);
+        } else {
+            $commandes = $repo->findAllOrdered();
+        }
+
+        // Compteurs
+        $countEnAttente = $repo->countByStatut('en_attente');
+        $countEnPreparation = $repo->countByStatut('en_preparation');
+        $countTerminees = $repo->countByStatut('terminee');
 
         return $this->render('employe/commandes/index.html.twig', [
             'commandes' => $commandes,
+            'statutFiltre' => $statutFiltre,
+            'countEnAttente' => $countEnAttente,
+            'countEnPreparation' => $countEnPreparation,
+            'countTerminees' => $countTerminees,
         ]);
     }
+
+
 
     #[Route('/{id}', name: 'employe_commandes_show')]
 public function show(Commande $commande): Response
@@ -48,7 +65,6 @@ public function changeStatut(
         return $this->redirectToRoute('employe_commandes_show', ['id' => $commande->getId()]);
     }
 
-    // Création du nouveau statut
     $statut = new CommandeStatut();
     $statut->setCommande($commande);
     $statut->setStatut($nouveauStatut);
@@ -60,7 +76,8 @@ public function changeStatut(
 
     $this->addFlash('success', 'Statut mis à jour.');
 
-    return $this->redirectToRoute('employe_commandes_show', ['id' => $commande->getId()]);
+    // 👉 REDIRECTION CORRECTE
+    return $this->redirectToRoute('employe_commandes_index');
 }
 
 

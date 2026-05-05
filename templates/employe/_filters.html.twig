@@ -1,0 +1,18 @@
+<div class="filters">
+
+    <form method="get" class="filter-form">
+        <select name="statut" onchange="this.form.submit()">
+            <option value="">Tous les statuts</option>
+            <option value="en_attente" {{ statutFiltre == 'en_attente' ? 'selected' }}>En attente</option>
+            <option value="en_preparation" {{ statutFiltre == 'en_preparation' ? 'selected' }}>En préparation</option>
+            <option value="terminee" {{ statutFiltre == 'terminee' ? 'selected' }}>Terminée</option>
+        </select>
+    </form>
+
+    <div class="counters">
+        <span class="counter counter-attente">En attente : {{ countEnAttente }}</span>
+        <span class="counter counter-prepa">En préparation : {{ countEnPreparation }}</span>
+        <span class="counter counter-terminee">Terminées : {{ countTerminees }}</span>
+    </div>
+
+</div>

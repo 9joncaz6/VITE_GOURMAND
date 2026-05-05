@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des employés{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">Gestion des comptes</h1>
+
+<div class="card p-4 shadow-sm">
+
+    <table class="table table-striped align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Nom complet</th>
+                <th>Email</th>
+                <th>Actif</th>
+                <th>Rôles</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for employe in employes %}
+                <tr>
+                    <td>{{ employe.id }}</td>
+
+                    <td>{{ employe.prenom }} {{ employe.nom }}</td>
+
+                    <td>{{ employe.email }}</td>
+
+                    <td>
+                        {% if employe.actif %}
+                            <span class="badge bg-success">Actif</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactif</span>
+                        {% endif %}
+                    </td>
+
+                    <td>{{ employe.roles|join(', ') }}</td>
+
+                    <td class="text-end">
+
+                        <a href="{{ path('admin_employe_edit', { id: employe.id }) }}"
+                           class="btn btn-sm btn-primary me-2">
+                            Modifier
+                        </a>
+
+                        <form action="{{ path('admin_employe_delete', { id: employe.id }) }}"
+                              method="post"
+                              class="d-inline"
+                              onsubmit="return confirm('Supprimer cet employé ?');">
+                            <button class="btn btn-sm btn-danger">Supprimer</button>
+                        </form>
+
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

@@ -1,43 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Commandes — Employé{% endblock %}
+{% block title %}Commandes employé{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/employe/employe_commandes.css') }}">
+{% endblock %}
 
 {% block body %}
 
-<h1 class="mb-4">Commandes</h1>
+<h1 class="page-title">Commandes</h1>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Date</th>
-            <th>Total</th>
-            <th>Statut</th>
-            <th></th>
-        </tr>
-    </thead>
+<div class="table-wrapper">
 
-    <tbody>
-    {% for commande in commandes %}
-        {% set last = commande.commandeStatuts|last %}
-        <tr>
-            <td>#{{ commande.id }}</td>
-            <td>{{ commande.createdAt|date('d/m/Y H:i') }}</td>
-            <td>{{ commande.total|number_format(2, '.', ' ') }} €</td>
-            <td>
-                <span class="badge bg-info">
-                    {{ last.statut }}
-                </span>
-            </td>
-            <td>
-                <a href="{{ path('employe_commandes_show', {id: commande.id}) }}"
-                   class="btn btn-sm btn-primary">
-                    Voir
-                </a>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<div class="filters">
+
+    <form method="get" class="filter-form">
+        <select name="statut" onchange="this.form.submit()">
+            <option value="">Tous les statuts</option>
+            <option value="en_attente" {{ statutFiltre == 'en_attente' ? 'selected' }}>En attente</option>
+            <option value="en_preparation" {{ statutFiltre == 'en_preparation' ? 'selected' }}>En préparation</option>
+            <option value="terminee" {{ statutFiltre == 'terminee' ? 'selected' }}>Terminée</option>
+        </select>
+    </form>
+
+    <div class="counters">
+        <span class="counter counter-attente">En attente : {{ countEnAttente }}</span>
+        <span class="counter counter-prepa">En préparation : {{ countEnPreparation }}</span>
+        <span class="counter counter-terminee">Terminées : {{ countTerminees }}</span>
+    </div>
+
+</div>
+
+
+    <table class="orders-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for commande in commandes %}
+            <tr>
+                <td>{{ commande.id }}</td>
+                <td>{{ commande.createdAt|date('d/m/Y H:i') }}</td>
+                <td>{{ commande.total }} €</td>
+                <td>
+                    <span class="badge badge-{{ commande.statutActuel|lower|replace({' ': '-'}) }}">
+                        {{ commande.statutActuel }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ path('employe_commandes_show', {id: commande.id}) }}" class="btn-view">
+                        Voir
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
 
 {% endblock %}

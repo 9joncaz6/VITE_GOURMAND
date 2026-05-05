@@ -56,4 +56,35 @@ class CommandeRepository extends ServiceEntityRepository
         ->getOneOrNullResult();
 }
 
+public function findByStatutActuel(string $statut): array
+{
+    return $this->createQueryBuilder('c')
+        ->join('c.commandeStatuts', 's')
+        ->andWhere('s.statut = :statut')
+        ->setParameter('statut', $statut)
+        ->orderBy('c.createdAt', 'DESC')
+        ->getQuery()
+        ->getResult();
+}
+
+public function findAllOrdered(): array
+{
+    return $this->createQueryBuilder('c')
+        ->orderBy('c.createdAt', 'DESC')
+        ->getQuery()
+        ->getResult();
+}
+
+public function countByStatut(string $statut): int
+{
+    return $this->createQueryBuilder('c')
+        ->select('COUNT(c.id)')
+        ->join('c.commandeStatuts', 's')
+        ->andWhere('s.statut = :statut')
+        ->setParameter('statut', $statut)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+
 }

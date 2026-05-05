@@ -146,4 +146,23 @@ class AdminController extends AbstractController
             'ca' => json_encode($ca),
         ]);
     }
+
+    #[Route('/employes/{id}/delete', name: 'admin_employe_delete', methods: ['POST'])]
+public function deleteEmploye(Utilisateur $employe, EntityManagerInterface $em): Response
+{
+    $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+    // Empêcher de supprimer un admin
+    if (in_array('ROLE_ADMIN', $employe->getRoles())) {
+        $this->addFlash('danger', 'Impossible de supprimer un administrateur.');
+        return $this->redirectToRoute('admin_employe_list');
+    }
+
+    $em->remove($employe);
+    $em->flush();
+
+    $this->addFlash('success', 'Employé supprimé avec succès.');
+    return $this->redirectToRoute('admin_employe_list');
+}
+
 }
