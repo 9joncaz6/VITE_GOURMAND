@@ -66,27 +66,26 @@ class AvisController extends AbstractController
     }
     
     #[Route('/compte/avis/{id}/modifier', name: 'compte_avis_modifier')]
-public function modifier(Request $request, Avis $avis, EntityManagerInterface $em): Response
-{
-    // Vérifier que l'avis appartient bien à l'utilisateur connecté
-    if ($avis->getUtilisateur() !== $this->getUser()) {
-        throw $this->createAccessDeniedException();
-    }
+    public function modifier(Request $request, Avis $avis, EntityManagerInterface $em): Response
+    {
+        // Vérifier que l'avis appartient bien à l'utilisateur connecté
+        if ($avis->getUtilisateur() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
 
-    $form = $this->createForm(AvisTypeClient::class, $avis);
-    $form->handleRequest($request);
+        $form = $this->createForm(AvisTypeClient::class, $avis);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $em->flush();
-        return $this->redirectToRoute('app_menu_show', [
-            'id' => $avis->getMenu()->getId()
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            $this->addFlash('success', 'Votre avis a été modifié.');
+            return $this->redirectToRoute('compte_commandes');
+        }
+
+        return $this->render('avis/modifier.html.twig', [
+            'form' => $form->createView(),
+            'avis' => $avis,
         ]);
     }
-
-    return $this->render('avis/modifier.html.twig', [
-        'form' => $form,
-        'avis' => $avis,
-    ]);
-}
-
 }

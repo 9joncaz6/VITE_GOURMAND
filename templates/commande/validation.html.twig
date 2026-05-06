@@ -31,7 +31,6 @@
             {% for item in items %}
                 {% set menu = item.menu %}
                 {% set qte = item.quantite %}
-
                 {% set prixParPersonne = menu.prixBase / menu.nbPersonnesMin %}
                 {% set totalMenu = prixParPersonne * qte %}
                 {% set reduction = qte >= menu.nbPersonnesMin + 5 %}

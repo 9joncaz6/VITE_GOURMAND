@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes commandes{% endblock %}
+
+{% block body %}
+
+<h1 class="page-title">Mes commandes</h1>
+
+{% if commandes is empty %}
+    <p>Vous n'avez encore passé aucune commande.</p>
+{% else %}
+
+<table class="table table-striped mt-4">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Statut</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for commande in commandes %}
+        <tr>
+            <td>{{ commande.id }}</td>
+            <td>{{ commande.createdAt|date('d/m/Y H:i') }}</td>
+            <td>{{ commande.total|number_format(2, '.', ' ') }} €</td>
+            <td>
+                <span class="badge badge-{{ commande.statutActuel|lower|replace({' ': '-'}) }}">
+                    {{ commande.statutActuel }}
+                </span>
+            </td>
+            <td>
+                <a href="{{ path('compte_commandes_show', {id: commande.id}) }}" class="btn btn-primary btn-sm">
+                    Voir
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endif %}
+
+{% endblock %}

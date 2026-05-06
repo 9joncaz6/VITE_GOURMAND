@@ -3,67 +3,62 @@
 {% block title %}Mon compte{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('styles/compte.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/pages/compte.css') }}">
 {% endblock %}
-
 
 {% block body %}
 
-<h1 class="page-title mb-4">Mon compte</h1>
+<div class="compte-container">
 
-<div class="account-wrapper">
+    <h1 class="compte-title">Mon compte</h1>
 
-    <div class="card p-4 shadow-sm profile-card">
+    <p class="compte-subtitle">
+        Bienvenue {{ app.user.prenom }} {{ app.user.nom }}  
+        <br>
+        <small class="text-muted">Gérez vos informations, commandes et avis.</small>
+    </p>
 
-        <h2 class="section-title">Mes informations</h2>
+    <div class="compte-grid">
 
-        <div class="info-grid">
+        <!-- Informations personnelles -->
+        <a href="{{ path('app_compte_edit') }}" class="compte-card">
+            <div class="compte-card-icon">👤</div>
+            <h3>Mes informations</h3>
+            <p>Modifier mon nom, prénom, email, adresse…</p>
+        </a>
 
-            <div class="info-item">
-                <span class="label">Nom :</span>
-                <span class="value">{{ app.user.nom }}</span>
-            </div>
+        <!-- Mot de passe -->
+        <a href="{{ path('app_compte_password') }}" class="compte-card">
+            <div class="compte-card-icon">🔒</div>
+            <h3>Mot de passe</h3>
+            <p>Changer mon mot de passe en toute sécurité.</p>
+        </a>
 
-            <div class="info-item">
-                <span class="label">Prénom :</span>
-                <span class="value">{{ app.user.prenom }}</span>
-            </div>
+        <!-- Historique des commandes -->
+        <a href="{{ path('app_compte_historique') }}" class="compte-card">
+            <div class="compte-card-icon">🧾</div>
+            <h3>Mes commandes</h3>
+            <p>Consulter l’historique de mes commandes.</p>
+        </a>
 
-            <div class="info-item">
-                <span class="label">Email :</span>
-                <span class="value">{{ app.user.email }}</span>
-            </div>
+        <!-- Mes avis -->
+        <a href="{{ path('compte_avis_modifier', { id: 0 }) }}" 
+           class="compte-card disabled-card" 
+           onclick="return false;">
+            <div class="compte-card-icon">⭐</div>
+            <h3>Mes avis</h3>
+            <p>Voir et modifier mes avis (depuis les menus).</p>
+        </a>
 
-            <div class="info-item">
-                <span class="label">Téléphone :</span>
-                <span class="value">{{ app.user.gsm }}</span>
-            </div>
-
-            <div class="info-item full">
-                <span class="label">Adresse :</span>
-                <span class="value">{{ app.user.adressePostale }}</span>
-            </div>
-
-        </div>
-
-        <div class="actions">
-            <a href="{{ path('app_compte_edit') }}" class="btn btn-primary w-100 mb-2">
-                Modifier mes informations
-            </a>
-
-            <a href="{{ path('app_compte_password') }}" class="btn btn-outline-primary w-100 mb-2">
-                Changer mon mot de passe
-            </a>
-
-            <a href="{{ path('app_compte_historique') }}" class="btn btn-outline-secondary w-100">
-                Historique de mes commandes
-            </a>
-        </div>
+        <!-- Déconnexion -->
+        <a href="{{ path('app_logout') }}" class="compte-card logout-card">
+            <div class="compte-card-icon">🚪</div>
+            <h3>Déconnexion</h3>
+            <p>Se déconnecter de mon compte.</p>
+        </a>
 
     </div>
 
 </div>
-
-
 
 {% endblock %}

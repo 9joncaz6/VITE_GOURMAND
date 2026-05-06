@@ -1,17 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Laisser un avis{% endblock %}
+{% block title %}Modifier mon avis{% endblock %}
 
 {% block body %}
 <div class="container mt-5" style="max-width: 700px;">
-    
-    <h2 class="mb-4 text-center">Laisser un avis</h2>
+
+    <h2 class="mb-4 text-center">Modifier mon avis</h2>
 
     <div class="card shadow-sm p-4">
-
-        <p class="text-muted mb-4">
-            Commande n° {{ commande.id }} — passée le {{ commande.createdAt|date('d/m/Y') }}
-        </p>
 
         {{ form_start(form) }}
 
@@ -29,8 +25,8 @@
                 }) }}
             </div>
 
-            <button class="btn btn-primary w-100 mt-3">
-                Envoyer mon avis
+            <button class="btn btn-warning w-100 mt-3">
+                Enregistrer les modifications
             </button>
 
         {{ form_end(form) }}

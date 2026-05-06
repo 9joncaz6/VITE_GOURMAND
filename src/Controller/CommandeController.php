@@ -18,6 +18,9 @@ use Symfony\Component\Mailer\MailerInterface;
 #[Route('/commande')]
 class CommandeController extends AbstractController
 {
+    /**
+     * PAGE DE VALIDATION
+     */
     #[Route('/validation', name: 'app_commande_validation')]
     public function validation(PanierManager $panierManager): Response
     {
@@ -28,6 +31,7 @@ class CommandeController extends AbstractController
         }
 
         $items = $panierManager->getPanierForTwig($user->getId());
+
         if (empty($items)) {
             $this->addFlash('warning', 'Votre panier est vide.');
             return $this->redirectToRoute('app_panier_show');
@@ -39,6 +43,9 @@ class CommandeController extends AbstractController
         ]);
     }
 
+    /**
+     * CREATION DE COMMANDE
+     */
     #[Route('/create', name: 'app_commande_create')]
     public function create(
         PanierManager $panierManager,
@@ -65,18 +72,12 @@ class CommandeController extends AbstractController
             $qte  = $item['quantite'];
 
             if ($qte < $menu->getNbPersonnesMin()) {
-                $this->addFlash(
-                    'error',
-                    'Le menu "' . $menu->getTitre() . '" nécessite au minimum ' . $menu->getNbPersonnesMin() . ' personnes.'
-                );
+                $this->addFlash('error', 'Le menu "' . $menu->getTitre() . '" nécessite au minimum ' . $menu->getNbPersonnesMin() . ' personnes.');
                 return $this->redirectToRoute('app_panier_show');
             }
 
             if ($menu->getStockDisponible() <= 0) {
-                $this->addFlash(
-                    'error',
-                    'Le menu "' . $menu->getTitre() . '" n’est plus disponible.'
-                );
+                $this->addFlash('error', 'Le menu "' . $menu->getTitre() . '" n’est plus disponible.');
                 return $this->redirectToRoute('app_panier_show');
             }
         }
@@ -121,6 +122,7 @@ class CommandeController extends AbstractController
 
             $commande->addItem($commandeItem);
 
+            // Décrémentation du stock
             $menu->setStockDisponible($menu->getStockDisponible() - 1);
         }
 
@@ -133,10 +135,10 @@ class CommandeController extends AbstractController
         $em->persist($commande);
         $em->persist($statut);
         $em->flush();
+
+        // 6) Mise à jour des stats
         $statsService->updateStats($commande);
 
-
-        
         // 7) Email
         $email = (new Email())
             ->from('no-reply@vitegourmand.fr')
@@ -156,9 +158,13 @@ class CommandeController extends AbstractController
         ]);
     }
 
+    /**
+     * PAGE DE CONFIRMATION
+     */
     #[Route('/confirmation/{id}', name: 'app_commande_confirmation')]
     public function confirmation(Commande $commande, PanierManager $panierManager): Response
     {
+        // On vide le panier après la commande
         $panierManager->clearPanier($commande->getUtilisateur()->getId());
 
         return $this->render('commande/confirmation.html.twig', [
@@ -166,6 +172,9 @@ class CommandeController extends AbstractController
         ]);
     }
 
+    /**
+     * Distance fictive
+     */
     private function calculerDistance(string $adresse): float
     {
         if (stripos($adresse, 'bordeaux') !== false) {
@@ -173,45 +182,4 @@ class CommandeController extends AbstractController
         }
         return 12;
     }
-
-    #[Route('/mes-commandes', name: 'app_commande_mes_commandes')]
-    public function mesCommandes(): Response
-    {
-        /** @var Utilisateur|null $user */
-        $user = $this->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        return $this->render('commande/mes_commandes.html.twig', [
-            'commandes' => $user->getCommandes(),
-        ]);
-    }
-
-    #[Route('/commande/details/{id}', name: 'app_commande_details')]
-    public function details(Commande $commande): Response
-    {
-        $user = $this->getUser();
-
-        if ($commande->getUtilisateur() !== $user) {
-            throw $this->createAccessDeniedException();
-        }
-
-        return $this->render('commande/details.html.twig', [
-            'commande' => $commande,
-        ]);
-    }
-
-    #[Route('/admin/commandes/{id}/delete', name: 'admin_commandes_delete', methods: ['POST'])]
-public function delete(Commande $commande, EntityManagerInterface $em): Response
-{
-    $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-    $em->remove($commande);
-    $em->flush();
-
-    $this->addFlash('success', 'Commande supprimée.');
-    return $this->redirectToRoute('admin_commandes_index');
-}
-
 }

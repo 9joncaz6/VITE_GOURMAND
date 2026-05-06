@@ -1,0 +1,112 @@
+/* ================================
+   PAGE MON COMPTE — STYLE PREMIUM
+   ================================ */
+
+.compte-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.compte-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.compte-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* ================================
+   GRID DES CARTES
+   ================================ */
+
+.compte-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+/* ================================
+   CARTE
+   ================================ */
+
+.compte-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 25px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    transition: all 0.25s ease;
+    border: 1px solid #eee;
+}
+
+.compte-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* Icône */
+.compte-card-icon {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+
+/* Titre */
+.compte-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* Description */
+.compte-card p {
+    font-size: 0.95rem;
+    color: #666;
+}
+
+/* ================================
+   CARTE DÉSACTIVÉE
+   ================================ */
+
+.disabled-card {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.disabled-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* ================================
+   CARTE DÉCONNEXION
+   ================================ */
+
+.logout-card {
+    background: #ffecec;
+    border: 1px solid #ffb3b3;
+}
+
+.logout-card:hover {
+    background: #ffdede;
+    box-shadow: 0 8px 20px rgba(255,0,0,0.15);
+}
+
+/* ================================
+   RESPONSIVE
+   ================================ */
+
+@media (max-width: 600px) {
+    .compte-title {
+        font-size: 2rem;
+    }
+
+    .compte-card {
+        padding: 20px;
+    }
+}
