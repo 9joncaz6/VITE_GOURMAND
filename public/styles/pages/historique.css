@@ -1,32 +1,77 @@
-.page-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
+.historique-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
 }
 
-.historique-container {
+.historique-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.historique-list {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 20px;
 }
 
-.commande-card {
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid var(--border);
+.historique-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 25px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+    transition: 0.25s ease;
+}
+
+.historique-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.historique-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.commande-card h2 {
-    margin-bottom: 0.5rem;
+.historique-date {
+    color: #888;
+    font-size: 0.9rem;
 }
 
-.empty {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #777;
-    margin-top: 2rem;
+.historique-info {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* Statuts */
+.statut-en_attente { background: #fff3cd; color: #856404; }
+.statut-en_preparation { background: #cce5ff; color: #004085; }
+.statut-terminee { background: #d4edda; color: #155724; }
+
+.btn-details {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #ff7a00;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-details:hover {
+    background: #e56d00;
 }

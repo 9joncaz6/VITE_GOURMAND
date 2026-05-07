@@ -126,11 +126,16 @@ class CommandeController extends AbstractController
             $menu->setStockDisponible($menu->getStockDisponible() - 1);
         }
 
-        // 5) Statut initial
-        $statut = new CommandeStatut();
-        $statut->setCommande($commande);
-        $statut->setStatut('en_attente');
-        $statut->setDateMaj(new \DateTimeImmutable());
+        /// 5) Statut initial
+$commande->setStatus('en_attente'); // 🔥 Fallback cohérent
+
+$statut = new CommandeStatut();
+$statut->setCommande($commande);
+$statut->setStatut('en_attente');
+$statut->setDateMaj(new \DateTimeImmutable());
+
+
+
 
         $em->persist($commande);
         $em->persist($statut);

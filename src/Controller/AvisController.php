@@ -21,7 +21,7 @@ class AvisController extends AbstractController
         Request $request,
         EntityManagerInterface $em
     ): Response {
-        
+
         // 1) Vérifier que la commande appartient au client connecté
         if ($commande->getUtilisateur() !== $this->getUser()) {
             $this->addFlash('error', 'Vous ne pouvez pas laisser un avis pour cette commande.');
@@ -29,7 +29,7 @@ class AvisController extends AbstractController
         }
 
         // 2) Vérifier que la commande est terminée
-        if ($commande->getStatutActuel() !== 'terminée') {
+        if ($commande->getStatutActuel() !== 'terminee') {
             $this->addFlash('error', 'Vous ne pouvez laisser un avis que pour une commande terminée.');
             return $this->redirectToRoute('compte_commandes');
         }
@@ -48,23 +48,28 @@ class AvisController extends AbstractController
         // 5) Traitement du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $avis->setUtilisateur($this->getUser());
-            $avis->setCommande($commande);
-            $avis->setDate(new \DateTimeImmutable());
+    $avis->setUtilisateur($this->getUser());
+    $avis->setCommande($commande);
 
-            $em->persist($avis);
-            $em->flush();
+    // 🔥 Lier l'avis au menu (sinon menu_id = NULL → erreur SQL)
+    $menu = $commande->getItems()->first()->getMenu();
+    $avis->setMenu($menu);
 
-            $this->addFlash('success', 'Merci pour votre avis !');
-            return $this->redirectToRoute('compte_commandes');
-        }
+    $avis->setDate(new \DateTimeImmutable());
+
+    $em->persist($avis);
+    $em->flush();
+
+    $this->addFlash('success', 'Merci pour votre avis !');
+    return $this->redirectToRoute('compte_commandes');
+}
 
         return $this->render('avis/form.html.twig', [
             'form' => $form->createView(),
             'commande' => $commande
         ]);
     }
-    
+
     #[Route('/compte/avis/{id}/modifier', name: 'compte_avis_modifier')]
     public function modifier(Request $request, Avis $avis, EntityManagerInterface $em): Response
     {

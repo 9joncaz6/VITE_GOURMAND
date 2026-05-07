@@ -1,171 +1,145 @@
-/* ===========================
-   TITRE
-   =========================== */
-
-.menu-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
+.commande-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
 }
 
-/* ===========================
-   LAYOUT
-   =========================== */
-
-.menu-detail {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-}
-
-.menu-image img {
-    width: 450px;
-    border-radius: 12px;
-}
-
-/* ===========================
-   INFO
-   =========================== */
-
-.menu-info h2 {
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-}
-
-.menu-info p {
-    margin-bottom: 1rem;
-    color: var(--muted);
-}
-
-.menu-info .price {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin: 1rem 0 2rem;
-}
-
-/* ===========================
-   QUANTITÉ
-   =========================== */
-
-.quantity-selector {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.qty-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--white);
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
-.qty-value {
-    font-size: 1.2rem;
+.btn-retour {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #555;
     font-weight: 600;
 }
 
-/* ===========================
-   RESPONSIVE
-   =========================== */
-
-@media (max-width: 768px) {
-
-    .menu-detail {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .menu-image img {
-        width: 100%;
-    }
-
-    .quantity-selector {
-        justify-content: center;
-    }
-
-    .statut-form {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin: 2rem 0;
-    }
-
-    .statut-select {
-        padding: 0.6rem 1rem;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        background: var(--white);
-        font-size: 1rem;
-    }
-
-    .badge {
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: white;
-    }
-
-    .badge-en-attente { background: #6c757d; }
-    .badge-en-préparation { background: #0d6efd; }
-    .badge-en-livraison { background: #fd7e14; }
-    .badge-livré { background: #198754; }
-    .badge-annulé { background: #dc3545; }
+.commande-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
 }
 
-/* ===========================
-   AVIS PAGE DÉTAILS
-=========================== */
-
-.details-avis {
-    padding: 40px 0;
-}
-
-.details-avis h2 {
+.commande-section {
+    background: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
     margin-bottom: 25px;
 }
 
-.avis-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.commande-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
 }
 
-.avis-card {
-    background: #fff;
-    border: 1px solid #eaeaea;
-    padding: 20px;
-    border-radius: 10px;
-    display: flex;
+.commande-infos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 15px;
 }
 
-.avis-avatar {
-    width: 50px;
-    height: 50px;
-    background: #ddd;
+.label {
+    font-weight: 600;
+    margin-right: 6px;
+}
+
+.total {
+    font-weight: 700;
+    color: #ff7a00;
+}
+
+/* BADGES STATUTS */
+.badge {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.statut-en_attente { background: #fff3cd; color: #856404; }
+.statut-en_preparation { background: #cce5ff; color: #004085; }
+.statut-terminee { background: #d4edda; color: #155724; }
+
+/* TABLEAU */
+.commande-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.commande-table th {
+    text-align: left;
+    padding: 10px;
+    background: #f7f7f7;
+    font-weight: 600;
+}
+
+.commande-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.frais {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #444;
+}
+
+.btn-avis {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 18px;
+    background: #ff7a00;
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-avis:hover {
+    background: #e56d00;
+}
+
+/* ================================
+   TIMELINE DES STATUTS
+   ================================ */
+
+.timeline {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px 0 35px;
+    padding: 0 10px;
+}
+
+.step {
+    text-align: center;
+    flex: 1;
+    opacity: 0.4;
+    transition: 0.2s;
+}
+
+.step.active {
+    opacity: 1;
+}
+
+.step .dot {
+    width: 16px;
+    height: 16px;
+    background: #ccc;
     border-radius: 50%;
+    margin: 0 auto 8px;
+    transition: 0.2s;
 }
 
-.avis-content h3 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: bold;
+.step.active .dot {
+    background: #ff7a00;
 }
 
-.avis-content p {
-    margin-top: 8px;
+.step p {
     font-size: 0.9rem;
-    color: #555;
+    font-weight: 600;
+    margin: 0;
 }
 
-.avis-stars svg {
-    width: 18px;
-    height: 18px;
-}
+

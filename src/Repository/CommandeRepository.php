@@ -51,7 +51,7 @@ class CommandeRepository extends ServiceEntityRepository
         ->andWhere('s.statut = :statut')
         ->setParameter('user', $user)
         ->setParameter('menu', $menu)
-        ->setParameter('statut', 'terminée')
+        ->setParameter('statut', 'terminee')
         ->orderBy('s.dateMaj', 'DESC')
         ->setMaxResults(1)
         ->getQuery()

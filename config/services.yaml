@@ -11,6 +11,4 @@ services:
     App\:
         resource: '../src/'
 
-    App\Service\NoSql\AllergeneService:
-        arguments:
-            $kernelProjectDir: '%kernel.project_dir%'
+

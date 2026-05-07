@@ -100,4 +100,45 @@ public function historique(EntityManagerInterface $em): Response
     ]);
 }
 
+#[Route('/commande/{id}', name: 'compte_commandes_show')]
+public function showCommande(
+    \App\Entity\Commande $commande,
+    EntityManagerInterface $em,
+    \App\Repository\AvisRepository $avisRepository
+): Response {
+    /** @var Utilisateur $user */
+    $user = $this->getUser();
+
+    if (!$user || $commande->getUtilisateur() !== $user) {
+        return $this->redirectToRoute('app_login');
+    }
+
+    // --- LOGIQUE POUR LE BOUTON "LAISSER UN AVIS" ---
+    $peutLaisserAvis = false;
+    $menuEligible = null;
+
+    foreach ($commande->getItems() as $item) {
+        $menu = $item->getMenu();
+
+        // Vérifier si l'utilisateur a déjà laissé un avis
+        $avisExistant = $avisRepository->findOneBy([
+            'menu' => $menu,
+            'utilisateur' => $user
+        ]);
+
+        if (!$avisExistant) {
+            $peutLaisserAvis = true;
+            $menuEligible = $menu;
+            break;
+        }
+    }
+
+    return $this->render('compte/commandes/show.html.twig', [
+        'commande' => $commande,
+        'peutLaisserAvis' => $peutLaisserAvis,
+        'menuEligible' => $menuEligible,
+    ]);
+}
+
+
 }

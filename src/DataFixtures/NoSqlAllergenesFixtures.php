@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Repository\MenuRepository;
-use App\Service\NoSql\AllergeneService;
+use App\Service\NoSQL\AllergeneService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 

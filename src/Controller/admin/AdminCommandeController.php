@@ -3,14 +3,15 @@
 namespace App\Controller\admin;
 
 use App\Entity\Commande;
+use App\Entity\CommandeStatut;
 use App\Repository\CommandeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\CommandeStatut;
+use Symfony\Component\Mailer\MailerInterface; // ✅ IMPORTANT
 
 #[Route('/admin/commandes')]
 #[IsGranted('ROLE_ADMIN')]
@@ -48,7 +49,8 @@ class AdminCommandeController extends AbstractController
     public function changeStatut(
         Request $request,
         Commande $commande,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        MailerInterface $mailer // ✅ OK
     ): Response {
         $nouveauStatut = $request->request->get('statut');
         $commentaire = $request->request->get('commentaire');
@@ -58,14 +60,32 @@ class AdminCommandeController extends AbstractController
             return $this->redirectToRoute('admin_commandes_show', ['id' => $commande->getId()]);
         }
 
+        // Historique
         $statut = new CommandeStatut();
         $statut->setCommande($commande);
         $statut->setStatut($nouveauStatut);
         $statut->setCommentaire($commentaire);
         $statut->setDateMaj(new \DateTimeImmutable());
 
+        // Mise à jour du statut fallback
+        $commande->setStatus($nouveauStatut);
+
         $em->persist($statut);
         $em->flush();
+
+        // Email si terminée
+        if ($nouveauStatut === 'terminee') {
+            $email = (new \Symfony\Component\Mime\Email())
+                ->from('no-reply@vitegourmand.fr')
+                ->to($commande->getUtilisateur()->getEmail())
+                ->subject('Votre commande est terminée')
+                ->html($this->renderView('emails/commande_terminee.html.twig', [
+                    'commande' => $commande,
+                    'user' => $commande->getUtilisateur(),
+                ]));
+
+            $mailer->send($email);
+        }
 
         $this->addFlash('success', 'Statut mis à jour.');
 

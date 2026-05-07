@@ -1,39 +1,87 @@
+/* ================================
+   PAGE MERCI — STYLE PREMIUM
+   ================================ */
+
 .merci-container {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 0 20px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 4rem 1rem;
 }
 
 .merci-card {
-    background: var(--white);
-    padding: 3rem 2rem;
-    border-radius: 16px;
+    background: #fff;
+    padding: 40px 35px;
+    border-radius: 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
     text-align: center;
-    max-width: 500px;
-    width: 100%;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
 }
 
-.merci-card .icon {
-    font-size: 4rem;
-    color: var(--primary);
-    margin-bottom: 1rem;
+.checkmark {
+    font-size: 60px;
+    color: #28a745;
+    margin-bottom: 20px;
 }
 
-.merci-card h1 {
+.merci-title {
     font-size: 2rem;
-    margin-bottom: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
-.merci-card p {
+.merci-text {
     font-size: 1.1rem;
-    margin-bottom: 2rem;
     color: #555;
+    margin-bottom: 25px;
 }
 
-.retour-btn {
-    display: inline-block;
-    padding: 0.8rem 2rem;
+.merci-info {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border: 1px solid #eee;
+}
+
+.merci-info p {
+    margin: 6px 0;
+    font-size: 1rem;
+}
+
+.merci-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-primary {
+    display: block;
+    padding: 12px 0;
+    background: #ff7a00;
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    background: #e56d00;
+}
+
+.btn-secondary {
+    display: block;
+    padding: 12px 0;
+    background: #f1f1f1;
+    color: #333;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #e2e2e2;
 }

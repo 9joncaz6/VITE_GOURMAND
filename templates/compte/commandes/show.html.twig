@@ -2,78 +2,104 @@
 
 {% block title %}Commande #{{ commande.id }}{% endblock %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/pages/detail.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<h1 class="page-title">Commande #{{ commande.id }}</h1>
+<div class="commande-container">
 
-<a href="{{ path('compte_commandes') }}" class="btn btn-secondary mb-3">← Retour</a>
+    <a href="{{ path('app_compte_historique') }}" class="btn-retour">← Retour</a>
 
-<div class="card p-4 shadow-sm">
+    <h1 class="commande-title">Commande #{{ commande.id }}</h1>
 
-    <h3 class="mb-3">Informations</h3>
+    <!-- SECTION INFOS -->
+    <div class="commande-section">
+        <h2>Informations</h2>
 
-    <p><strong>Date :</strong> {{ commande.createdAt|date('d/m/Y H:i') }}</p>
-    <p><strong>Total :</strong> {{ commande.total|number_format(2, '.', ' ') }} €</p>
+        <!-- TIMELINE DES STATUTS -->
+        <div class="timeline">
 
-    <p>
-        <strong>Statut actuel :</strong>
-        <span class="badge badge-{{ commande.statutActuel|lower|replace({' ': '-'}) }}">
-            {{ commande.statutActuel }}
-        </span>
-    </p>
+            <div class="step {% if commande.statutActuel in ['en_attente','en_preparation','terminee'] %}active{% endif %}">
+                <span class="dot"></span>
+                <p>Commande passée</p>
+            </div>
 
-    <hr>
+            <div class="step {% if commande.statutActuel in ['en_preparation','terminee'] %}active{% endif %}">
+                <span class="dot"></span>
+                <p>En préparation</p>
+            </div>
 
-    <h4>Menus commandés</h4>
+            <div class="step {% if commande.statutActuel == 'terminee' %}active{% endif %}">
+                <span class="dot"></span>
+                <p>Terminée</p>
+            </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Menu</th>
-                <th>Quantité</th>
-                <th>Prix unitaire</th>
-                <th>Total</th>
-            </tr>
-        </thead>
+        </div>
 
-        <tbody>
-        {% for item in commande.items %}
-            <tr>
-                <td>{{ item.menu.titre }}</td>
-                <td>{{ item.quantite }}</td>
-                <td>{{ item.prixUnitaire|number_format(2, '.', ' ') }} €</td>
-                <td>{{ (item.prixUnitaire * item.quantite)|number_format(2, '.', ' ') }} €</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <!-- GRID INFOS -->
+        <div class="commande-infos-grid">
+            <div>
+                <span class="label">Date :</span>
+                <span>{{ commande.createdAt|date('d/m/Y H:i') }}</span>
+            </div>
 
-    <hr>
+            <div>
+                <span class="label">Total :</span>
+                <span class="total">{{ commande.total }} €</span>
+            </div>
 
-    {% if commande.fraisLivraison is defined %}
-        <p><strong>Frais de livraison :</strong>
-            {{ commande.fraisLivraison|number_format(2, '.', ' ') }} €
-        </p>
+            <div>
+                <span class="label">Statut actuel :</span>
+                <span class="badge statut-{{ commande.statutActuel }}">
+                    {{ commande.statutActuel }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOUTON LAISSER UN AVIS -->
+    {% if peutLaisserAvis %}
+        <a href="{{ path('compte_avis', { id: commande.id }) }}"
+           class="btn-avis">
+            ⭐ Laisser un avis
+        </a>
     {% endif %}
 
+    <!-- SECTION ITEMS -->
+    <div class="commande-section">
+        <h2>Menus commandés</h2>
+
+        <table class="commande-table">
+            <thead>
+                <tr>
+                    <th>Menu</th>
+                    <th>Quantité</th>
+                    <th>Prix unitaire</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in commande.items %}
+                    <tr>
+                        <td>{{ item.menu.titre }}</td>
+                        <td>{{ item.quantite }}</td>
+                        <td>{{ item.prixUnitaire }} €</td>
+                        <td>{{ item.total }} €</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- SECTION FRAIS -->
+    <div class="commande-section">
+        <h2>Frais de livraison</h2>
+        <p class="frais">{{ commande.fraisLivraison }} €</p>
+    </div>
+
 </div>
-
-{# 🔥 BOUTON LAISSER UN AVIS #}
-{% if commande.statutActuel == 'terminée' and commande.avis is null %}
-    <div class="mt-4">
-        <a href="{{ path('compte_avis', { id: commande.id }) }}" class="btn btn-primary w-100">
-            Laisser un avis
-        </a>
-    </div>
-{% endif %}
-
-{# 🔥 BOUTON MODIFIER AVIS #}
-{% if commande.avis is not null %}
-    <div class="mt-4">
-        <a href="{{ path('compte_avis_modifier', { id: commande.avis.id }) }}" class="btn btn-warning w-100">
-            Modifier mon avis
-        </a>
-    </div>
-{% endif %}
 
 {% endblock %}
