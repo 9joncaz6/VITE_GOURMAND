@@ -1,8 +1,14 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/admin_base.html.twig' %}
+
 
 {% block title %}Dashboard Administrateur{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/admin/dashboard.css') }}">
+{% endblock %}
+
+{% block admin_body %}
+
 
 <h1 class="mb-4">Espace Administrateur</h1>
 
@@ -38,47 +44,24 @@
         <p>Chiffre d'affaires & analyses</p>
     </a>
 
-</div>
+</div> {# ✔ FIN DE LA GRILLE #}
 
-<style>
-    .admin-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 20px;
-        margin-top: 20px;
-    }
+<hr class="my-4">
 
-    .admin-card {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        text-decoration: none;
-        color: inherit;
-        border: 1px solid #eee;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-        transition: 0.2s ease;
-        text-align: center;
-    }
+<h3>Dernières actions admin</h3>
 
-    .admin-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    }
-
-    .admin-card .icon {
-        font-size: 40px;
-        margin-bottom: 10px;
-    }
-
-    .admin-card h2 {
-        font-size: 20px;
-        margin-bottom: 6px;
-    }
-
-    .admin-card p {
-        font-size: 14px;
-        color: #666;
-    }
-</style>
+<ul class="admin-logs">
+    {% for log in logs %}
+        <li>
+            <strong>{{ log.action }}</strong>
+            — {{ log.date|date('d/m/Y H:i') }}
+            {% if log.details %}
+                — détails : {{ log.details|json_encode }}
+            {% endif %}
+        </li>
+    {% else %}
+        <li>Aucune action enregistrée.</li>
+    {% endfor %}
+</ul>
 
 {% endblock %}

@@ -6,8 +6,8 @@ use App\Entity\Commande;
 use App\Entity\CommandeItem;
 use App\Entity\CommandeStatut;
 use App\Entity\Utilisateur;
-use App\Service\PanierManager;
-use App\Service\StatsService;
+use App\Service\NoSQL\PanierManager;
+use App\Service\NoSQL\StatsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -126,22 +126,19 @@ class CommandeController extends AbstractController
             $menu->setStockDisponible($menu->getStockDisponible() - 1);
         }
 
-        /// 5) Statut initial
-$commande->setStatus('en_attente'); // 🔥 Fallback cohérent
+        // 5) Statut initial
+        $commande->setStatus('en_attente');
 
-$statut = new CommandeStatut();
-$statut->setCommande($commande);
-$statut->setStatut('en_attente');
-$statut->setDateMaj(new \DateTimeImmutable());
-
-
-
+        $statut = new CommandeStatut();
+        $statut->setCommande($commande);
+        $statut->setStatut('en_attente');
+        $statut->setDateMaj(new \DateTimeImmutable());
 
         $em->persist($commande);
         $em->persist($statut);
         $em->flush();
 
-        // 6) Mise à jour des stats
+        // 6) 🔥 Mise à jour des stats NoSQL
         $statsService->updateStats($commande);
 
         // 7) Email
@@ -169,7 +166,6 @@ $statut->setDateMaj(new \DateTimeImmutable());
     #[Route('/confirmation/{id}', name: 'app_commande_confirmation')]
     public function confirmation(Commande $commande, PanierManager $panierManager): Response
     {
-        // On vide le panier après la commande
         $panierManager->clearPanier($commande->getUtilisateur()->getId());
 
         return $this->render('commande/confirmation.html.twig', [

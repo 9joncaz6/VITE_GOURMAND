@@ -6,6 +6,7 @@ use App\Repository\CommandeRepository;
 use App\Entity\Menu;
 use App\Repository\MenuRepository;
 use App\Repository\AvisRepository;
+use App\Service\NoSQL\AllergeneService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,6 @@ class MenuPublicController extends AbstractController
         AvisRepository $avisRepository
     ): Response {
 
-        // 1) Récupérer les filtres depuis l’URL
         $criteria = [
             'theme'   => $request->query->get('theme'),
             'regime'  => $request->query->get('regime'),
@@ -29,13 +29,9 @@ class MenuPublicController extends AbstractController
             'prixMax' => $request->query->get('prixMax'),
         ];
 
-        // 2) Récupérer les menus filtrés
         $menus = $menuRepository->findByCriteria($criteria);
-
-        // 3) Récupérer les derniers avis (3 par défaut)
         $avis = $avisRepository->findLatestAvis(3);
 
-        // 4) Envoyer les données au template
         return $this->render('menu/index.html.twig', [
             'menus'    => $menus,
             'criteria' => $criteria,
@@ -44,75 +40,67 @@ class MenuPublicController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_menu_show')]
-public function show(
-    Menu $menu,
-    AvisRepository $avisRepository,
-    CommandeRepository $commandeRepository
-): Response {
+    public function show(
+        Menu $menu,
+        AvisRepository $avisRepository,
+        CommandeRepository $commandeRepository,
+        AllergeneService $allergeneService
+    ): Response {
 
-    $user = $this->getUser();
+        $user = $this->getUser();
 
-    // 1) Récupérer les avis du menu
-    $avis = $avisRepository->findBy(
-        ['menu' => $menu],
-        ['date' => 'DESC']
-    );
+        // 1) Avis
+        $avis = $avisRepository->findBy(
+            ['menu' => $menu],
+            ['date' => 'DESC']
+        );
 
-    // 2) Calculer la moyenne
-    $moyenne = null;
-    if (count($avis) > 0) {
-        $total = array_sum(array_map(fn($a) => $a->getNote(), $avis));
-        $moyenne = $total / count($avis);
-    }
+        // 2) Moyenne
+        $moyenne = null;
+        if (count($avis) > 0) {
+            $total = array_sum(array_map(fn($a) => $a->getNote(), $avis));
+            $moyenne = $total / count($avis);
+        }
 
-    // 3) Vérifier si l’utilisateur a déjà laissé un avis
-    $avisExistant = null;
-    $aDejaLaisseAvis = false;
+        // 3) Avis existant
+        $avisExistant = null;
+        $aDejaLaisseAvis = false;
 
-    if ($user) {
-        foreach ($avis as $a) {
-            if ($a->getUtilisateur() === $user) {
-                $avisExistant = $a;
-                $aDejaLaisseAvis = true;
-                break;
+        if ($user) {
+            foreach ($avis as $a) {
+                if ($a->getUtilisateur() === $user) {
+                    $avisExistant = $a;
+                    $aDejaLaisseAvis = true;
+                    break;
+                }
             }
         }
-    }
 
-    // 4) Vérifier si l’utilisateur peut laisser un avis
-    $peutLaisserAvis = false;
-    $commandeEligible = null;
+        // 4) Peut laisser un avis ?
+        $peutLaisserAvis = false;
+        $commandeEligible = null;
 
-    if ($user) {
-        $commandeEligible = $commandeRepository->findCommandeEligiblePourAvis($user, $menu);
+        if ($user) {
+            $commandeEligible = $commandeRepository->findCommandeEligiblePourAvis($user, $menu);
 
-        if ($commandeEligible && !$aDejaLaisseAvis) {
-            $peutLaisserAvis = true;
+            if ($commandeEligible && !$aDejaLaisseAvis) {
+                $peutLaisserAvis = true;
+            }
         }
+
+        // 5) 🔥 Récupérer les allergènes depuis MongoDB
+        $allergenesMenu = $allergeneService->getAllergenesForMenu($menu->getId());
+
+        // 6) Rendu
+        return $this->render('menu/show.html.twig', [
+            'menu' => $menu,
+            'avis' => $avis,
+            'moyenne' => $moyenne,
+            'aDejaLaisseAvis' => $aDejaLaisseAvis,
+            'avisExistant' => $avisExistant,
+            'peutLaisserAvis' => $peutLaisserAvis,
+            'commandeEligible' => $commandeEligible,
+            'allergenesMenu' => $allergenesMenu,
+        ]);
     }
-
-    // 5) 🔥 Récupérer les allergènes du menu
-    $allergenesMenu = [];
-
-    foreach ($menu->getPlats() as $plat) {
-        foreach ($plat->getAllergenes() as $allergene) {
-            $allergenesMenu[] = $allergene->getNom();
-        }
-    }
-
-    $allergenesMenu = array_unique($allergenesMenu);
-
-    // 6) Rendu
-    return $this->render('menu/show.html.twig', [
-        'menu' => $menu,
-        'avis' => $avis,
-        'moyenne' => $moyenne,
-        'aDejaLaisseAvis' => $aDejaLaisseAvis,
-        'avisExistant' => $avisExistant,
-        'peutLaisserAvis' => $peutLaisserAvis,
-        'commandeEligible' => $commandeEligible,
-        'allergenesMenu' => $allergenesMenu,
-    ]);
-}
-
 }

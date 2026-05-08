@@ -32,12 +32,6 @@ class Plat
     private ?string $image = null;
 
     /**
-     * @var Collection<int, Allergene>
-     */
-    #[ORM\ManyToMany(targetEntity: Allergene::class, inversedBy: 'plats')]
-    private Collection $allergenes;
-
-    /**
      * @var Collection<int, Menu>
      */
     #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'plats')]
@@ -45,7 +39,6 @@ class Plat
 
     public function __construct()
     {
-        $this->allergenes = new ArrayCollection();
         $this->menus = new ArrayCollection();
     }
 
@@ -98,25 +91,14 @@ class Plat
         return $this;
     }
 
-    /**
-     * @return Collection<int, Allergene>
-     */
-    public function getAllergenes(): Collection
+    public function getImage(): ?string
     {
-        return $this->allergenes;
+        return $this->image;
     }
 
-    public function addAllergene(Allergene $allergene): static
+    public function setImage(?string $image): static
     {
-        if (!$this->allergenes->contains($allergene)) {
-            $this->allergenes->add($allergene);
-        }
-        return $this;
-    }
-
-    public function removeAllergene(Allergene $allergene): static
-    {
-        $this->allergenes->removeElement($allergene);
+        $this->image = $image;
         return $this;
     }
 
@@ -144,16 +126,4 @@ class Plat
         }
         return $this;
     }
-
-    public function getImage(): ?string
-{
-    return $this->image;
-}
-
-public function setImage(?string $image): static
-{
-    $this->image = $image;
-    return $this;
-}
-
 }

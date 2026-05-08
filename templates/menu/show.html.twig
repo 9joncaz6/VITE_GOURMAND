@@ -59,14 +59,13 @@
 
 <h3>Allergènes du menu</h3>
 {% if allergenesMenu is not empty %}
-    <ul>
-        {% for a in allergenesMenu %}
-            <li>{{ a }}</li>
+    <div class="allergenes">
+        {% for allergene in allergenesMenu %}
+            <span class="badge bg-danger">{{ allergene }}</span>
         {% endfor %}
-    </ul>
-{% else %}
-    <p class="text-muted">Aucun allergène renseigné pour ce menu.</p>
+    </div>
 {% endif %}
+
 
 <hr>
 
