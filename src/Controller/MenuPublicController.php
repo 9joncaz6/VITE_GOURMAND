@@ -6,7 +6,7 @@ use App\Repository\CommandeRepository;
 use App\Entity\Menu;
 use App\Repository\MenuRepository;
 use App\Repository\AvisRepository;
-use App\Service\NoSQL\AllergeneService;
+use App\Service\NoSQL\AllergenesService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +44,7 @@ class MenuPublicController extends AbstractController
         Menu $menu,
         AvisRepository $avisRepository,
         CommandeRepository $commandeRepository,
-        AllergeneService $allergeneService
+        AllergenesService $allergeneService
     ): Response {
 
         $user = $this->getUser();

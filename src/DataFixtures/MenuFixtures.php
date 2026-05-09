@@ -15,37 +15,43 @@ class MenuFixtures extends Fixture
                 'titre' => 'Menu Mexicain',
                 'description' => 'Un menu épicé aux saveurs du Mexique.',
                 'prix' => 14.90,
-                'image' => 'mexicain.jpg'
+                'image' => 'mexicain.jpg',
+                'type' => 'mexicain'
             ],
             [
                 'titre' => 'Menu Pizza',
                 'description' => 'Une pizza généreuse et savoureuse.',
                 'prix' => 11.90,
-                'image' => 'pizza.jpg'
+                'image' => 'pizza.jpg',
+                'type' => 'pizza'
             ],
             [
                 'titre' => 'Menu Asiatique',
                 'description' => 'Un voyage culinaire en Asie.',
                 'prix' => 13.50,
-                'image' => 'asiatique.jpg'
+                'image' => 'asiatique.jpg',
+                'type' => 'asiatique'
             ],
             [
                 'titre' => 'Menu Végétarien',
                 'description' => 'Un menu sain et équilibré.',
                 'prix' => 12.50,
-                'image' => 'vegetarien.jpg'
+                'image' => 'vegetarien.jpg',
+                'type' => 'vegetarien'
             ],
             [
                 'titre' => 'Menu Burger',
                 'description' => 'Un burger gourmand et généreux.',
                 'prix' => 14.90,
-                'image' => 'burger.jpg'
+                'image' => 'burger.jpg',
+                'type' => 'burger'
             ],
             [
                 'titre' => 'Menu Italien',
                 'description' => 'Les saveurs authentiques de l’Italie.',
                 'prix' => 15.90,
-                'image' => 'italien.jpg'
+                'image' => 'italien.jpg',
+                'type' => 'italien'
             ],
         ];
 
@@ -57,8 +63,11 @@ class MenuFixtures extends Fixture
             $menu->setNbPersonnesMin(2);
             $menu->setStockDisponible(10);
 
-            // Option A : 1 seule image
+            // Images
             $menu->setImages([$data['image']]);
+
+            // ✔ Ajout du type obligatoire
+            
 
             $manager->persist($menu);
         }

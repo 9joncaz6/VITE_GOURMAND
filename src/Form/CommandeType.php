@@ -2,12 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\Avis;
 use App\Entity\Commande;
-use App\Entity\Menu;
-use App\Entity\Utilisateur;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,29 +16,32 @@ class CommandeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('dateCommande')
-            ->add('datePrestation')
-            ->add('heurePrestation')
-            ->add('adresseLivraison')
-            ->add('villeLivraison')
-            ->add('distanceKm')
-            ->add('prixLivraison')
-            ->add('nbPersonnes')
-            ->add('prixTotal')
-            ->add('statutActuel')
-            ->add('utilisateur', EntityType::class, [
-                'class' => Utilisateur::class,
-                'choice_label' => 'id',
+            ->add('dateCommande', DateType::class, [
+                'widget' => 'single_text',
             ])
-            ->add('menu', EntityType::class, [
-                'class' => Menu::class,
-                'choice_label' => 'id',
+            ->add('datePrestation', DateType::class, [
+                'widget' => 'single_text',
             ])
-            ->add('avis', EntityType::class, [
-                'class' => Avis::class,
-                'choice_label' => 'id',
+            ->add('heurePrestation', TimeType::class, [
+                'widget' => 'single_text',
             ])
+            ->add('adresseLivraison', TextType::class)
+            ->add('villeLivraison', TextType::class)
+            ->add('distanceKm', IntegerType::class)
+            ->add('prixLivraison', IntegerType::class)
+            ->add('nbPersonnes', IntegerType::class)
+            ->add('prixTotal', IntegerType::class)
+            ->add('statutActuel', TextType::class)
         ;
+        // ❌ On NE met PAS :
+        // - utilisateur
+        // - menu
+        // - avis
+        //
+        // Ces champs doivent être gérés dans le contrôleur :
+        // $commande->setUtilisateur($this->getUser());
+        // $commande->setMenu($menu);
+        // $commande->setAvis($avis);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

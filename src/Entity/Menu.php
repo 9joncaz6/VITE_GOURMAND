@@ -29,7 +29,6 @@ class Menu
     #[ORM\Column]
     private ?float $prixBase = null;
 
-
     #[ORM\Column]
     private ?int $stockDisponible = null;
 
@@ -39,8 +38,6 @@ class Menu
     #[ORM\ManyToOne(inversedBy: 'menus')]
     private ?Regime $regime = null;
 
-
-
     // Plusieurs images (stockées en JSON)
     #[ORM\Column(type: 'json')]
     private array $images = [];
@@ -48,8 +45,6 @@ class Menu
     // Image principale (pour affichage rapide)
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
-
-
 
     /**
      * @var Collection<int, Plat>
@@ -60,15 +55,11 @@ class Menu
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: Avis::class, cascade: ['remove'])]
     private Collection $avis;
 
-
-
-
     public function __construct()
     {
         $this->plats = new ArrayCollection();
         $this->images = [];
         $this->avis = new ArrayCollection();
-
     }
 
     // -------------------------
@@ -123,8 +114,6 @@ class Menu
         $this->prixBase = $prixBase;
         return $this;
     }
-
-
 
     public function getStockDisponible(): ?int
     {
@@ -216,36 +205,34 @@ class Menu
     }
 
     public function getPrixParPersonne(): float
-{
-    return $this->prixBase / $this->nbPersonnesMin;
-}
-
-/**
- * @return Collection<int, Avis>
- */
-public function getAvis(): Collection
-{
-    return $this->avis;
-}
-
-public function addAvi(Avis $avi): static
-{
-    if (!$this->avis->contains($avi)) {
-        $this->avis->add($avi);
-        $avi->setMenu($this);
+    {
+        return $this->prixBase / $this->nbPersonnesMin;
     }
-    return $this;
-}
 
-public function removeAvi(Avis $avi): static
-{
-    if ($this->avis->removeElement($avi)) {
-        if ($avi->getMenu() === $this) {
-            $avi->setMenu(null);
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $avi->setMenu($this);
         }
+        return $this;
     }
-    return $this;
-}
 
-
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            if ($avi->getMenu() === $this) {
+                $avi->setMenu(null);
+            }
+        }
+        return $this;
+    }
 }

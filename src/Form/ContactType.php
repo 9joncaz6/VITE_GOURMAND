@@ -23,6 +23,7 @@ class ContactType extends AbstractType
             ->add('message', TextareaType::class, [
                 'label' => 'Votre message',
                 'attr' => [
+                    'id' => 'message',
                     'maxlength' => 300,
                     'rows' => 6
                 ]
@@ -31,6 +32,8 @@ class ContactType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'data_class' => null, // ✔ OBLIGATOIRE
+        ]);
     }
 }

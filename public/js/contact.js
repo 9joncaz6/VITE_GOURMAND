@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const textarea = document.getElementById('message');
+    const textarea = document.getElementById('contact_message'); // ✔ ID réel généré par Symfony
     const counter = document.getElementById('counter');
     const sendBtn = document.getElementById('sendBtn');
 
