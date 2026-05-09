@@ -2,83 +2,106 @@
 
 namespace App\Service\NoSQL;
 
-use MongoDB\Client;
+use App\Document\Panier;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Repository\MenuRepository;
 
 class PanierManager
 {
-    private $collection;
+    private DocumentManager $dm;
     private MenuRepository $menuRepository;
 
-    public function __construct(MenuRepository $menuRepository)
+    public function __construct(DocumentManager $dm, MenuRepository $menuRepository)
     {
-        $client = new Client("mongodb://localhost:27017");
-        $db = $client->selectDatabase('symfony');
-        $this->collection = $db->selectCollection('paniers');
-
+        $this->dm = $dm;
         $this->menuRepository = $menuRepository;
     }
 
     /**
-     * Récupère le panier brut depuis MongoDB
+     * Récupère ou crée le panier d’un utilisateur
      */
-    public function getPanier(int $userId): array
+    public function getPanier(int $userId): Panier
     {
-        $doc = $this->collection->findOne(['userId' => $userId]);
+        $panier = $this->dm->getRepository(Panier::class)->findOneBy(['userId' => $userId]);
 
-        return $doc['items'] ?? [];
+        if (!$panier) {
+            $panier = new Panier();
+            $panier->setUserId($userId);
+            $panier->setItems([]);
+            $this->dm->persist($panier);
+            $this->dm->flush();
+        }
+
+        return $panier;
     }
 
     /**
-     * Ajoute un menu au panier
+     * Ajoute un item
      */
     public function addItem(int $userId, int $menuId, int $quantite = 1): void
     {
-        $this->collection->updateOne(
-            ['userId' => $userId],
-            [
-                '$inc' => ["items.$menuId" => $quantite]
-            ],
-            ['upsert' => true]
-        );
+        $menuId = (int) $menuId; // 🔥 FIX : éviter les clés string
+
+        $panier = $this->getPanier($userId);
+        $items = $panier->getItems();
+
+        $items[$menuId] = ($items[$menuId] ?? 0) + $quantite;
+
+        // Si quantité <= 0 → suppression
+        if ($items[$menuId] <= 0) {
+            unset($items[$menuId]);
+        }
+
+        $panier->setItems($items);
+        $this->dm->flush();
     }
 
     /**
-     * Retire un menu du panier
+     * Retire un item
      */
     public function removeItem(int $userId, int $menuId): void
     {
-        $this->collection->updateOne(
-            ['userId' => $userId],
-            [
-                '$unset' => ["items.$menuId" => ""]
-            ]
-        );
+        $menuId = (int) $menuId;
+
+        $panier = $this->getPanier($userId);
+        $items = $panier->getItems();
+
+        unset($items[$menuId]);
+
+        $panier->setItems($items);
+        $this->dm->flush();
     }
 
     /**
-     * Vide complètement le panier
+     * Vide le panier
      */
     public function clearPanier(int $userId): void
     {
-        $this->collection->deleteOne(['userId' => $userId]);
+        $panier = $this->getPanier($userId);
+        $panier->setItems([]);
+        $this->dm->flush();
     }
 
     /**
-     * Convertit le panier MongoDB en objets utilisables dans Twig
+     * Format pour Twig
      */
     public function getPanierForTwig(int $userId): array
     {
-        $items = $this->getPanier($userId);
+        $panier = $this->getPanier($userId);
+        $items = $panier->getItems();
         $result = [];
 
-        foreach ($items as $menuId => $quantite) {
+        foreach ($items as $menuIdString => $quantite) {
+
+            // 🔥 FIX CRITIQUE : MongoDB renvoie les clés en string
+            $menuId = (int) $menuIdString;
+
             $menu = $this->menuRepository->find($menuId);
 
             if ($menu) {
                 $result[] = [
                     'menu' => $menu,
-                    'quantite' => $quantite,
+                    'quantite' => (int) $quantite,
                 ];
             }
         }
@@ -87,7 +110,7 @@ class PanierManager
     }
 
     /**
-     * Calcule le total du panier
+     * Total du panier
      */
     public function getTotal(int $userId): float
     {
@@ -96,12 +119,15 @@ class PanierManager
 
         foreach ($items as $item) {
             $menu = $item['menu'];
-            $qte  = $item['quantite'];
+            $qte  = (int) $item['quantite'];
 
-            $prixParPersonne = $menu->getPrixBase() / $menu->getNbPersonnesMin();
+            $prixBase = (float) $menu->getPrixBase();
+            $nbMin    = max(1, (int) $menu->getNbPersonnesMin());
+
+            $prixParPersonne = $prixBase / $nbMin;
             $prixTotalMenu   = $prixParPersonne * $qte;
 
-            if ($qte >= $menu->getNbPersonnesMin() + 5) {
+            if ($qte >= $nbMin + 5) {
                 $prixTotalMenu *= 0.90;
             }
 

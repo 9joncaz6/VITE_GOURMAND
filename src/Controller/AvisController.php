@@ -22,22 +22,24 @@ class AvisController extends AbstractController
         EntityManagerInterface $em
     ): Response {
 
+        $user = $this->getUser();
+
         // 1) Vérifier que la commande appartient au client connecté
-        if ($commande->getUtilisateur() !== $this->getUser()) {
+        if ($commande->getUtilisateur() !== $user) {
             $this->addFlash('error', 'Vous ne pouvez pas laisser un avis pour cette commande.');
-            return $this->redirectToRoute('compte_commandes');
+            return $this->redirectToRoute('app_compte_historique');
         }
 
         // 2) Vérifier que la commande est terminée
         if ($commande->getStatutActuel() !== 'terminee') {
             $this->addFlash('error', 'Vous ne pouvez laisser un avis que pour une commande terminée.');
-            return $this->redirectToRoute('compte_commandes');
+            return $this->redirectToRoute('app_compte_historique');
         }
 
         // 3) Vérifier qu’il n’y a pas déjà un avis
         if ($commande->getAvis()) {
             $this->addFlash('info', 'Vous avez déjà laissé un avis pour cette commande.');
-            return $this->redirectToRoute('compte_commandes');
+            return $this->redirectToRoute('app_compte_historique');
         }
 
         // 4) Créer un nouvel avis
@@ -48,21 +50,21 @@ class AvisController extends AbstractController
         // 5) Traitement du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
 
-    $avis->setUtilisateur($this->getUser());
-    $avis->setCommande($commande);
+            $avis->setUtilisateur($user);
+            $avis->setCommande($commande);
 
-    // 🔥 Lier l'avis au menu (sinon menu_id = NULL → erreur SQL)
-    $menu = $commande->getItems()->first()->getMenu();
-    $avis->setMenu($menu);
+            // Lier l'avis au menu (premier item de la commande)
+            $menu = $commande->getItems()->first()->getMenu();
+            $avis->setMenu($menu);
 
-    $avis->setDate(new \DateTimeImmutable());
+            $avis->setDate(new \DateTimeImmutable());
 
-    $em->persist($avis);
-    $em->flush();
+            $em->persist($avis);
+            $em->flush();
 
-    $this->addFlash('success', 'Merci pour votre avis !');
-    return $this->redirectToRoute('compte_commandes');
-}
+            $this->addFlash('success', 'Merci pour votre avis !');
+            return $this->redirectToRoute('app_compte_historique');
+        }
 
         return $this->render('avis/form.html.twig', [
             'form' => $form->createView(),
@@ -73,8 +75,10 @@ class AvisController extends AbstractController
     #[Route('/compte/avis/{id}/modifier', name: 'compte_avis_modifier')]
     public function modifier(Request $request, Avis $avis, EntityManagerInterface $em): Response
     {
+        $user = $this->getUser();
+
         // Vérifier que l'avis appartient bien à l'utilisateur connecté
-        if ($avis->getUtilisateur() !== $this->getUser()) {
+        if ($avis->getUtilisateur() !== $user) {
             throw $this->createAccessDeniedException();
         }
 
@@ -85,7 +89,7 @@ class AvisController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Votre avis a été modifié.');
-            return $this->redirectToRoute('compte_commandes');
+            return $this->redirectToRoute('app_compte_historique');
         }
 
         return $this->render('avis/modifier.html.twig', [

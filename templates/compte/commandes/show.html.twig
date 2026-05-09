@@ -60,12 +60,11 @@
     </div>
 
     <!-- BOUTON LAISSER UN AVIS -->
-    {% if peutLaisserAvis %}
-        <a href="{{ path('compte_avis', { id: commande.id }) }}"
-           class="btn-avis">
-            ⭐ Laisser un avis
-        </a>
-    {% endif %}
+    {% if commande.statutActuel == 'terminee' and commande.avis is null %}
+    <a href="{{ path('compte_avis', { id: commande.id }) }}" class="btn-avis">
+        ⭐ Laisser un avis
+    </a>
+{% endif %}
 
     <!-- SECTION ITEMS -->
     <div class="commande-section">

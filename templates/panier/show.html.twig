@@ -21,9 +21,15 @@
         <section class="cart-list">
 
             {% for item in items %}
+
+                {# Gestion intelligente de l'image #}
+                {% set img = item.menu.image 
+                    ?? (item.menu.images[0] ?? 'default.jpg') 
+                %}
+
                 <div class="cart-item">
 
-                    <img src="{{ asset('uploads/menus/' ~ item.menu.image) }}"
+                    <img src="{{ asset('uploads/menus/' ~ img) }}"
                          alt="{{ item.menu.titre }}"
                          class="cart-img">
 
@@ -32,28 +38,38 @@
                         <p class="price">{{ item.menu.prixBase }} €</p>
 
                         <div class="qty-controls">
-                            <a href="{{ path('app_panier_update', {menuId: item.menu.id, action: 'minus'}) }}"
+                            <a href="{{ path('app_panier_update', {menuId: item.menu.getId(), action: 'minus'}) }}"
                                class="qty-btn">−</a>
 
                             <span class="qty-value">{{ item.quantite }}</span>
 
-                            <a href="{{ path('app_panier_update', {menuId: item.menu.id, action: 'plus'}) }}"
+                            <a href="{{ path('app_panier_update', {menuId: item.menu.getId(), action: 'plus'}) }}"
                                class="qty-btn">+</a>
                         </div>
 
-                        <p class="subtotal">Sous-total : {{ item.subtotal }} €</p>
+                        {# Calcul sécurisé du sous-total #}
+                        {% set prixBase = item.menu.prixBase + 0 %}
+                        {% set nbMin = item.menu.nbPersonnesMin + 0 %}
+                        {% set qte = item.quantite + 0 %}
+                        {% set sousTotal = (prixBase / nbMin) * qte %}
+
+                        <p class="subtotal">
+                            Sous-total :
+                            {{ sousTotal | number_format(2, ',', ' ') }} €
+                        </p>
                     </div>
 
-                    <a href="{{ path('app_panier_remove', {menuId: item.menu.id}) }}"
+                    <a href="{{ path('app_panier_remove', {menuId: item.menu.getId()}) }}"
                        class="remove-btn">✕</a>
 
                 </div>
+
             {% endfor %}
 
         </section>
 
         <section class="cart-total">
-            <p>Total : <strong>{{ total }} €</strong></p>
+            <p>Total : <strong>{{ total | number_format(2, ',', ' ') }} €</strong></p>
 
             <a href="{{ path('app_commande_validation') }}" class="btn-primary">
                 Valider la commande

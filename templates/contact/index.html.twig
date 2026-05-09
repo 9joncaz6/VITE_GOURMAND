@@ -37,6 +37,9 @@
 
 </div>
 
-<script src="{{ asset('js/contact.js') }}"></script>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/contact.js') }}"></script>
 {% endblock %}

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Mailer\MailerInterface; // ✅ IMPORTANT
+use Symfony\Component\Mailer\MailerInterface;
 
 #[Route('/admin/commandes')]
 #[IsGranted('ROLE_ADMIN')]
@@ -22,11 +22,9 @@ class AdminCommandeController extends AbstractController
     {
         $statutFiltre = $request->query->get('statut');
 
-        if ($statutFiltre) {
-            $commandes = $repo->findByStatutActuel($statutFiltre);
-        } else {
-            $commandes = $repo->findAllOrdered();
-        }
+        $commandes = $statutFiltre
+            ? $repo->findByStatutActuel($statutFiltre)
+            : $repo->findAllOrdered();
 
         return $this->render('admin/commandes/index.html.twig', [
             'commandes' => $commandes,
@@ -50,7 +48,7 @@ class AdminCommandeController extends AbstractController
         Request $request,
         Commande $commande,
         EntityManagerInterface $em,
-        MailerInterface $mailer // ✅ OK
+        MailerInterface $mailer
     ): Response {
         $nouveauStatut = $request->request->get('statut');
         $commentaire = $request->request->get('commentaire');
@@ -67,9 +65,10 @@ class AdminCommandeController extends AbstractController
         $statut->setCommentaire($commentaire);
         $statut->setDateMaj(new \DateTimeImmutable());
 
-        // Mise à jour du statut fallback
+        // Mise à jour du statut principal
         $commande->setStatus($nouveauStatut);
 
+        $em->persist($commande);
         $em->persist($statut);
         $em->flush();
 
@@ -82,6 +81,7 @@ class AdminCommandeController extends AbstractController
                 ->html($this->renderView('emails/commande_terminee.html.twig', [
                     'commande' => $commande,
                     'user' => $commande->getUtilisateur(),
+                    'commentaire' => $commentaire,
                 ]));
 
             $mailer->send($email);
@@ -89,6 +89,8 @@ class AdminCommandeController extends AbstractController
 
         $this->addFlash('success', 'Statut mis à jour.');
 
-        return $this->redirectToRoute('admin_commandes_index');
+        return $this->redirectToRoute('admin_commandes_show', [
+            'id' => $commande->getId()
+        ]);
     }
 }

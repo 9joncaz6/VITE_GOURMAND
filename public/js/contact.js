@@ -1,15 +1,20 @@
-const textarea = document.getElementById('message');
-const counter = document.getElementById('counter');
-const sendBtn = document.getElementById('sendBtn');
+document.addEventListener('DOMContentLoaded', () => {
 
-textarea.addEventListener('input', () => {
-    const length = textarea.value.length;
+    const textarea = document.getElementById('message');
+    const counter = document.getElementById('counter');
+    const sendBtn = document.getElementById('sendBtn');
 
-    counter.textContent = `${length} / 300`;
-
-    if (length === 0 || length > 300) {
-        sendBtn.disabled = true;
-    } else {
-        sendBtn.disabled = false;
+    if (!textarea || !counter || !sendBtn) {
+        console.warn("contact.js : éléments introuvables");
+        return;
     }
+
+    const update = () => {
+        const length = textarea.value.length;
+        counter.textContent = `${length} / 300`;
+        sendBtn.disabled = length === 0 || length > 300;
+    };
+
+    textarea.addEventListener('input', update);
+    update();
 });

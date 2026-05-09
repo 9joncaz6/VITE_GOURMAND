@@ -2,22 +2,16 @@
 
 namespace App\Service\NoSQL;
 
-use MongoDB\Client;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class AllergeneService
 {
     private $collection;
 
-    public function __construct()
+    public function __construct(DocumentManager $dm)
     {
-        // Connexion MongoDB locale
-        $client = new Client("mongodb://localhost:27017");
-
-        // Base "symfony"
-        $db = $client->selectDatabase('symfony');
-
-        // Collection "allergenes"
-        $this->collection = $db->selectCollection('allergenes');
+        // On récupère la collection MongoDB via ODM
+        $this->collection = $dm->getDocumentCollection(\App\Document\Allergene::class);
     }
 
     /**
@@ -47,7 +41,7 @@ class AllergeneService
                     'allergenes' => $allergenes
                 ]
             ],
-            ['upsert' => true] // crée le document s’il n’existe pas
+            ['upsert' => true]
         );
     }
 }

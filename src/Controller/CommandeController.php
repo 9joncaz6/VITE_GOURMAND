@@ -19,97 +19,87 @@ use Symfony\Component\Mailer\MailerInterface;
 class CommandeController extends AbstractController
 {
     /**
-     * PAGE DE VALIDATION
+     * PAGE DE VALIDATION (affiche frais AVANT confirmation)
      */
     #[Route('/validation', name: 'app_commande_validation')]
-    public function validation(PanierManager $panierManager): Response
-    {
-        /** @var Utilisateur|null $user */
+    public function validation(
+        PanierManager $panierManager,
+        EntityManagerInterface $em
+    ): Response {
+        /** @var Utilisateur $user */
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
-        $items = $panierManager->getPanierForTwig($user->getId());
+        $userId = $user->getId();
 
-        if (empty($items)) {
-            $this->addFlash('warning', 'Votre panier est vide.');
-            return $this->redirectToRoute('app_panier_show');
-        }
+        // Items du panier
+        $items = $panierManager->getPanierForTwig($userId);
+        $totalMenus = $panierManager->getTotal($userId);
+
+        // Adresse utilisateur
+        $adresse = $user->getAdressePostale();
+        $distance = $adresse ? $this->calculerDistance($adresse) : 0;
+
+        // Calcul frais livraison
+        $livraison = $distance === 0 ? 0 : 5 + ($distance * 0.59);
+
+        // Total final
+        $totalFinal = $totalMenus + $livraison;
 
         return $this->render('commande/validation.html.twig', [
             'items' => $items,
-            'total' => $panierManager->getTotal($user->getId()),
+            'totalMenus' => $totalMenus,
+            'livraison' => $livraison,
+            'totalFinal' => $totalFinal,
+            'user' => $user,
         ]);
     }
 
     /**
-     * CREATION DE COMMANDE
+     * CONFIRMATION DE LA COMMANDE (création SQL)
      */
-    #[Route('/create', name: 'app_commande_create')]
-    public function create(
+    #[Route('/confirmer', name: 'app_commande_confirmer')]
+    public function confirmer(
         PanierManager $panierManager,
         EntityManagerInterface $em,
         MailerInterface $mailer,
         StatsService $statsService
     ): Response {
-        /** @var Utilisateur|null $user */
+        /** @var Utilisateur $user */
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
-        $items = $panierManager->getPanierForTwig($user->getId());
+        $userId = $user->getId();
 
+        // Récupération du panier
+        $items = $panierManager->getPanierForTwig($userId);
         if (empty($items)) {
             $this->addFlash('warning', 'Votre panier est vide.');
             return $this->redirectToRoute('app_panier_show');
         }
 
-        // 1) Vérifications
-        foreach ($items as $item) {
-            $menu = $item['menu'];
-            $qte  = $item['quantite'];
+        // Total menus
+        $totalMenus = $panierManager->getTotal($userId);
 
-            if ($qte < $menu->getNbPersonnesMin()) {
-                $this->addFlash('error', 'Le menu "' . $menu->getTitre() . '" nécessite au minimum ' . $menu->getNbPersonnesMin() . ' personnes.');
-                return $this->redirectToRoute('app_panier_show');
-            }
-
-            if ($menu->getStockDisponible() <= 0) {
-                $this->addFlash('error', 'Le menu "' . $menu->getTitre() . '" n’est plus disponible.');
-                return $this->redirectToRoute('app_panier_show');
-            }
-        }
-
-        // 2) Calcul du total
-        $total = 0;
-        foreach ($items as $item) {
-            $menu = $item['menu'];
-            $qte  = $item['quantite'];
-
-            $prixParPersonne = $menu->getPrixBase() / $menu->getNbPersonnesMin();
-            $prixTotalMenu   = $prixParPersonne * $qte;
-
-            if ($qte >= $menu->getNbPersonnesMin() + 5) {
-                $prixTotalMenu *= 0.90;
-            }
-
-            $total += $prixTotalMenu;
-        }
-
-        // 3) Livraison
-        $adresse  = $user->getAdressePostale();
+        // Livraison
+        $adresse = $user->getAdressePostale();
         $distance = $adresse ? $this->calculerDistance($adresse) : 0;
         $livraison = $distance === 0 ? 0 : 5 + ($distance * 0.59);
-        $total += $livraison;
 
-        // 4) Création commande
+        // Total final
+        $totalFinal = $totalMenus + $livraison;
+
+        // Création commande
         $commande = new Commande();
         $commande->setUtilisateur($user);
-        $commande->setTotal($total);
+        $commande->setTotal($totalFinal);
         $commande->setFraisLivraison($livraison);
 
+        // Ajout des items
         foreach ($items as $item) {
             $menu = $item['menu'];
             $qte  = $item['quantite'];
@@ -123,10 +113,10 @@ class CommandeController extends AbstractController
             $commande->addItem($commandeItem);
 
             // Décrémentation du stock
-            $menu->setStockDisponible($menu->getStockDisponible() - 1);
+            $menu->setStockDisponible($menu->getStockDisponible() - $qte);
         }
 
-        // 5) Statut initial
+        // Statut initial
         $commande->setStatus('en_attente');
 
         $statut = new CommandeStatut();
@@ -138,10 +128,10 @@ class CommandeController extends AbstractController
         $em->persist($statut);
         $em->flush();
 
-        // 6) 🔥 Mise à jour des stats NoSQL
+        // Mise à jour stats NoSQL
         $statsService->updateStats($commande);
 
-        // 7) Email
+        // Email confirmation
         $email = (new Email())
             ->from('no-reply@vitegourmand.fr')
             ->to($user->getEmail())
@@ -150,10 +140,13 @@ class CommandeController extends AbstractController
                 'user' => $user,
                 'commande' => $commande,
                 'items' => $items,
-                'total' => $total
+                'total' => $totalFinal
             ]));
 
         $mailer->send($email);
+
+        // Vider le panier
+        $panierManager->clearPanier($userId);
 
         return $this->redirectToRoute('app_commande_confirmation', [
             'id' => $commande->getId(),
@@ -161,20 +154,18 @@ class CommandeController extends AbstractController
     }
 
     /**
-     * PAGE DE CONFIRMATION
+     * PAGE DE CONFIRMATION FINALE
      */
     #[Route('/confirmation/{id}', name: 'app_commande_confirmation')]
-    public function confirmation(Commande $commande, PanierManager $panierManager): Response
+    public function confirmation(Commande $commande): Response
     {
-        $panierManager->clearPanier($commande->getUtilisateur()->getId());
-
         return $this->render('commande/confirmation.html.twig', [
             'commande' => $commande,
         ]);
     }
 
     /**
-     * Distance fictive
+     * CALCUL DISTANCE
      */
     private function calculerDistance(string $adresse): float
     {
