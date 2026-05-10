@@ -6,9 +6,28 @@
 <h1>Créer un plat</h1>
 
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+
+    {{ form_row(form.nom) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.type) }}
+    {{ form_row(form.imageFile) }}
+
     <button class="btn btn-primary mt-3">Créer</button>
+
 {{ form_end(form) }}
 
-<a href="{{ path('admin_plat_index') }}" class="btn btn-secondary mt-3">Retour</a>
+<div class="mt-3 d-flex gap-2">
+
+    {# ⭐ Si on vient d’un menu, on retourne vers ce menu #}
+    {% if app.request.get('menu') %}
+        <a href="{{ path('admin_menu_edit', { id: app.request.get('menu') }) }}" class="btn btn-secondary">
+            Retour au menu
+        </a>
+    {% endif %}
+
+    <a href="{{ path('app_plat_index') }}" class="btn btn-outline-secondary">
+        Retour à la liste des plats
+    </a>
+</div>
+
 {% endblock %}

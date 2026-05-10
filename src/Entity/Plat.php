@@ -25,8 +25,6 @@ class Plat
     #[ORM\Column(length: 20)]
     private ?string $type = null;
 
-    #[ORM\Column(type: 'float')]
-    private ?float $prix = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
@@ -80,16 +78,6 @@ class Plat
         return $this;
     }
 
-    public function getPrix(): ?float
-    {
-        return $this->prix;
-    }
-
-    public function setPrix(float $prix): static
-    {
-        $this->prix = $prix;
-        return $this;
-    }
 
     public function getImage(): ?string
     {

@@ -30,7 +30,9 @@ class MenuController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_EMPLOYE');
 
         $menu = new Menu();
-        $form = $this->createForm(MenuType::class, $menu);
+        $form = $this->createForm(MenuType::class, $menu, [
+            'menu_id' => null, // pas de retour possible
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -60,7 +62,11 @@ class MenuController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_EMPLOYE');
 
-        $form = $this->createForm(MenuType::class, $menu);
+        // ⭐ On passe l’ID du menu au formulaire
+        $form = $this->createForm(MenuType::class, $menu, [
+            'menu_id' => $menu->getId(),
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

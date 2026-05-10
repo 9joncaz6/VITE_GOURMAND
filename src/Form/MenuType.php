@@ -3,12 +3,15 @@
 namespace App\Form;
 
 use App\Entity\Menu;
+use App\Entity\Plat;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,18 +32,30 @@ class MenuType extends AbstractType
             ->add('prixBase', MoneyType::class, [
                 'label' => 'Prix de base'
             ])
-            // 🔥 Champ supprimé car il n'existe plus dans l'entité
-            // ->add('conditions', TextareaType::class, [
-            //     'required' => false,
-            //     'label' => 'Conditions'
-            // ])
             ->add('stockDisponible', IntegerType::class, [
                 'label' => 'Stock disponible'
             ])
+
+            // ⭐ Regroupement esthétique des plats
+            ->add('plats', EntityType::class, [
+                'class' => Plat::class,
+                'choice_label' => 'nom',
+                'multiple' => true,
+                'expanded' => true,
+                'label' => 'Plats du menu',
+                'group_by' => fn(Plat $plat) => ucfirst($plat->getType()),
+            ])
+
             ->add('imageFile', FileType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Image du menu'
+            ])
+
+            // ⭐ Champ caché pour retour automatique après création d’un plat
+            ->add('menu_id', HiddenType::class, [
+                'mapped' => false,
+                'data' => $options['menu_id'],
             ]);
     }
 
@@ -48,6 +63,7 @@ class MenuType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Menu::class,
+            'menu_id' => null,
         ]);
     }
 }

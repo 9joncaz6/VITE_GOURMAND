@@ -28,18 +28,16 @@
             {{ menu.description }}
         </p>
 
-   {% if moyenne %}
-    {% set full = moyenne|round(0, 'floor') %}
-    {% set empty = 5 - full %}
+        {% if moyenne %}
+            {% set full = moyenne|round(0, 'floor') %}
+            {% set empty = 5 - full %}
 
-    <p class="menu-rating">
-        {% for i in 1..full %}★{% endfor %}
-        {% for i in 1..empty %}☆{% endfor %}
-        ({{ moyenne|number_format(1, '.', ' ') }}/5)
-    </p>
-{% endif %}
-
-
+            <p class="menu-rating">
+                {% for i in 1..full %}★{% endfor %}
+                {% for i in 1..empty %}☆{% endfor %}
+                ({{ moyenne|number_format(1, '.', ' ') }}/5)
+            </p>
+        {% endif %}
 
         <p class="menu-price">{{ menu.prixBase }}€ TTC</p>
 
@@ -64,32 +62,26 @@
             <span class="badge bg-danger">{{ allergene }}</span>
         {% endfor %}
     </div>
+{% else %}
+    <p class="text-muted">Aucun allergène renseigné pour ce menu.</p>
 {% endif %}
-
 
 <hr>
 
 <h3>Plats du menu</h3>
 <ul>
     {% for plat in menu.plats %}
-        <li class="mb-2">
-            <strong>{{ plat.nom }}</strong> ({{ plat.type }}) — {{ plat.prix }} €
+        <li class="mb-3">
+            <strong>{{ plat.nom }}</strong> ({{ plat.type }})
             <br>
-            <small class="text-muted">
-                Allergènes :
-                {% for allergene in plat.allergenes %}
-                    {{ allergene.nom }}{% if not loop.last %}, {% endif %}
-                {% else %}
-                    Aucun
-                {% endfor %}
-            </small>
+            <small class="text-muted">{{ plat.description }}</small>
         </li>
+    {% else %}
+        <li class="text-muted">Aucun plat associé à ce menu.</li>
     {% endfor %}
 </ul>
 
 <hr>
-
-
 
 {% if aDejaLaisseAvis %}
     <div class="alert alert-info mb-4">
@@ -124,7 +116,6 @@
         </div>
     {% endfor %}
 </div>
-
 
 <a href="{{ path('app_commander') }}" class="btn btn-secondary mt-4">Retour</a>
 

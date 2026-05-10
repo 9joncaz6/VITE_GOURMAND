@@ -4,7 +4,6 @@ namespace App\Controller\admin;
 
 use App\Entity\Plat;
 use App\Form\PlatType;
-use App\Repository\PlatRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,18 +13,20 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin/plats')]
 class PlatController extends AbstractController
 {
-    #[Route('/', name: 'admin_plat_index')]
-    public function index(PlatRepository $repo): Response
+    #[Route('/', name: 'app_plat_index')]
+    public function index(EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_EMPLOYE');
 
+        $plats = $em->getRepository(Plat::class)->findAll();
+
         return $this->render('admin/plat/index.html.twig', [
-            'plats' => $repo->findAll(),
+            'plats' => $plats,
         ]);
     }
 
-    #[Route('/create', name: 'admin_plat_create')]
-    public function create(Request $request, EntityManagerInterface $em): Response
+    #[Route('/new', name: 'app_plat_new')]
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_EMPLOYE');
 
@@ -35,7 +36,7 @@ class PlatController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Upload image
+            // Upload image si fournie
             $image = $form->get('imageFile')->getData();
             if ($image) {
                 $filename = uniqid('plat_') . '.' . $image->guessExtension();
@@ -46,8 +47,15 @@ class PlatController extends AbstractController
             $em->persist($plat);
             $em->flush();
 
-            $this->addFlash('success', 'Plat créé avec succès.');
-            return $this->redirectToRoute('admin_plat_index');
+            // ⭐ Retour automatique vers le menu si paramètre "menu" présent
+            if ($request->query->get('menu')) {
+                return $this->redirectToRoute('admin_menu_edit', [
+                    'id' => $request->query->get('menu')
+                ]);
+            }
+
+            // Sinon retour normal vers la liste des plats
+            return $this->redirectToRoute('app_plat_index');
         }
 
         return $this->render('admin/plat/create.html.twig', [
@@ -55,7 +63,7 @@ class PlatController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'admin_plat_edit')]
+    #[Route('/edit/{id}', name: 'app_plat_edit')]
     public function edit(Plat $plat, Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_EMPLOYE');
@@ -75,8 +83,7 @@ class PlatController extends AbstractController
 
             $em->flush();
 
-            $this->addFlash('success', 'Plat modifié avec succès.');
-            return $this->redirectToRoute('admin_plat_index');
+            return $this->redirectToRoute('app_plat_index');
         }
 
         return $this->render('admin/plat/edit.html.twig', [
@@ -85,7 +92,7 @@ class PlatController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'admin_plat_delete')]
+    #[Route('/delete/{id}', name: 'app_plat_delete')]
     public function delete(Plat $plat, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_EMPLOYE');
@@ -93,7 +100,6 @@ class PlatController extends AbstractController
         $em->remove($plat);
         $em->flush();
 
-        $this->addFlash('success', 'Plat supprimé.');
-        return $this->redirectToRoute('admin_plat_index');
+        return $this->redirectToRoute('app_plat_index');
     }
 }

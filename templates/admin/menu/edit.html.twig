@@ -5,6 +5,11 @@
 {% block body %}
 <h1>Modifier le menu : {{ menu.titre }}</h1>
 
+{# ⭐ Nouveau bouton : créer un plat depuis ce menu #}
+<a href="{{ path('app_plat_new', { menu: menu.id }) }}" class="btn btn-success mb-3">
+    + Créer un plat
+</a>
+
 {{ form_start(form) }}
     {{ form_widget(form) }}
     <button class="btn btn-success mt-3">Enregistrer</button>

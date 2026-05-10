@@ -4,8 +4,8 @@ namespace App\Form;
 
 use App\Entity\Plat;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,12 +19,21 @@ class PlatType extends AbstractType
             ->add('nom', TextType::class, [
                 'label' => 'Nom du plat'
             ])
+
             ->add('description', TextareaType::class, [
                 'label' => 'Description'
             ])
-            ->add('prix', MoneyType::class, [
-                'label' => 'Prix'
+
+            ->add('type', ChoiceType::class, [
+                'label' => 'Type de plat',
+                'choices' => [
+                    'Entrée' => 'entrée',
+                    'Plat' => 'plat',
+                    'Dessert' => 'dessert',
+                ],
+                'placeholder' => 'Choisir un type',
             ])
+
             ->add('imageFile', FileType::class, [
                 'mapped' => false,
                 'required' => false,
