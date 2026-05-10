@@ -18,9 +18,6 @@ use Symfony\Component\Mailer\MailerInterface;
 #[Route('/commande')]
 class CommandeController extends AbstractController
 {
-    /**
-     * PAGE DE VALIDATION (affiche frais AVANT confirmation)
-     */
     #[Route('/validation', name: 'app_commande_validation')]
     public function validation(
         PanierManager $panierManager,
@@ -33,33 +30,31 @@ class CommandeController extends AbstractController
         }
 
         $userId = $user->getId();
-
-        // Items du panier
         $items = $panierManager->getPanierForTwig($userId);
+
+        if (empty($items)) {
+            $this->addFlash('warning', 'Votre panier est vide.');
+            return $this->redirectToRoute('app_panier_show');
+        }
+
+        if (!$user->getAdressePostale()) {
+            $this->addFlash('error', 'Veuillez renseigner votre adresse avant de valider la commande.');
+            return $this->redirectToRoute('app_compte_edit');
+        }
+
         $totalMenus = $panierManager->getTotal($userId);
-
-        // Adresse utilisateur
-        $adresse = $user->getAdressePostale();
-        $distance = $adresse ? $this->calculerDistance($adresse) : 0;
-
-        // Calcul frais livraison
-        $livraison = $distance === 0 ? 0 : 5 + ($distance * 0.59);
-
-        // Total final
+        $livraison = $this->calculerFraisLivraison($user);
         $totalFinal = $totalMenus + $livraison;
 
         return $this->render('commande/validation.html.twig', [
-            'items' => $items,
+            'items'      => $items,
             'totalMenus' => $totalMenus,
-            'livraison' => $livraison,
+            'livraison'  => $livraison,
             'totalFinal' => $totalFinal,
-            'user' => $user,
+            'user'       => $user,
         ]);
     }
 
-    /**
-     * CONFIRMATION DE LA COMMANDE (création SQL)
-     */
     #[Route('/confirmer', name: 'app_commande_confirmer')]
     public function confirmer(
         PanierManager $panierManager,
@@ -74,88 +69,79 @@ class CommandeController extends AbstractController
         }
 
         $userId = $user->getId();
-
-        // Récupération du panier
         $items = $panierManager->getPanierForTwig($userId);
+
         if (empty($items)) {
             $this->addFlash('warning', 'Votre panier est vide.');
             return $this->redirectToRoute('app_panier_show');
         }
 
-        // Total menus
-        $totalMenus = $panierManager->getTotal($userId);
-
-        // Livraison
-        $adresse = $user->getAdressePostale();
-        $distance = $adresse ? $this->calculerDistance($adresse) : 0;
-        $livraison = $distance === 0 ? 0 : 5 + ($distance * 0.59);
-
-        // Total final
-        $totalFinal = $totalMenus + $livraison;
-
-        // Création commande
-        $commande = new Commande();
-        $commande->setUtilisateur($user);
-        $commande->setTotal($totalFinal);
-        $commande->setFraisLivraison($livraison);
-
-        // Ajout des items
-        foreach ($items as $item) {
-            $menu = $item['menu'];
-            $qte  = $item['quantite'];
-
-            $commandeItem = new CommandeItem();
-            $commandeItem->setCommande($commande);
-            $commandeItem->setMenu($menu);
-            $commandeItem->setQuantite($qte);
-            $commandeItem->setPrixUnitaire($menu->getPrixBase());
-
-            $commande->addItem($commandeItem);
-
-            // Décrémentation du stock
-            $menu->setStockDisponible($menu->getStockDisponible() - $qte);
+        if (!$user->getAdressePostale()) {
+            $this->addFlash('error', 'Veuillez renseigner votre adresse avant de confirmer la commande.');
+            return $this->redirectToRoute('app_compte_edit');
         }
 
-        // Statut initial
-        $commande->setStatus('en_attente');
+        $totalMenus = $panierManager->getTotal($userId);
+        $livraison  = $this->calculerFraisLivraison($user);
+        $totalFinal = $totalMenus + $livraison;
 
-        $statut = new CommandeStatut();
-        $statut->setCommande($commande);
-        $statut->setStatut('en_attente');
-        $statut->setDateMaj(new \DateTimeImmutable());
+        $commande = new Commande();
+$commande->setUtilisateur($user);
+$commande->setTotal($totalFinal);
+$commande->setFraisLivraison($livraison);
 
-        $em->persist($commande);
-        $em->persist($statut);
-        $em->flush();
+// PAS de setStatut() ici — tu ne l’as jamais eu
+// Le statut initial est géré via CommandeStatut
 
-        // Mise à jour stats NoSQL
+foreach ($items as $item) {
+    $menu = $item['menu'];
+    $qte  = $item['quantite'];
+
+    $commandeItem = new CommandeItem();
+    $commandeItem->setCommande($commande);
+    $commandeItem->setMenu($menu);
+    $commandeItem->setQuantite($qte);
+    $commandeItem->setPrixUnitaire($menu->getPrixBase());
+
+    $commande->addItem($commandeItem);
+
+    // Mise à jour du stock
+    $menu->setStockDisponible($menu->getStockDisponible() - $qte);
+}
+
+// Création du statut initial
+$statut = new CommandeStatut();
+$statut->setCommande($commande);
+$statut->setStatut('en_attente');
+$statut->setDateMaj(new \DateTimeImmutable());
+
+$em->persist($commande);
+$em->persist($statut);
+$em->flush();
+
+
         $statsService->updateStats($commande);
 
-        // Email confirmation
         $email = (new Email())
             ->from('no-reply@vitegourmand.fr')
             ->to($user->getEmail())
             ->subject('Confirmation de votre commande')
             ->html($this->renderView('emails/confirmation_commande.html.twig', [
-                'user' => $user,
+                'user'     => $user,
                 'commande' => $commande,
-                'items' => $items,
-                'total' => $totalFinal
+                'items'    => $items,
+                'total'    => $totalFinal,
             ]));
 
         $mailer->send($email);
 
-        // Vider le panier
         $panierManager->clearPanier($userId);
 
         return $this->redirectToRoute('app_commande_confirmation', [
-            'id' => $commande->getId(),
+            'id' => $commande->getId()
         ]);
     }
 
-    /**
-     * PAGE DE CONFIRMATION FINALE
-     */
     #[Route('/confirmation/{id}', name: 'app_commande_confirmation')]
     public function confirmation(Commande $commande): Response
     {
@@ -164,14 +150,63 @@ class CommandeController extends AbstractController
         ]);
     }
 
-    /**
-     * CALCUL DISTANCE
-     */
+    private function calculerFraisLivraison(Utilisateur $user): float
+    {
+        $adresse = $user->getAdressePostale() ?? '';
+        $distance = $this->calculerDistance($adresse);
+        $livraison = 5 + ($distance * 0.59);
+        return max(5, min($livraison, 25));
+    }
+
     private function calculerDistance(string $adresse): float
     {
-        if (stripos($adresse, 'bordeaux') !== false) {
+        $adresse = strtolower($adresse);
+
+        if (str_contains($adresse, 'bordeaux')) {
             return 0;
         }
-        return 12;
+
+        $agglo = [
+            'merignac', 'pessac', 'talence', 'cenon', 'begles', 'loirac',
+            'bruges', 'lormont', 'eysines', 'gradignan', 'villeneuve-d\'ornon'
+        ];
+
+        foreach ($agglo as $ville) {
+            if (str_contains($adresse, $ville)) {
+                return 5;
+            }
+        }
+
+        $gironde = [
+            'arcachon', 'libourne', 'langon', 'blaye', 'lesparre', 'andernos',
+            'lacana', 'soulac', 'gujan', 'leognan', 'parempuyre'
+        ];
+
+        foreach ($gironde as $ville) {
+            if (str_contains($adresse, $ville)) {
+                return 12;
+            }
+        }
+
+        $france = [
+            'paris', 'lyon', 'marseille', 'lille', 'nice', 'toulouse', 'nantes',
+            'montpellier', 'strasbourg', 'rennes', 'reims', 'dijon', 'angers',
+            'tours', 'clermont', 'metz', 'nancy', 'brest', 'caen', 'rouen'
+        ];
+
+        foreach ($france as $ville) {
+            if (str_contains($adresse, $ville)) {
+                return 25;
+            }
+        }
+
+        if (preg_match('/\b(\d{5})\b/', $adresse, $matches)) {
+            $cp = (int) $matches[1];
+            if ($cp >= 1000 && $cp <= 95999) {
+                return 25;
+            }
+        }
+
+        return 40;
     }
 }

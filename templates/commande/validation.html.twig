@@ -25,6 +25,16 @@
 
     <hr>
 
+    <h2>Adresse de livraison</h2>
+    <p>
+        {{ user.adressePostale }}<br>
+        <a href="{{ path('app_compte_edit') }}" class="btn btn-secondary btn-sm">
+            Modifier mon adresse
+        </a>
+    </p>
+
+    <hr>
+
     <p>Total menus : <strong>{{ totalMenus | number_format(2, ',', ' ') }} €</strong></p>
     <p>Frais de livraison : <strong>{{ livraison | number_format(2, ',', ' ') }} €</strong></p>
 

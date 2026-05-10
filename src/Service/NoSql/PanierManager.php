@@ -25,9 +25,7 @@ class PanierManager
         $panier = $this->dm->getRepository(Panier::class)->findOneBy(['userId' => $userId]);
 
         if (!$panier) {
-            $panier = new Panier();
-            $panier->setUserId($userId);
-            $panier->setItems([]);
+            $panier = new Panier($userId);
             $this->dm->persist($panier);
             $this->dm->flush();
         }
@@ -36,39 +34,51 @@ class PanierManager
     }
 
     /**
-     * Ajoute un item
+     * Ajoute ou met à jour un item
+     * Format items : [ ["menuId" => X, "quantite" => Y], ... ]
      */
     public function addItem(int $userId, int $menuId, int $quantite = 1): void
     {
-        $menuId = (int) $menuId; // 🔥 FIX : éviter les clés string
-
         $panier = $this->getPanier($userId);
         $items = $panier->getItems();
 
-        $items[$menuId] = ($items[$menuId] ?? 0) + $quantite;
+        $found = false;
 
-        // Si quantité <= 0 → suppression
-        if ($items[$menuId] <= 0) {
-            unset($items[$menuId]);
+        foreach ($items as &$item) {
+            if ($item['menuId'] === $menuId) {
+                $item['quantite'] += $quantite;
+
+                if ($item['quantite'] <= 0) {
+                    $items = array_filter($items, fn($i) => $i['menuId'] !== $menuId);
+                }
+
+                $found = true;
+                break;
+            }
         }
 
-        $panier->setItems($items);
+        if (!$found && $quantite > 0) {
+            $items[] = [
+                'menuId'   => $menuId,
+                'quantite' => $quantite,
+            ];
+        }
+
+        $panier->setItems(array_values($items));
         $this->dm->flush();
     }
 
     /**
-     * Retire un item
+     * Retire complètement un item
      */
     public function removeItem(int $userId, int $menuId): void
     {
-        $menuId = (int) $menuId;
-
         $panier = $this->getPanier($userId);
         $items = $panier->getItems();
 
-        unset($items[$menuId]);
+        $items = array_filter($items, fn($i) => $i['menuId'] !== $menuId);
 
-        $panier->setItems($items);
+        $panier->setItems(array_values($items));
         $this->dm->flush();
     }
 
@@ -91,17 +101,13 @@ class PanierManager
         $items = $panier->getItems();
         $result = [];
 
-        foreach ($items as $menuIdString => $quantite) {
-
-            // 🔥 FIX CRITIQUE : MongoDB renvoie les clés en string
-            $menuId = (int) $menuIdString;
-
-            $menu = $this->menuRepository->find($menuId);
+        foreach ($items as $item) {
+            $menu = $this->menuRepository->find($item['menuId']);
 
             if ($menu) {
                 $result[] = [
-                    'menu' => $menu,
-                    'quantite' => (int) $quantite,
+                    'menu'     => $menu,
+                    'quantite' => (int) $item['quantite'],
                 ];
             }
         }
@@ -110,7 +116,7 @@ class PanierManager
     }
 
     /**
-     * Total du panier
+     * Total du panier (menus uniquement)
      */
     public function getTotal(int $userId): float
     {
