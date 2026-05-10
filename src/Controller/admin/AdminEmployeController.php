@@ -1,9 +1,6 @@
 <?php
 
-
-
 namespace App\Controller\admin;
-
 
 use App\Entity\Utilisateur;
 use App\Form\EmployeType;
@@ -40,7 +37,9 @@ class AdminEmployeController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Employé mis à jour avec succès.');
-            return $this->redirectToRoute('admin_employe_index');
+
+            // 🔥 Correction ici : la bonne route est admin_employes_index
+            return $this->redirectToRoute('admin_employes_index');
         }
 
         return $this->render('admin/employe/edit.html.twig', [

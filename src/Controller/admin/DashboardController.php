@@ -21,12 +21,10 @@ class DashboardController extends AbstractController
         StatsService $statsService
     ): Response {
 
-        // Dernières commandes, menus, utilisateurs
         $commandes = $commandeRepo->findBy([], ['createdAt' => 'DESC'], 5);
         $menus     = $menuRepo->findBy([], ['id' => 'DESC'], 5);
         $users     = $userRepo->findBy([], ['id' => 'DESC'], 5);
 
-        // Statistiques globales (NoSQL)
         $statsGlobales = $statsService->getStats();
 
         $stats = [

@@ -29,10 +29,11 @@ class MenuType extends AbstractType
             ->add('prixBase', MoneyType::class, [
                 'label' => 'Prix de base'
             ])
-            ->add('conditions', TextareaType::class, [
-                'required' => false,
-                'label' => 'Conditions'
-            ])
+            // 🔥 Champ supprimé car il n'existe plus dans l'entité
+            // ->add('conditions', TextareaType::class, [
+            //     'required' => false,
+            //     'label' => 'Conditions'
+            // ])
             ->add('stockDisponible', IntegerType::class, [
                 'label' => 'Stock disponible'
             ])
