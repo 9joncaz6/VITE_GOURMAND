@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Controller;
-
+namespace App\Controller\admin;
 
 use App\Entity\Theme;
 use App\Form\ThemeType;
@@ -11,8 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/theme')]
+
+#[IsGranted('ROLE_EMPLOYE')]
+#[Route('/admin/theme')]
 final class ThemeController extends AbstractController
 {
     #[Route(name: 'app_theme_index', methods: ['GET'])]
@@ -22,9 +24,6 @@ final class ThemeController extends AbstractController
             'themes' => $themeRepository->findAll(),
         ]);
     }
-
-
-
 
     #[Route('/new', name: 'app_theme_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -37,7 +36,8 @@ final class ThemeController extends AbstractController
             $entityManager->persist($theme);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_theme_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Thème créé avec succès.');
+            return $this->redirectToRoute('app_theme_index');
         }
 
         return $this->render('theme/new.html.twig', [
@@ -63,7 +63,8 @@ final class ThemeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_theme_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Thème modifié avec succès.');
+            return $this->redirectToRoute('app_theme_index');
         }
 
         return $this->render('theme/edit.html.twig', [
@@ -78,14 +79,9 @@ final class ThemeController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$theme->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($theme);
             $entityManager->flush();
+            $this->addFlash('success', 'Thème supprimé avec succès.');
         }
 
-        return $this->redirectToRoute('app_theme_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_theme_index');
     }
-
-
-
-
-
-
 }

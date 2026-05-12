@@ -1,6 +1,5 @@
 {% extends 'admin/admin_base.html.twig' %}
 
-
 {% block title %}Dashboard Administrateur{% endblock %}
 
 {% block stylesheets %}
@@ -8,7 +7,6 @@
 {% endblock %}
 
 {% block admin_body %}
-
 
 <h1 class="mb-4">Espace Administrateur</h1>
 
@@ -32,6 +30,12 @@
         <p>Gérer les menus</p>
     </a>
 
+    <a href="{{ path('app_theme_index') }}" class="admin-card">
+        <div class="icon">🎨</div>
+        <h2>Thèmes</h2>
+        <p>Gérer les thèmes des menus</p>
+    </a>
+
     <a href="{{ path('admin_avis_index') }}" class="admin-card">
         <div class="icon">⭐</div>
         <h2>Avis</h2>
@@ -44,25 +48,8 @@
         <p>Chiffre d'affaires & analyses</p>
     </a>
 
-</div> {# ✔ FIN DE LA GRILLE #}
+</div>
 
 <hr class="my-4">
-
- {#<h3>Dernières actions admin</h3>
-
-<ul class="admin-logs">
-    {% for log in logs %}
-        <li>
-            <strong>{{ log.action }}</strong>
-            — {{ log.date|date('d/m/Y H:i') }}
-            {% if log.details %}
-                — détails : {{ log.details|json_encode }}
-            {% endif %}
-        </li>
-    {% else %}
-        <li>Aucune action enregistrée.</li>
-    {% endfor %}
-
-</ul>#}
 
 {% endblock %}

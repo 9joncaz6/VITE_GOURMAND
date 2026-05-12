@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Utilisateur;
 use App\Service\NoSQL\PanierManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,7 +34,8 @@ class PanierController extends AbstractController
     public function add(
         int $menuId,
         PanierManager $panierManager,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Request $request
     ): Response {
         /** @var Utilisateur $user */
         $user = $this->getUser();
@@ -51,7 +53,8 @@ class PanierController extends AbstractController
 
         $panierManager->addItem($user->getId(), $menuId, $quantite);
 
-        $redirect = $_GET['redirect'] ?? null;
+        // 🔥 Redirection spéciale pour le bouton "Commander"
+        $redirect = $request->query->get('redirect');
         if ($redirect === 'validation') {
             return $this->redirectToRoute('app_commande_validation');
         }

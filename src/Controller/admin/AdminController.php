@@ -6,7 +6,7 @@ use App\Entity\Utilisateur;
 use App\Form\CreateEmployeType;
 use App\Repository\UtilisateurRepository;
 use App\Repository\MenuRepository;
-use App\Service\StatsService;
+use App\Service\NoSQL\StatsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

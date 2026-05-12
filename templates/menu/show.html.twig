@@ -42,12 +42,34 @@
         <p class="menu-price">{{ menu.prixBase }}€ TTC</p>
 
         {% if menu.stockDisponible > 0 %}
-            <a href="{{ path('app_panier_add', {menuId: menu.id}) }}" class="menu-button">
+
+            <!-- AJOUTER AU PANIER -->
+            <a href="{{ path('app_panier_add', {menuId: menu.id}) }}" 
+               class="menu-button">
                 Ajouter au panier
             </a>
-        {% else %}
-            <span class="badge bg-danger mt-2">Stock épuisé</span>
-        {% endif %}
+
+           <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'validation'}) }}"
+            class="btn w-100 mt-3"
+            style="
+            background: #ff6f00;
+            color: white;
+            font-weight: 600;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 8px rgba(255,111,0,0.4);
+            transition: 0.2s;
+            "
+            onmouseover="this.style.opacity='0.9'"
+            onmouseout="this.style.opacity='1'">
+            Commander
+        </a>
+
+
+                {% else %}
+                    <span class="badge bg-danger mt-2">Stock épuisé</span>
+                {% endif %}
 
     </div>
 

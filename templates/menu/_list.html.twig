@@ -16,6 +16,11 @@
                     {{ menu.description|slice(0, 80) ~ '...' }}
                 </p>
 
+                <!-- AJOUT DU THÈME -->
+                <p class="menu-theme">
+                    <strong>Thème :</strong> {{ menu.theme ? menu.theme.nom : 'Aucun' }}
+                </p>
+
                 <p class="menu-min">
                     Minimum : {{ menu.nbPersonnesMin }} personnes
                 </p>

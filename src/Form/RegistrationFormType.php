@@ -40,8 +40,17 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Mot de passe',
                 'mapped' => false,
                 'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(min: 6),
+                    new Assert\NotBlank([
+                        'message' => 'Veuillez saisir un mot de passe.',
+                    ]),
+                    new Assert\Length([
+                        'min' => 10,
+                        'minMessage' => 'Le mot de passe doit contenir au moins 10 caractères.',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/[!@#$%^&*(),.?":{}|<>]/',
+                        'message' => 'Le mot de passe doit contenir au moins un caractère spécial.',
+                    ]),
                 ],
             ]);
     }
