@@ -10,7 +10,6 @@
         <tr>
             <th>Nom</th>
             <th>Type</th>
-            <th>Prix</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -19,7 +18,6 @@
             <tr>
                 <td>{{ plat.nom }}</td>
                 <td>{{ plat.type }}</td>
-                <td>{{ plat.prix }} €</td>
                 <td>
                     <a href="{{ path('app_plat_edit', {id: plat.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
 

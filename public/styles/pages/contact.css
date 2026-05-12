@@ -1,0 +1,95 @@
+/* ===========================
+   WRAPPER
+=========================== */
+.contact-wrapper {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 2.5rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* ===========================
+   TITRE
+=========================== */
+.contact-wrapper h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* ===========================
+   LABELS
+=========================== */
+.contact-wrapper label {
+    display: block;
+    text-align: left;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem;
+    color: #444;
+}
+
+/* ===========================
+   INPUTS
+=========================== */
+.contact-wrapper input,
+.contact-wrapper textarea {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s ease;
+}
+
+.contact-wrapper input:focus,
+.contact-wrapper textarea:focus {
+    border-color: #e67e22;
+}
+
+/* ===========================
+   TEXTAREA
+=========================== */
+.contact-wrapper textarea {
+    height: 150px;
+    resize: none;
+}
+
+/* ===========================
+   COMPTEUR
+=========================== */
+#counter {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.3rem;
+}
+
+/* ===========================
+   BOUTON
+=========================== */
+#sendBtn {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 0.9rem;
+    background: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+#sendBtn:disabled {
+    background: #c9c9c9;
+    cursor: not-allowed;
+}
+
+#sendBtn:hover:not(:disabled) {
+    background: #cf6d17;
+}

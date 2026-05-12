@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande #{{ commande.id }}{% endblock %}
+
+{% block body %}
+
+<h1 class="mb-4">Commande #{{ commande.id }}</h1>
+
+<h3>Client</h3>
+<p>
+    {{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}<br>
+    {{ commande.utilisateur.email }}<br>
+    {{ commande.utilisateur.adressePostale }}
+</p>
+
+<hr>
+
+<h3>Menus commandés</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Menu</th>
+            <th>Quantité</th>
+            <th>Prix unitaire</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in commande.items %}
+        <tr>
+            <td>{{ item.menu.titre }}</td>
+            <td>{{ item.quantite }}</td>
+            <td>{{ item.prixUnitaire|number_format(2, '.', ' ') }} €</td>
+            <td>{{ (item.prixUnitaire * item.quantite)|number_format(2, '.', ' ') }} €</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<h3>Historique des statuts</h3>
+
+<ul>
+    {% for s in commande.commandeStatuts %}
+        <li>
+            <strong>{{ s.statut }}</strong>
+            — {{ s.dateMaj|date('d/m/Y H:i') }}
+            {% if s.commentaire %}
+                <br><small class="text-muted">{{ s.commentaire }}</small>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Changer le statut</h3>
+
+<form method="post" action="{{ path('employe_commandes_statut', {id: commande.id}) }}">
+    <div class="mb-3">
+        <label class="form-label">Nouveau statut</label>
+        <select name="statut" class="form-select" required>
+            <option value="">Choisir…</option>
+            <option value="en_preparation">En préparation</option>
+            <option value="en_livraison">En livraison</option>
+            <option value="terminee">Terminée</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Commentaire (optionnel)</label>
+        <textarea name="commentaire" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-success">Mettre à jour</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,145 @@
+.commande-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.btn-retour {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+}
+
+.commande-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.commande-section {
+    background: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+    margin-bottom: 25px;
+}
+
+.commande-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+}
+
+.commande-infos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.label {
+    font-weight: 600;
+    margin-right: 6px;
+}
+
+.total {
+    font-weight: 700;
+    color: #ff7a00;
+}
+
+/* BADGES STATUTS */
+.badge {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.statut-en_attente { background: #fff3cd; color: #856404; }
+.statut-en_preparation { background: #cce5ff; color: #004085; }
+.statut-terminee { background: #d4edda; color: #155724; }
+
+/* TABLEAU */
+.commande-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.commande-table th {
+    text-align: left;
+    padding: 10px;
+    background: #f7f7f7;
+    font-weight: 600;
+}
+
+.commande-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.frais {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #444;
+}
+
+.btn-avis {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 18px;
+    background: #ff7a00;
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-avis:hover {
+    background: #e56d00;
+}
+
+/* ================================
+   TIMELINE DES STATUTS
+   ================================ */
+
+.timeline {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px 0 35px;
+    padding: 0 10px;
+}
+
+.step {
+    text-align: center;
+    flex: 1;
+    opacity: 0.4;
+    transition: 0.2s;
+}
+
+.step.active {
+    opacity: 1;
+}
+
+.step .dot {
+    width: 16px;
+    height: 16px;
+    background: #ccc;
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    transition: 0.2s;
+}
+
+.step.active .dot {
+    background: #ff7a00;
+}
+
+.step p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+

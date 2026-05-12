@@ -1,24 +1,26 @@
 <?php
 
-// src/Controller/HomeController.php
 namespace App\Controller;
 
 use App\Repository\MenuRepository;
+use App\Repository\AvisRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-
+use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(MenuRepository $menuRepository): Response
+    public function index(MenuRepository $menuRepository, AvisRepository $avisRepository): Response
     {
-        $menus = $menuRepository->findBy([], ['id' => 'DESC'], 4); 
-        // On affiche les 4 derniers menus comme dans ton mockup
+        $menus = $menuRepository->findAll();
+
+        // Les mêmes avis que sur la page Menus
+        $avis = $avisRepository->findLatestAvis(3);
 
         return $this->render('home/home.html.twig', [
             'menus' => $menus,
+            'avis' => $avis,
         ]);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\PlatRepository;
-use App\Service\SearchTracker;
+use App\Service\NoSQL\SearchTracker;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,13 +20,20 @@ class SearchController extends AbstractController
     ): Response {
         $query = $request->query->get('q', '');
 
-        if ($this->getUser()) {
-    /** @var \App\Entity\Utilisateur $user */
-    $user = $this->getUser();
-    $tracker->track($user->getId(), $query);
-}
+        // 🔥 Tracking NoSQL
+        if (!empty($query)) {
 
+            /** @var \App\Entity\Utilisateur|null $user */
+            $user = $this->getUser(); // ✔ plus d'erreur getId()
 
+            $tracker->track(
+                $user ? $user->getId() : null,
+                $query,
+                'search_page'
+            );
+        }
+
+        // 🔍 Recherche SQL
         $results = $platRepository->createQueryBuilder('p')
             ->where('p.nom LIKE :q')
             ->setParameter('q', "%$query%")

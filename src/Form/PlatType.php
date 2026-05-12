@@ -3,11 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Plat;
-use App\Entity\Allergene;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,31 +17,28 @@ class PlatType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'Nom du plat',
+                'label' => 'Nom du plat'
             ])
+
             ->add('description', TextareaType::class, [
-                'label' => 'Description',
+                'label' => 'Description'
             ])
+
             ->add('type', ChoiceType::class, [
                 'label' => 'Type de plat',
                 'choices' => [
-                    'Entrée' => 'entree',
+                    'Entrée' => 'entrée',
                     'Plat' => 'plat',
                     'Dessert' => 'dessert',
                 ],
+                'placeholder' => 'Choisir un type',
             ])
-            ->add('prix', MoneyType::class, [
-                'label' => 'Prix',
-                'currency' => 'EUR',
-            ])
-            ->add('allergenes', EntityType::class, [
-                'class' => Allergene::class,
-                'choice_label' => 'nom',
-                'multiple' => true,
-                'expanded' => true,
-                'label' => 'Allergènes',
-            ])
-        ;
+
+            ->add('imageFile', FileType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Image du plat'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

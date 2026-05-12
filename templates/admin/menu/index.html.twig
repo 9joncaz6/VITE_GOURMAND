@@ -1,0 +1,42 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Menus{% endblock %}
+
+{% block body %}
+<h1>Gestion des menus</h1>
+
+<div class="d-flex gap-2 mb-3">
+    <a href="{{ path('admin_menu_create') }}" class="btn btn-primary">+ Ajouter un menu</a>
+
+    {# ⭐ Nouveau bouton : créer un plat #}
+    <a href="{{ path('app_plat_new') }}" class="btn btn-success">+ Créer un plat</a>
+</div>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Titre</th>
+            <th>Stock</th>
+            <th>Prix</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for menu in menus %}
+            <tr>
+                <td>{{ menu.id }}</td>
+                <td>{{ menu.titre }}</td>
+                <td>{{ menu.stockDisponible }}</td>
+                <td>{{ menu.prixBase }} €</td>
+                <td>
+                    <a href="{{ path('admin_menu_edit', {id: menu.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                    <a href="{{ path('admin_menu_delete', {id: menu.id}) }}" class="btn btn-sm btn-danger"
+                       onclick="return confirm('Supprimer ce menu ?')">Supprimer</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

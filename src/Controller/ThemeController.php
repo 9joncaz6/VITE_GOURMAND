@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Theme;
 use App\Form\ThemeType;
 use App\Repository\ThemeRepository;
@@ -21,6 +22,9 @@ final class ThemeController extends AbstractController
             'themes' => $themeRepository->findAll(),
         ]);
     }
+
+
+
 
     #[Route('/new', name: 'app_theme_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -78,4 +82,10 @@ final class ThemeController extends AbstractController
 
         return $this->redirectToRoute('app_theme_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
+
+
+
 }

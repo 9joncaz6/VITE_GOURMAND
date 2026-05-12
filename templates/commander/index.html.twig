@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commander{% endblock %}
+
+{% block body %}
+
+<h1 class="mb-4">Commander un menu</h1>
+
+<div class="section">
+    <div class="menu-grid">
+
+        {% for menu in menus %}
+            <div class="card menu-card">
+
+                {# Titre #}
+                <h3>{{ menu.titre }}</h3>
+
+                {# Description #}
+                <p class="text-muted">{{ menu.description }}</p>
+
+                {# Prix #}
+                <p><strong>Prix :</strong> {{ menu.prixBase }} €</p>
+
+                {# Ajouter au panier #}
+                <a href="{{ path('app_panier_add', {menuId: menu.id}) }}"
+                   class="btn-secondary w-100 mt-2">
+                    Ajouter au panier
+                </a>
+
+                {# Commander maintenant = ajouter + redirection vers validation #}
+                <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'validation'}) }}"
+                   class="btn-primary w-100 mt-2">
+                    Commander maintenant
+                </a>
+
+            </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

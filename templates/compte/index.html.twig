@@ -2,11 +2,63 @@
 
 {% block title %}Mon compte{% endblock %}
 
-{% block body %}
-<h1>Mon compte</h1>
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/pages/compte.css') }}">
+{% endblock %}
 
-<ul>
-    <li><a href="{{ path('app_compte_commandes') }}">Mes commandes</a></li>
-    <li><a href="#">Mes informations</a></li>
-</ul>
+{% block body %}
+
+<div class="compte-container">
+
+    <h1 class="compte-title">Mon compte</h1>
+
+    <p class="compte-subtitle">
+        Bienvenue {{ app.user.prenom }} {{ app.user.nom }}  
+        <br>
+        <small class="text-muted">Gérez vos informations, commandes et avis.</small>
+    </p>
+
+    <div class="compte-grid">
+
+        <!-- Informations personnelles -->
+        <a href="{{ path('app_compte_edit') }}" class="compte-card">
+            <div class="compte-card-icon">👤</div>
+            <h3>Mes informations</h3>
+            <p>Modifier mon nom, prénom, email, adresse…</p>
+        </a>
+
+        <!-- Mot de passe -->
+        <a href="{{ path('app_compte_password') }}" class="compte-card">
+            <div class="compte-card-icon">🔒</div>
+            <h3>Mot de passe</h3>
+            <p>Changer mon mot de passe en toute sécurité.</p>
+        </a>
+
+        <!-- Historique des commandes -->
+        <a href="{{ path('app_compte_historique') }}" class="compte-card">
+            <div class="compte-card-icon">🧾</div>
+            <h3>Mes commandes</h3>
+            <p>Consulter l’historique de mes commandes.</p>
+        </a>
+
+        <!-- Mes avis -->
+        <a href="{{ path('compte_avis_modifier', { id: 0 }) }}" 
+           class="compte-card disabled-card" 
+           onclick="return false;">
+            <div class="compte-card-icon">⭐</div>
+            <h3>Mes avis</h3>
+            <p>Voir et modifier mes avis (depuis les menus).</p>
+        </a>
+
+        <!-- Déconnexion -->
+        <a href="{{ path('app_logout') }}" class="compte-card logout-card">
+            <div class="compte-card-icon">🚪</div>
+            <h3>Déconnexion</h3>
+            <p>Se déconnecter de mon compte.</p>
+        </a>
+
+    </div>
+
+</div>
+
 {% endblock %}

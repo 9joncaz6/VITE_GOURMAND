@@ -2,51 +2,82 @@
 
 {% block title %}Panier - V & G{% endblock %}
 
-{% block styles %}
+{% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('styles/pages/panier.css') }}">
 {% endblock %}
 
 {% block body %}
 
-<h1 class="cart-title">Votre panier</h1>
+<div class="cart-container">
 
-{% if items is empty %}
-    <p class="empty-cart">Votre panier est vide.</p>
-{% else %}
+    <h1 class="cart-title">Votre panier</h1>
 
-<section class="cart-list">
+    {% if items is empty %}
 
-    {% for item in items %}
-        <div class="cart-item">
+        <p class="empty-cart">Votre panier est vide.</p>
 
-            <img src="{{ asset('uploads/menus/' ~ item.menu.image) }}" alt="{{ item.menu.titre }}">
+    {% else %}
 
-            <div class="cart-info">
-                <h3>{{ item.menu.titre }}</h3>
-                <p class="price">{{ item.menu.prixBase }} €</p>
+        <section class="cart-list">
 
-                <div class="qty-controls">
-                    <a href="{{ path('app_panier_update', {id: item.menu.id, action: 'minus'}) }}" class="qty-btn">-</a>
+            {% for item in items %}
 
-                    <span class="qty-value">{{ item.quantite }}</span>
+                {# Gestion intelligente de l'image #}
+                {% set img = item.menu.image 
+                    ?? (item.menu.images[0] ?? 'default.jpg') 
+                %}
 
-                    <a href="{{ path('app_panier_update', {id: item.menu.id, action: 'plus'}) }}" class="qty-btn">+</a>
+                <div class="cart-item">
+
+                    <img src="{{ asset('uploads/menus/' ~ img) }}"
+                         alt="{{ item.menu.titre }}"
+                         class="cart-img">
+
+                    <div class="cart-info">
+                        <h3>{{ item.menu.titre }}</h3>
+                        <p class="price">{{ item.menu.prixBase }} €</p>
+
+                        <div class="qty-controls">
+                            <a href="{{ path('app_panier_update', {menuId: item.menu.getId(), action: 'minus'}) }}"
+                               class="qty-btn">−</a>
+
+                            <span class="qty-value">{{ item.quantite }}</span>
+
+                            <a href="{{ path('app_panier_update', {menuId: item.menu.getId(), action: 'plus'}) }}"
+                               class="qty-btn">+</a>
+                        </div>
+
+                        {# Calcul sécurisé du sous-total #}
+                        {% set prixBase = item.menu.prixBase + 0 %}
+                        {% set nbMin = item.menu.nbPersonnesMin + 0 %}
+                        {% set qte = item.quantite + 0 %}
+                        {% set sousTotal = (prixBase / nbMin) * qte %}
+
+                        <p class="subtotal">
+                            Sous-total :
+                            {{ sousTotal | number_format(2, ',', ' ') }} €
+                        </p>
+                    </div>
+
+                    <a href="{{ path('app_panier_remove', {menuId: item.menu.getId()}) }}"
+                       class="remove-btn">✕</a>
+
                 </div>
 
-                <p class="subtotal">Sous-total : {{ item.subtotal }} €</p>
-            </div>
+            {% endfor %}
 
-            <a href="{{ path('app_panier_remove', {id: item.menu.id}) }}" class="remove-btn">✕</a>
-        </div>
-    {% endfor %}
+        </section>
 
-</section>
+        <section class="cart-total">
+            <p>Total : <strong>{{ total | number_format(2, ',', ' ') }} €</strong></p>
 
-<section class="cart-total">
-    <p>Total : <strong>{{ total }} €</strong></p>
-    <a href="{{ path('app_commande_validation') }}" class="btn-primary">Valider la commande</a>
-</section>
+            <a href="{{ path('app_commande_validation') }}" class="btn-primary">
+                Valider la commande
+            </a>
+        </section>
 
-{% endif %}
+    {% endif %}
+
+</div>
 
 {% endblock %}

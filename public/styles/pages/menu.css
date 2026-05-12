@@ -1,0 +1,190 @@
+/* ================================
+   LAYOUT EN DEUX COLONNES
+   ================================ */
+
+.menu-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin: 40px auto;
+    max-width: 1100px;
+}
+
+/* ================================
+   COLONNE GAUCHE : IMAGE
+   ================================ */
+
+.menu-left {
+    flex: 1;
+}
+
+.menu-image {
+    width: 100%;
+    max-width: 500px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* ================================
+   COLONNE DROITE : TEXTE
+   ================================ */
+
+.menu-right {
+    flex: 1;
+    text-align: left;
+    background: #fafafa;
+    padding: 25px 30px;
+    border-radius: 12px;
+    border: 1px solid #e5e5e5;
+}
+
+.menu-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.menu-subtitle {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.menu-description {
+    font-size: 16px;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* ================================
+   NOTE MOYENNE
+   ================================ */
+
+.menu-rating {
+    color: #f5c518; /* jaune IMDb */
+    font-size: 20px;
+    margin: 10px 0 15px 0;
+}
+
+/* ================================
+   PRIX
+   ================================ */
+
+.menu-price {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+/* ================================
+   BOUTON
+   ================================ */
+
+.menu-button {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.menu-button:hover {
+    background: #0069d9;
+}
+
+/* ================================
+   AVIS
+   ================================ */
+
+.avis-card {
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.avis-card small {
+    display: block;
+    margin-top: 8px;
+    color: #777;
+}
+
+.stars {
+    color: #f5c518;
+    font-size: 20px;
+}
+
+/* Avatar gris par défaut */
+.avatar-default {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #ddd;
+}
+
+/* ================================
+   FILTRES
+   ================================ */
+
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #f2f2f2;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.filter-btn:hover {
+    background: #e6e6e6;
+}
+
+.filter-btn.active {
+    background: #333;
+    color: white;
+    border-color: #333;
+}
+
+/* ================================
+   RESPONSIVE
+   ================================ */
+
+@media (max-width: 900px) {
+    .menu-layout {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .menu-right {
+        text-align: center;
+    }
+
+    .menu-image {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+

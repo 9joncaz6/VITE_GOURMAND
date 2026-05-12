@@ -4,7 +4,7 @@ namespace App\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
-#[ODM\Document]
+#[ODM\Document(collection: "paniers")]
 class Panier
 {
     #[ODM\Id]
@@ -19,10 +19,31 @@ class Panier
     #[ODM\Field(type: "date")]
     private \DateTime $lastUpdate;
 
-    public function __construct(int $userId)
+    public function __construct(int $userId = 0)
     {
         $this->userId = $userId;
         $this->items = [];
+        $this->lastUpdate = new \DateTime();
+    }
+
+    /* ============================
+       USER ID
+       ============================ */
+
+    public function getId(): ?string
+{
+    return $this->id;
+}
+
+
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
         $this->lastUpdate = new \DateTime();
     }
 
@@ -36,7 +57,6 @@ class Panier
             if ($item['menuId'] === $menuId) {
                 $item['quantite'] += $quantite;
 
-                // Si la quantité tombe à 0 → suppression
                 if ($item['quantite'] <= 0) {
                     $this->removeItem($menuId);
                 }
@@ -46,7 +66,6 @@ class Panier
             }
         }
 
-        // Si le menu n'existe pas encore dans le panier
         if ($quantite > 0) {
             $this->items[] = [
                 "menuId" => $menuId,
@@ -66,7 +85,7 @@ class Panier
         foreach ($this->items as $key => $item) {
             if ($item['menuId'] === $menuId) {
                 unset($this->items[$key]);
-                $this->items = array_values($this->items); // réindexation
+                $this->items = array_values($this->items);
                 break;
             }
         }
@@ -83,6 +102,12 @@ class Panier
         return $this->items;
     }
 
+    public function setItems(array $items): void
+    {
+        $this->items = $items;
+        $this->lastUpdate = new \DateTime();
+    }
+
     public function getTotal(callable $priceResolver): float
     {
         $total = 0;
@@ -93,11 +118,5 @@ class Panier
         }
 
         return $total;
-    }
-
-    public function setItems(array $items): void
-    {
-        $this->items = $items;
-        $this->lastUpdate = new \DateTime();
     }
 }

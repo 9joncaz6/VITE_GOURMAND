@@ -1,0 +1,68 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+
+{% block title %}Dashboard Administrateur{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/admin/dashboard.css') }}">
+{% endblock %}
+
+{% block admin_body %}
+
+
+<h1 class="mb-4">Espace Administrateur</h1>
+
+<div class="admin-grid">
+
+    <a href="{{ path('admin_employes_index') }}" class="admin-card">
+        <div class="icon">👥</div>
+        <h2>Employés</h2>
+        <p>Gérer les comptes employés</p>
+    </a>
+
+    <a href="{{ path('admin_commandes_index') }}" class="admin-card">
+        <div class="icon">🧾</div>
+        <h2>Commandes</h2>
+        <p>Voir toutes les commandes</p>
+    </a>
+
+    <a href="{{ path('admin_menu_index') }}" class="admin-card">
+        <div class="icon">🍽️</div>
+        <h2>Menus</h2>
+        <p>Gérer les menus</p>
+    </a>
+
+    <a href="{{ path('admin_avis_index') }}" class="admin-card">
+        <div class="icon">⭐</div>
+        <h2>Avis</h2>
+        <p>Modérer les avis clients</p>
+    </a>
+
+    <a href="{{ path('admin_stats') }}" class="admin-card">
+        <div class="icon">📊</div>
+        <h2>Statistiques</h2>
+        <p>Chiffre d'affaires & analyses</p>
+    </a>
+
+</div> {# ✔ FIN DE LA GRILLE #}
+
+<hr class="my-4">
+
+ {#<h3>Dernières actions admin</h3>
+
+<ul class="admin-logs">
+    {% for log in logs %}
+        <li>
+            <strong>{{ log.action }}</strong>
+            — {{ log.date|date('d/m/Y H:i') }}
+            {% if log.details %}
+                — détails : {{ log.details|json_encode }}
+            {% endif %}
+        </li>
+    {% else %}
+        <li>Aucune action enregistrée.</li>
+    {% endfor %}
+
+</ul>#}
+
+{% endblock %}

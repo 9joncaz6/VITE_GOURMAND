@@ -1,54 +1,97 @@
-{# templates/home/home.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil - V & G{% endblock %}
+{% block title %}Accueil - Vite & Gourmand{% endblock %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{{ asset('styles/pages/home.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 {% endblock %}
 
 {% block body %}
 
-<section class="hero">
-    <div class="hero-content">
-        <h1>Vite et Gourmand</h1>
-        <p>Commandez des plats savoureux en quelques clics !</p>
-        <a href="{{ path('app_menu_index') }}" class="btn-primary">Commander</a>
-    </div>
+<main class="home">
 
-    <div class="hero-image">
-        <img src="{{ asset('images/hero.jpg') }}" alt="Image accueil">
-    </div>
-</section>
+    <!-- ===========================
+         HERO
+    ============================ -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Vite et Gourmand</h1>
+            <p>Commander des plats savoureux en quelques clics !</p>
+            <a href="{{ path('app_commander') }}" class="btn btn-primary">Commander</a>
 
-<section class="presentation">
-    <h2>Présentation de l’entreprise</h2>
-    <p>
-        Fort de notre savoir faire, nous vous proposons de délicieux menus qui vous combleront
-        de joie au quotidien ou lors de vos évènements.
-    </p>
-</section>
+        </div>
 
-<section class="menus-preview">
-    <h2>Cartes menus</h2>
+        <div class="hero-image">
+            <img src="{{ asset('uploads/accueil/accueil01.jpg') }}" alt="Tomates fraîches">
+        </div>
+    </section>
 
-    <div class="menus-grid">
-        {% for menu in menus %}
-            <div class="menu-card">
 
-                <img src="{{ asset('uploads/menus/' ~ menu.image) }}" alt="{{ menu.titre }}">
+    <!-- ===========================
+         PRÉSENTATION
+    ============================ -->
+    <section class="presentation">
 
-                <h3>{{ menu.titre }}</h3>
+        <div class="presentation-image">
+            <img src="{{ asset('uploads/accueil/accueil02.jpg') }}" alt="Notre cuisine">
+        </div>
 
-                <p class="price">{{ menu.prixBase }} €</p>
+        <div class="presentation-text">
+            <h2>Présentation de l’entreprise</h2>
+            <h3>Notre cuisine à votre service</h3>
 
-                <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">
-                    Voir détails
-                </a>
+            <p>
+                Fort de notre savoir faire, nous vous proposons de délicieux menus
+                qui vous combleront de joie au quotidien ou lors de vos évènements.
+            </p>
+        </div>
 
-            </div>
-        {% endfor %}
-    </div>
-</section>
+    </section>
+
+
+    <!-- ===========================
+         AVIS CLIENTS
+    ============================ -->
+    <section class="home-avis">
+        <h2>Les avis de nos chers clients :</h2>
+
+        <div class="avis-list">
+            {% for avi in avis|slice(0, 3) %}
+                {% include 'components/avis_home_card.html.twig' with { avi: avi } %}
+            {% endfor %}
+        </div>
+    </section>
+
+
+    <!-- ===========================
+         CARTES MENUS
+    ============================ -->
+    <section class="menus-preview">
+        <h2>Cartes menus</h2>
+
+        <div class="menus-grid">
+    {% for menu in menus %}
+    <article class="menu-card">
+
+        {% if menu.images is not empty %}
+            <img src="{{ asset('uploads/menus/' ~ menu.images[0]) }}" alt="{{ menu.titre }}">
+        {% else %}
+            <img src="{{ asset('uploads/menus/default.jpg') }}" alt="Image indisponible">
+        {% endif %}
+
+        <h3>{{ menu.titre }}</h3>
+        <p class="price">{{ menu.prixBase|number_format(2, '.', '') }} €</p>
+
+        <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">
+            Voir détails
+        </a>
+    </article>
+{% endfor %}
+
+</div>
+
+    </section>
+
+</main>
 
 {% endblock %}

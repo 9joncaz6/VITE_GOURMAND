@@ -2,67 +2,121 @@
 
 {% block title %}{{ menu.titre }}{% endblock %}
 
-{% block body %}
-<h1>{{ menu.titre }}</h1>
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/pages/menu.css') }}">
+{% endblock %}
 
-<div class="row mb-4">
-    <div class="col-md-6">
+{% block body %}
+
+<div class="menu-layout">
+
+    <!-- COLONNE GAUCHE : IMAGE -->
+    <div class="menu-left">
         {% if menu.images is not empty %}
-            <img src="{{ asset('uploads/menus/' ~ menu.images[0]) }}" class="img-fluid rounded">
-        {% else %}
-            <p>Aucune image disponible.</p>
+            <img src="{{ asset('uploads/menus/' ~ menu.images[0]) }}" class="menu-image">
         {% endif %}
     </div>
 
-    <div class="col-md-6">
-        <h3>Description</h3>
-        <p>{{ menu.description }}</p>
+    <!-- COLONNE DROITE : TEXTE -->
+    <div class="menu-right">
 
-        <p><strong>Prix :</strong> {{ menu.prixBase }} €</p>
-        <p><strong>Nombre minimum de personnes :</strong> {{ menu.nbPersonnesMin }}</p>
-        <p><strong>Conditions :</strong> {{ menu.conditions }}</p>
+        <h1 class="menu-title">{{ menu.titre }}</h1>
 
-        <p><strong>Thème :</strong> {{ menu.theme ? menu.theme.nom : 'Aucun' }}</p>
-        <p><strong>Régime :</strong> {{ menu.regime ? menu.regime.nom : 'Aucun' }}</p>
+        <h2 class="menu-subtitle">Description</h2>
 
-        <a href="{{ path('app_cart_add', {id: menu.id}) }}" class="btn btn-success btn-lg mt-3">
-            Ajouter au panier
-        </a>
+        <p class="menu-description">
+            {{ menu.description }}
+        </p>
+
+        {% if moyenne %}
+            {% set full = moyenne|round(0, 'floor') %}
+            {% set empty = 5 - full %}
+
+            <p class="menu-rating">
+                {% for i in 1..full %}★{% endfor %}
+                {% for i in 1..empty %}☆{% endfor %}
+                ({{ moyenne|number_format(1, '.', ' ') }}/5)
+            </p>
+        {% endif %}
+
+        <p class="menu-price">{{ menu.prixBase }}€ TTC</p>
+
+        {% if menu.stockDisponible > 0 %}
+            <a href="{{ path('app_panier_add', {menuId: menu.id}) }}" class="menu-button">
+                Ajouter au panier
+            </a>
+        {% else %}
+            <span class="badge bg-danger mt-2">Stock épuisé</span>
+        {% endif %}
+
     </div>
+
 </div>
 
 <hr>
 
-<h3>Galerie d’images</h3>
-<div class="row">
-    {% for img in menu.images %}
-        <div class="col-3 mb-3">
-            <img src="{{ asset('uploads/menus/' ~ img) }}" class="img-fluid rounded">
-        </div>
-    {% else %}
-        <p>Aucune image disponible.</p>
-    {% endfor %}
-</div>
+<h3>Allergènes du menu</h3>
+{% if allergenesMenu is not empty %}
+    <div class="allergenes">
+        {% for allergene in allergenesMenu %}
+            <span class="badge bg-danger">{{ allergene }}</span>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text-muted">Aucun allergène renseigné pour ce menu.</p>
+{% endif %}
 
 <hr>
 
 <h3>Plats du menu</h3>
 <ul>
     {% for plat in menu.plats %}
-        <li>
-            {{ plat.nom }} ({{ plat.type }}) — {{ plat.prix }} €
+        <li class="mb-3">
+            <strong>{{ plat.nom }}</strong> ({{ plat.type }})
             <br>
-            <small>Allergènes :
-                {% for allergene in plat.allergenes %}
-                    {{ allergene.nom }}{% if not loop.last %}, {% endif %}
-                {% else %}
-                    Aucun
-                {% endfor %}
-            </small>
+            <small class="text-muted">{{ plat.description }}</small>
         </li>
+    {% else %}
+        <li class="text-muted">Aucun plat associé à ce menu.</li>
     {% endfor %}
 </ul>
 
-<a href="{{ path('app_menu_index') }}" class="btn btn-secondary mt-4">Retour</a>
+<hr>
+
+{% if aDejaLaisseAvis %}
+    <div class="alert alert-info mb-4">
+        Vous avez déjà laissé un avis pour ce menu.
+        <a href="{{ path('compte_avis_modifier', { id: avisExistant.id }) }}" class="btn btn-sm btn-warning ms-2">
+            Modifier mon avis
+        </a>
+    </div>
+{% endif %}
+
+{% if peutLaisserAvis %}
+    <a href="{{ path('compte_avis', { id: commandeEligible.id }) }}"
+       class="btn btn-primary mb-4">
+        Laisser un avis
+    </a>
+{% endif %}
+
+<div class="mt-4">
+    {% for a in avis %}
+        <div class="avis-card">
+
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="avatar-default"></div>
+
+                {% include 'components/stars.html.twig' with { note: a.note } %}
+            </div>
+
+            <p class="mt-2">{{ a.commentaire }}</p>
+
+            <small class="text-muted">Le {{ a.date|date('d/m/Y') }}</small>
+
+        </div>
+    {% endfor %}
+</div>
+
+<a href="{{ path('app_commander') }}" class="btn btn-secondary mt-4">Retour</a>
 
 {% endblock %}

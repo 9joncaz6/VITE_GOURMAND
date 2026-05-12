@@ -25,14 +25,9 @@ class Plat
     #[ORM\Column(length: 20)]
     private ?string $type = null;
 
-    #[ORM\Column(type: 'float')]
-    private ?float $prix = null;
 
-    /**
-     * @var Collection<int, Allergene>
-     */
-    #[ORM\ManyToMany(targetEntity: Allergene::class, inversedBy: 'plats')]
-    private Collection $allergenes;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
 
     /**
      * @var Collection<int, Menu>
@@ -42,7 +37,6 @@ class Plat
 
     public function __construct()
     {
-        $this->allergenes = new ArrayCollection();
         $this->menus = new ArrayCollection();
     }
 
@@ -84,36 +78,15 @@ class Plat
         return $this;
     }
 
-    public function getPrix(): ?float
+
+    public function getImage(): ?string
     {
-        return $this->prix;
+        return $this->image;
     }
 
-    public function setPrix(float $prix): static
+    public function setImage(?string $image): static
     {
-        $this->prix = $prix;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Allergene>
-     */
-    public function getAllergenes(): Collection
-    {
-        return $this->allergenes;
-    }
-
-    public function addAllergene(Allergene $allergene): static
-    {
-        if (!$this->allergenes->contains($allergene)) {
-            $this->allergenes->add($allergene);
-        }
-        return $this;
-    }
-
-    public function removeAllergene(Allergene $allergene): static
-    {
-        $this->allergenes->removeElement($allergene);
+        $this->image = $image;
         return $this;
     }
 

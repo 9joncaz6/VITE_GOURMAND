@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/admin/admin_stats.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<h1 class="page-title">Statistiques</h1>
+
+<div class="stats-wrapper">
+
+    <!-- CHIFFRES GLOBAUX -->
+    <div class="stats-cards">
+
+        <div class="stat-card">
+            <div class="stat-value">{{ stats.caTotal }} €</div>
+            <div class="stat-label">Chiffre d'affaires total</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-value">{{ stats.totalCommandes }}</div>
+            <div class="stat-label">Nombre total de commandes</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-value">{{ stats.panierMoyen }} €</div>
+            <div class="stat-label">Panier moyen</div>
+        </div>
+
+    </div>
+
+    <!-- COMMANDES PAR MENU -->
+    <h2 class="section-title">Nombre de commandes par menu</h2>
+
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Menu</th>
+                <th>Commandes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for menu in menus %}
+                <tr>
+                    <td>{{ menu.titre }}</td>
+                    <td>
+                        <span class="badge">
+                            {{ commandesParMenu[menu.id] ?? 0 }}
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- CA PAR MENU -->
+    <h2 class="section-title">Chiffre d'affaires par menu</h2>
+
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Menu</th>
+                <th>CA (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for menu in menus %}
+                <tr>
+                    <td>{{ menu.titre }}</td>
+                    <td>
+                        <span class="badge badge-green">
+                            {{ caParMenu[menu.id] ?? 0 }}
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+server:
+    document_root: public
+    allow_http: true
+
+php:
+  version: "C:\\php\\php.exe"
+

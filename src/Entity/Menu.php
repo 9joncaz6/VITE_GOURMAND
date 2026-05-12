@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Avis;
 use App\Repository\MenuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -28,9 +29,6 @@ class Menu
     #[ORM\Column]
     private ?float $prixBase = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $conditions = null;
-
     #[ORM\Column]
     private ?int $stockDisponible = null;
 
@@ -40,11 +38,11 @@ class Menu
     #[ORM\ManyToOne(inversedBy: 'menus')]
     private ?Regime $regime = null;
 
-    // Plusieurs images (JSON)
+    // Plusieurs images (stockées en JSON)
     #[ORM\Column(type: 'json')]
     private array $images = [];
 
-    // Image principale (pour la homepage)
+    // Image principale (pour affichage rapide)
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
@@ -54,12 +52,19 @@ class Menu
     #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'menus')]
     private Collection $plats;
 
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: Avis::class, cascade: ['remove'])]
+    private Collection $avis;
+
     public function __construct()
     {
         $this->plats = new ArrayCollection();
-        $this->images = []; // ← IMPORTANT
-
+        $this->images = [];
+        $this->avis = new ArrayCollection();
     }
+
+    // -------------------------
+    // Getters / Setters
+    // -------------------------
 
     public function getId(): ?int
     {
@@ -110,17 +115,6 @@ class Menu
         return $this;
     }
 
-    public function getConditions(): ?string
-    {
-        return $this->conditions;
-    }
-
-    public function setConditions(string $conditions): static
-    {
-        $this->conditions = $conditions;
-        return $this;
-    }
-
     public function getStockDisponible(): ?int
     {
         return $this->stockDisponible;
@@ -154,6 +148,10 @@ class Menu
         return $this;
     }
 
+    // -------------------------
+    // Plats
+    // -------------------------
+
     /**
      * @return Collection<int, Plat>
      */
@@ -176,6 +174,10 @@ class Menu
         return $this;
     }
 
+    // -------------------------
+    // Images multiples
+    // -------------------------
+
     public function getImages(): array
     {
         return $this->images;
@@ -187,14 +189,50 @@ class Menu
         return $this;
     }
 
+    // -------------------------
+    // Image principale
+    // -------------------------
+
     public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage(?string $image): self
+    public function setImage(?string $image): static
     {
         $this->image = $image;
+        return $this;
+    }
+
+    public function getPrixParPersonne(): float
+    {
+        return $this->prixBase / $this->nbPersonnesMin;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $avi->setMenu($this);
+        }
+        return $this;
+    }
+
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            if ($avi->getMenu() === $this) {
+                $avi->setMenu(null);
+            }
+        }
         return $this;
     }
 }

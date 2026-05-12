@@ -16,23 +16,68 @@
         Créer un compte
     </h1>
 
-    {{ form_start(form) }}
-
-    <div style="display: flex; gap: 1rem;">
-        <div style="flex: 1;">
-            {{ form_row(form.prenom) }}
-        </div>
-        <div style="flex: 1;">
-            {{ form_row(form.nom) }}
-        </div>
+    {# 🔥 Affiche les erreurs globales (dont UniqueEntity) #}
+    <div style="color: #b30000; margin-bottom: 1rem; font-size: 0.9rem;">
+        {{ form_errors(form) }}
     </div>
 
-    {{ form_row(form.email) }}
-    {{ form_row(form.plainPassword) }}
+    {{ form_start(form) }}
 
-    <button class="btn-primary" style="width: 100%; margin-top: 1rem;">
-        Créer mon compte
-    </button>
+        {# Champ prénom #}
+        <div style="margin-bottom: 1rem;">
+            {{ form_label(form.prenom) }}
+            {{ form_widget(form.prenom, {
+                attr: {
+                    style: 'width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;'
+                }
+            }) }}
+            <div style="color: #b30000; font-size: 0.85rem;">
+                {{ form_errors(form.prenom) }}
+            </div>
+        </div>
+
+        {# Champ nom #}
+        <div style="margin-bottom: 1rem;">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom, {
+                attr: {
+                    style: 'width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;'
+                }
+            }) }}
+            <div style="color: #b30000; font-size: 0.85rem;">
+                {{ form_errors(form.nom) }}
+            </div>
+        </div>
+
+        {# Champ email + erreurs (🔥 ici s'affiche "Cet email est déjà utilisé") #}
+        <div style="margin-bottom: 1rem;">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, {
+                attr: {
+                    style: 'width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;'
+                }
+            }) }}
+            <div style="color: #b30000; font-size: 0.85rem;">
+                {{ form_errors(form.email) }}
+            </div>
+        </div>
+
+        {# Mot de passe #}
+        <div style="margin-bottom: 1rem;">
+            {{ form_label(form.plainPassword) }}
+            {{ form_widget(form.plainPassword, {
+                attr: {
+                    style: 'width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;'
+                }
+            }) }}
+            <div style="color: #b30000; font-size: 0.85rem;">
+                {{ form_errors(form.plainPassword) }}
+            </div>
+        </div>
+
+        <button class="btn-primary" style="width: 100%; margin-top: 1rem;">
+            Créer mon compte
+        </button>
 
     {{ form_end(form) }}
 

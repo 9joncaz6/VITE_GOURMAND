@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes commandes{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/pages/historique.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="historique-container">
+
+    <h1 class="historique-title">Mes commandes</h1>
+
+    {% if commandes is empty %}
+        <p class="text-muted">Vous n'avez encore passé aucune commande.</p>
+    {% else %}
+
+        <div class="historique-list">
+
+            {% for commande in commandes %}
+                <div class="historique-card">
+
+                    <div class="historique-card-header">
+                        <h3>Commande #{{ commande.id }}</h3>
+                        <span class="historique-date">
+                            {{ commande.createdAt|date('d/m/Y H:i') }}
+                        </span>
+                    </div>
+
+                    <div class="historique-info">
+                        <span class="badge statut-{{ commande.statutActuel }}">
+                            {{ commande.statutActuel }}
+                        </span>
+
+                        <span class="historique-total">
+                            {{ commande.total }} €
+                        </span>
+                    </div>
+
+                    <a href="{{ path('compte_commandes_show', { id: commande.id }) }}"
+                       class="btn-details">
+                        Voir les détails →
+                    </a>
+
+                </div>
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

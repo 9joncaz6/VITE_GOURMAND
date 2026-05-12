@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Laisser un avis{% endblock %}
+
+{% block body %}
+<div class="container mt-5" style="max-width: 700px;">
+    
+    <h2 class="mb-4 text-center">Laisser un avis</h2>
+
+    <div class="card shadow-sm p-4">
+
+        <p class="text-muted mb-4">
+            Commande n° {{ commande.id }} — passée le {{ commande.createdAt|date('d/m/Y') }}
+        </p>
+
+        {{ form_start(form) }}
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Votre note</label>
+                <div class="d-flex gap-3">
+                    {{ form_widget(form.note) }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Votre commentaire</label>
+                {{ form_widget(form.commentaire, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+
+            <button class="btn btn-primary w-100 mt-3">
+                Envoyer mon avis
+            </button>
+
+        {{ form_end(form) }}
+
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ path('app_compte_historique') }}" class="text-decoration-none">
+            ← Retour à mes commandes
+        </a>
+    </div>
+
+</div>
+{% endblock %}

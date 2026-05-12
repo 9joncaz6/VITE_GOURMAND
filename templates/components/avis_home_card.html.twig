@@ -1,0 +1,12 @@
+<div class="avis-card">
+    <div class="avis-avatar"></div>
+
+    <div class="avis-content">
+        <h3>{{ avi.utilisateur.prenom }} {{ avi.utilisateur.nom }}</h3>
+        <p>{{ avi.commentaire }}</p>
+
+        <div class="avis-stars">
+            {% include 'components/stars.html.twig' with { note: avi.note } %}
+        </div>
+    </div>
+</div>

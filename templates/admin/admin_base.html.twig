@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/admin/admin_employe.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/admin/admin_employe_list.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/admin/avis.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="admin-container">
+    {% block admin_body %}{% endblock %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+{% endblock %}

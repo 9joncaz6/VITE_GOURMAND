@@ -3,102 +3,98 @@
 namespace App\Controller;
 
 use App\Entity\Avis;
-use App\Form\AvisType;
-use App\Repository\AvisRepository;
+use App\Entity\Commande;
+use App\Form\AvisTypeClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-// AJOUT NoSQL
-use App\Service\AvisArchiver;
-
-#[Route('/avis')]
-final class AvisController extends AbstractController
+#[IsGranted('ROLE_USER')]
+class AvisController extends AbstractController
 {
-    #[Route(name: 'app_avis_index', methods: ['GET'])]
-    public function index(AvisRepository $avisRepository): Response
-    {
-        return $this->render('avis/index.html.twig', [
-            'avis' => $avisRepository->findAll(),
+    #[Route('/compte/commande/{id}/avis', name: 'compte_avis')]
+    public function avis(
+        Commande $commande,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+
+        $user = $this->getUser();
+
+        // 1) Vérifier que la commande appartient au client connecté
+        if ($commande->getUtilisateur() !== $user) {
+            $this->addFlash('error', 'Vous ne pouvez pas laisser un avis pour cette commande.');
+            return $this->redirectToRoute('app_compte_historique');
+        }
+
+        // 2) Vérifier que la commande est terminée
+        if ($commande->getStatutActuel() !== 'terminee') {
+            $this->addFlash('error', 'Vous ne pouvez laisser un avis que pour une commande terminée.');
+            return $this->redirectToRoute('app_compte_historique');
+        }
+
+        // 3) Vérifier qu’il n’y a pas déjà un avis
+        if ($commande->getAvis()) {
+            $this->addFlash('info', 'Vous avez déjà laissé un avis pour cette commande.');
+            return $this->redirectToRoute('app_compte_historique');
+        }
+
+        // 4) Créer un nouvel avis
+        $avis = new Avis();
+        $form = $this->createForm(AvisTypeClient::class, $avis);
+        $form->handleRequest($request);
+
+        // 5) Traitement du formulaire
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $avis->setUtilisateur($user);
+            $avis->setCommande($commande);
+
+            // Lier l'avis au menu (premier item de la commande)
+            $menu = $commande->getItems()->first()->getMenu();
+            $avis->setMenu($menu);
+
+            $avis->setDate(new \DateTimeImmutable());
+
+            $em->persist($avis);
+            $em->flush();
+
+            $this->addFlash('success', 'Merci pour votre avis !');
+            return $this->redirectToRoute('app_compte_historique');
+        }
+
+        return $this->render('avis/form.html.twig', [
+            'form' => $form->createView(),
+            'commande' => $commande
         ]);
     }
 
-    #[Route('/new', name: 'app_avis_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/compte/avis/{id}/modifier', name: 'compte_avis_modifier')]
+    public function modifier(Request $request, Avis $avis, EntityManagerInterface $em): Response
     {
-        $avi = new Avis();
-        $form = $this->createForm(AvisType::class, $avi);
+        $user = $this->getUser();
+
+        // Vérifier que l'avis appartient bien à l'utilisateur connecté
+        if ($avis->getUtilisateur() !== $user) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $form = $this->createForm(AvisTypeClient::class, $avis);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($avi);
-            $entityManager->flush();
+            $em->flush();
 
-            return $this->redirectToRoute('app_avis_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Votre avis a été modifié.');
+            return $this->redirectToRoute('app_compte_historique');
         }
 
-        return $this->render('avis/new.html.twig', [
-            'avi' => $avi,
-            'form' => $form,
+        return $this->render('avis/modifier.html.twig', [
+            'form' => $form->createView(),
+            'avis' => $avis,
         ]);
-    }
-
-    #[Route('/{id}', name: 'app_avis_show', methods: ['GET'])]
-    public function show(Avis $avi): Response
-    {
-        return $this->render('avis/show.html.twig', [
-            'avi' => $avi,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_avis_edit', methods: ['GET', 'POST'])]
-    public function edit(
-        Request $request,
-        Avis $avi,
-        EntityManagerInterface $entityManager,
-        AvisArchiver $archiver // AJOUT NoSQL
-    ): Response {
-        $form = $this->createForm(AvisType::class, $avi);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            // AJOUT NoSQL : archive avant modification
-            $archiver->archive($avi, [
-                "action" => "modification"
-            ]);
-
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_avis_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('avis/edit.html.twig', [
-            'avi' => $avi,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_avis_delete', methods: ['POST'])]
-    public function delete(
-        Request $request,
-        Avis $avi,
-        EntityManagerInterface $entityManager,
-        AvisArchiver $archiver // AJOUT NoSQL
-    ): Response {
-        if ($this->isCsrfTokenValid('delete'.$avi->getId(), $request->getPayload()->getString('_token'))) {
-
-            // AJOUT NoSQL : archive avant suppression
-            $archiver->archive($avi, [
-                "action" => "suppression"
-            ]);
-
-            $entityManager->remove($avi);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_avis_index', [], Response::HTTP_SEE_OTHER);
     }
 }

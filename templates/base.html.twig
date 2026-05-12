@@ -1,241 +1,195 @@
-{# templates/base.html.twig #}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+
+    {# ===== TITRE DYNAMIQUE ===== #}
     <title>{% block title %}V & G - Vite et Gourmand{% endblock %}</title>
+
+    {# ===== SEO ===== #}
+    <meta name="description" content="V & G - Traiteur artisanal, menus variés, livraison rapide, cuisine maison et service premium. Commandez vos menus en ligne facilement.">
+    <meta name="keywords" content="traiteur, livraison repas, cuisine maison, menus, commande en ligne, vite et gourmand, V&G">
+    <meta name="author" content="V & G - Vite et Gourmand">
+
+    {# ===== RESPONSIVE ===== #}
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {# Reset + base minimaliste #}
-    <style>
-        :root {
-            --bg: #f5f5f5;
-            --white: #ffffff;
-            --text: #222222;
-            --muted: #666666;
-            --primary: #ff7a1a;
-            --primary-dark: #e06610;
-            --border: #e0e0e0;
-        }
+    {# ===== OPEN GRAPH (Facebook, WhatsApp, Messenger) ===== #}
+    <meta property="og:title" content="V & G - Vite et Gourmand">
+    <meta property="og:description" content="Menus variés, cuisine maison, livraison rapide. Découvrez nos menus gourmands.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ app.request.uri }}">
+    <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    {# ===== TWITTER CARDS ===== #}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="V & G - Vite et Gourmand">
+    <meta name="twitter:description" content="Menus variés, cuisine maison, livraison rapide. Découvrez nos menus gourmands.">
+    <meta name="twitter:image" content="{{ asset('images/og-image.jpg') }}">
 
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: var(--bg);
-            color: var(--text);
-        }
+    {# ===== FAVICON ===== #}
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
+    {# ===== CSS PRINCIPAUX ===== #}
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}?v=1">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=1">
 
-        .page {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            background: var(--white);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .header-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .brand {
-            font-weight: 700;
-            font-size: 1.4rem;
-        }
-
-        nav {
-            display: flex;
-            gap: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        nav a {
-            position: relative;
-            padding-bottom: 0.2rem;
-        }
-
-        nav a.active::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-            border-radius: 999px;
-        }
-
-        main {
-            flex: 1;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem 3rem;
-        }
-
-        footer {
-            border-top: 1px solid var(--border);
-            background: #eeeeee;
-        }
-
-        .footer-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 1rem 1.5rem;
-            font-size: 0.85rem;
-            color: var(--muted);
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.7rem 1.4rem;
-            border-radius: 999px;
-            border: none;
-            background: var(--primary);
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: background 0.15s ease-out, transform 0.1s ease-out;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.6rem 1.2rem;
-            border-radius: 999px;
-            border: 1px solid var(--border);
-            background: var(--white);
-            color: var(--text);
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-
-        /* Bouton utilisateur rond */
-        .user-menu {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--white);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background 0.15s ease-out, transform 0.1s ease-out;
-        }
-
-        .user-btn:hover {
-            background: var(--bg);
-            transform: translateY(-1px);
-        }
-
-        .user-icon {
-            font-size: 1.2rem;
-            color: var(--text);
-        }
-
-        @media (max-width: 768px) {
-            .header-inner {
-                padding: 0.8rem 1rem;
-            }
-
-            nav {
-                display: none; /* version mobile : menu burger dans les mockups */
-            }
-
-            .brand {
-                font-size: 1.2rem;
-            }
-
-            main {
-                padding: 1.5rem 1rem 2.5rem;
-            }
-        }
-    </style>
-
-    {% block styles %}{% endblock %}
+    {# ===== CSS SECONDAIRES ===== #}
+    {% block stylesheets %}{% endblock %}
 </head>
+
 
 <body>
 <div class="page">
 
-    <header>
+    {# ============================
+       HEADER DESKTOP
+       ============================ #}
+    <header class="header-desktop">
         <div class="header-inner">
 
-            <div class="brand">V &amp; G</div>
+            <!-- LOGO -->
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" class="icon">
+                        <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M9 10a3 3 0 1 1 6 0c0 1.5-.75 2.25-1.2 2.7-.45.45-.8 1-.8 1.8v.5h-2v-.5c0-.8-.35-1.35-.8-1.8C9.75 12.25 9 11.5 9 10z"
+                              fill="currentColor"/>
+                    </svg>
+                </div>
+                <span class="logo-text">V &amp; G</span>
+            </div>
 
-            {# Navigation principale #}
-            <nav>
-                <a href="{{ path('app_home') }}"
-                   class="{% if app.current_route is defined and app.current_route starts with 'app_home' %}active{% endif %}">
-                    Accueil
-                </a>
+            <!-- NAVIGATION -->
+            <div class="right-side">
 
-                <a href="{{ path('app_menu_index') }}"
-                   class="{% if app.current_route is defined and app.current_route starts with 'app_menu_' %}active{% endif %}">
-                    Menus
-                </a>
+                <nav class="main-nav">
 
-                <a href="{{ path('app_contact') }}"
-                   class="{% if app.current_route is defined and app.current_route starts with 'app_contact' %}active{% endif %}">
-                    Contacts
-                </a>
-            </nav>
-
-            {# Bouton compte utilisateur #}
-            <div class="user-menu">
-                {% if app.user %}
-                    <a href="{{ path('app_compte') }}" class="user-btn">
-                        <span class="user-icon">👤</span>
+                    <a href="{{ path('app_home') }}"
+                       class="{% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">
+                        Accueil
                     </a>
-                {% else %}
-                    <a href="{{ path('app_login') }}" class="user-btn">
-                        <span class="user-icon">👤</span>
+
+                    <a href="{{ path('app_menu_index') }}"
+                       class="{% if app.request.attributes.get('_route') starts with 'app_menu' %}active{% endif %}">
+                        Menus
                     </a>
-                {% endif %}
+
+                    <a href="{{ path('app_contact') }}"
+                       class="{% if app.request.attributes.get('_route') == 'app_contact' %}active{% endif %}">
+                        Contacts
+                    </a>
+
+                </nav>
+
+                <!-- USER MENU -->
+                <div class="user-menu">
+
+                    {% if app.user %}
+
+                        <div class="user-info">
+                            <span class="user-icon">👤</span>
+                            <span class="user-name">
+                                {{ app.user.prenom }}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <span class="badge-admin">Admin</span>
+                                {% elseif is_granted('ROLE_EMPLOYE') %}
+                                    <span class="badge-admin">Employé</span>
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        {# ADMIN : lien vers le dashboard #}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('admin_dashboard') }}" class="admin-link">Dashboard admin</a>
+                        {% endif %}
+
+                        {# EMPLOYÉ : uniquement commandes #}
+                        {% if is_granted('ROLE_EMPLOYE') and not is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('employe_commandes_index') }}" class="admin-link">Commandes employé</a>
+                        {% endif %}
+
+                        {# UTILISATEUR CONNECTÉ #}
+                        <a href="{{ path('app_compte_index') }}">Mon compte</a>
+
+                        <a href="{{ path('app_logout') }}" class="logout-btn">Déconnexion</a>
+
+                    {% else %}
+
+                        <a href="{{ path('app_login') }}" class="user-icon">👤</a>
+
+                    {% endif %}
+
+                </div>
+
             </div>
 
         </div>
     </header>
 
+
+    {# ============================
+       MENU MOBILE
+       ============================ #}
+    <nav class="mobile-menu">
+
+        <a href="{{ path('app_home') }}"
+           class="{% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">
+            Accueil
+        </a>
+
+        <a href="{{ path('app_menu_index') }}"
+           class="{% if app.request.attributes.get('_route') starts with 'app_menu' %}active{% endif %}">
+            Menus
+        </a>
+
+        <a href="{{ path('app_contact') }}"
+           class="{% if app.request.attributes.get('_route') == 'app_contact' %}active{% endif %}">
+            Contacts
+        </a>
+
+        {% if app.user %}
+
+            {# ADMIN #}
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('admin_dashboard') }}">Dashboard admin</a>
+            {% endif %}
+
+            {# EMPLOYÉ #}
+            {% if is_granted('ROLE_EMPLOYE') and not is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('employe_commandes_index') }}">Commandes employé</a>
+            {% endif %}
+
+            <a href="{{ path('app_compte_index') }}">Mon compte</a>
+            <a href="{{ path('app_logout') }}">Déconnexion</a>
+
+        {% else %}
+            <a href="{{ path('app_login') }}">Connexion</a>
+        {% endif %}
+
+    </nav>
+
+
+    {# ============================
+       CONTENU PRINCIPAL
+       ============================ #}
     <main>
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash flash-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
         {% block body %}{% endblock %}
     </main>
 
+
+    {# ============================
+       FOOTER
+       ============================ #}
     <footer>
         <div class="footer-inner">
             <a href="{{ path('app_horaires') }}">Horaires</a>
@@ -246,9 +200,10 @@
 
 </div>
 
-    {% block javascripts %}
+{% block javascripts %}
     <script src="{{ asset('js/main.js') }}"></script>
-    {% endblock %}
+    <script src="{{ asset('js/menu-filters.js') }}"></script>
+{% endblock %}
 
 </body>
 </html>

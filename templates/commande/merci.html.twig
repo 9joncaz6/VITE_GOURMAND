@@ -1,30 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Merci pour votre commande{% endblock %}
+{% block title %}Commande confirmée{% endblock %}
 
-{% block styles %}
-    <link rel="stylesheet" href="{{ asset('styles/pages/merci.css') }}">
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/pages/merci.css') }}">
 {% endblock %}
 
 {% block body %}
 
-<section class="merci-container">
+<div class="merci-container">
 
     <div class="merci-card">
-        <div class="icon">✔</div>
 
-        <h1>Merci pour votre commande</h1>
+        <div class="checkmark">✔</div>
 
-        <p>
+        <h1 class="merci-title">Merci pour votre commande !</h1>
+
+        <p class="merci-text">
             Votre commande a bien été enregistrée.<br>
-            Vous recevrez un email de confirmation dans quelques instants.
+            Nous la préparons avec soin.
         </p>
 
-        <a href="{{ path('app_home') }}" class="btn-primary retour-btn">
-            Retour à l’accueil
-        </a>
+        <div class="merci-info">
+            <p><strong>Numéro de commande :</strong> #{{ commande.id }}</p>
+            <p><strong>Total :</strong> {{ commande.total }} €</p>
+        </div>
+
+        <div class="merci-buttons">
+            <a href="{{ path('compte_commandes_show', { id: commande.id }) }}" class="btn-primary">
+                Voir ma commande →
+            </a>
+
+            <a href="{{ path('app_menu_index') }}" class="btn-secondary">
+                Retour aux menus
+            </a>
+        </div>
+
     </div>
 
-</section>
+</div>
 
 {% endblock %}

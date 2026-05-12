@@ -1,0 +1,61 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Liste des employés{% endblock %}
+
+{% block admin_body %}
+
+<h1 class="mb-4">Gestion des employés</h1>
+
+<a href="{{ path('admin_employe_create') }}" class="btn btn-primary mb-3">
+    + Créer un employé
+</a>
+
+<div class="card p-4 shadow-sm">
+
+    {% if employes is empty %}
+        <div class="alert alert-info">Aucun employé trouvé.</div>
+    {% else %}
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Actif</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for employe in employes %}
+                <tr>
+                    <td>{{ employe.email }}</td>
+
+                    <td>
+                        {% if employe.actif %}
+                            <span class="badge bg-success">Actif</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactif</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="{{ path('admin_employe_toggle', {id: employe.id}) }}"
+                           class="btn btn-sm btn-outline-secondary">
+                            {{ employe.actif ? 'Désactiver' : 'Activer' }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    {% endif %}
+
+</div>
+
+<a href="{{ path('admin_dashboard') }}" class="btn btn-secondary mt-3">
+    Retour au tableau de bord
+</a>
+
+{% endblock %}

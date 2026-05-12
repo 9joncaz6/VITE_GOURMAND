@@ -1,0 +1,99 @@
+/* Container principal */
+.admin-edit-container {
+    max-width: 520px;
+    margin: 2rem auto;
+    background: #fff;
+    padding: 2rem 2.4rem;
+    border-radius: 18px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* Titre */
+.admin-edit-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.admin-edit-subtitle {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #666;
+}
+
+/* Champs */
+.admin-field {
+    margin-bottom: 1rem;
+}
+
+.admin-field input,
+.admin-field select,
+.admin-field textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.admin-error {
+    color: #b30000;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+}
+
+/* Blocs gris */
+.admin-box {
+    margin: 1.5rem 0;
+    padding: 1.2rem;
+    background: #f8f8f8;
+    border-radius: 10px;
+    border: 1px solid #e5e5e5;
+}
+
+/* TITRES des blocs (Compte actif / Rôles) */
+.admin-box > label,
+.admin-box > legend {
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Options (checkbox / radio) — PAS en gras */
+.admin-options label {
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+/* Pour éviter que les cases soient collées */
+.admin-options input {
+    margin-right: 6px;
+}
+
+/* Bouton */
+.admin-submit {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+/* Lien retour */
+.admin-back {
+    text-align: center;
+    margin-top: 1.2rem;
+}
+
+.admin-back a {
+    color: var(--primary);
+    font-size: 0.9rem;
+}

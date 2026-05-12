@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un employé{% endblock %}
+
+{% block body %}
+
+<h1 class="mb-4">Créer un employé</h1>
+
+<div class="card p-4 shadow-sm">
+
+    {{ form_start(form) }}
+
+        {{ form_row(form.email) }}
+        {{ form_row(form.password) }}
+
+        <button class="btn btn-primary mt-3">Créer l'employé</button>
+
+    {{ form_end(form) }}
+
+</div>
+
+<a href="{{ path('admin_employe_list') }}" class="btn btn-secondary mt-3">
+    Retour à la liste des employés
+</a>
+
+{% endblock %}

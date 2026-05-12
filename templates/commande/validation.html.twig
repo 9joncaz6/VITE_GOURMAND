@@ -1,36 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Validation de la commande{% endblock %}
+{% block title %}Validation de commande{% endblock %}
 
 {% block body %}
-<h1>Validation de la commande</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Menu</th>
-            <th>Quantité</th>
-            <th>Prix</th>
-            <th>Total</th>
-        </tr>
-    </thead>
+<h1>Validation de votre commande</h1>
 
-    <tbody>
-        {% for item in items %}
-            <tr>
-                <td>{{ item.menu.titre }}</td>
-                <td>{{ item.quantite }}</td>
-                <td>{{ item.menu.prixBase }} €</td>
-                <td>{{ item.subtotal }} €</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<section class="validation-section">
 
-<h3>Total : {{ total }} €</h3>
+    <h2>Votre panier</h2>
 
-<a href="{{ path('app_commande_create') }}" class="btn btn-success">
-    Confirmer la commande
-</a>
+    {% for item in items %}
+        {% set prixBase = item.menu.prixBase + 0 %}
+        {% set nbMin = item.menu.nbPersonnesMin + 0 %}
+        {% set qte = item.quantite + 0 %}
+        {% set sousTotal = (prixBase / nbMin) * qte %}
+
+        <div class="validation-item">
+            <strong>{{ item.menu.titre }}</strong><br>
+            Quantité : {{ qte }}<br>
+            Sous-total : {{ sousTotal | number_format(2, ',', ' ') }} €
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <h2>Adresse de livraison</h2>
+    <p>
+        {{ user.adressePostale }}<br>
+        <a href="{{ path('app_compte_edit') }}" class="btn btn-secondary btn-sm">
+            Modifier mon adresse
+        </a>
+    </p>
+
+    <hr>
+
+    <p>Total menus : <strong>{{ totalMenus | number_format(2, ',', ' ') }} €</strong></p>
+    <p>Frais de livraison : <strong>{{ livraison | number_format(2, ',', ' ') }} €</strong></p>
+
+    <p style="font-size:1.4rem; font-weight:bold;">
+        Total à payer : {{ totalFinal | number_format(2, ',', ' ') }} €
+    </p>
+
+    <a href="{{ path('app_commande_confirmer') }}" class="btn btn-primary">
+        Confirmer ma commande
+    </a>
+
+</section>
 
 {% endblock %}

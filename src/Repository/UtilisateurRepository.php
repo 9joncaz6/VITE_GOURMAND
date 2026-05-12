@@ -16,28 +16,31 @@ class UtilisateurRepository extends ServiceEntityRepository
         parent::__construct($registry, Utilisateur::class);
     }
 
-    //    /**
-    //     * @return Utilisateur[] Returns an array of Utilisateur objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Trouve tous les utilisateurs possédant un rôle donné.
+     * Exemple : findByRole('ROLE_EMPLOYE')
+     */
+    public function findByRole(string $role)
+{
+    return $this->createQueryBuilder('u')
+        ->andWhere('u.roles LIKE :role')
+        ->setParameter('role', '%"'.$role.'"%')
+        ->getQuery()
+        ->getResult();
+}
 
-    //    public function findOneBySomeField($value): ?Utilisateur
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+
+    /**
+     * Trouve tous les employés actifs
+     */
+    public function findActiveEmployes(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
+            ->andWhere('u.actif = 1')
+            ->setParameter('role', json_encode('ROLE_EMPLOYE'))
+            ->orderBy('u.email', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

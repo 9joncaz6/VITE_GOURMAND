@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon avis{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">Modifier mon avis</h1>
+
+    <div class="card p-4 shadow-sm">
+
+        {{ form_start(form) }}
+
+            <div class="mb-3">
+                {{ form_label(form.note, 'Note') }}
+                {{ form_widget(form.note) }}
+                {{ form_errors(form.note) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.commentaire, 'Commentaire') }}
+                {{ form_widget(form.commentaire) }}
+                {{ form_errors(form.commentaire) }}
+            </div>
+
+            <button class="btn btn-primary mt-3">Enregistrer les modifications</button>
+
+        {{ form_end(form) }}
+
+    </div>
+
+    <a href="{{ path('compte_commandes') }}" class="btn btn-secondary mt-4">
+        Retour à mes commandes
+    </a>
+
+</div>
+
+{% endblock %}

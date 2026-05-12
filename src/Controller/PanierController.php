@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
-use App\Service\PanierManager;
+use App\Entity\Utilisateur;
+use App\Service\NoSQL\PanierManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/panier')]
 class PanierController extends AbstractController
@@ -13,8 +15,12 @@ class PanierController extends AbstractController
     #[Route('/', name: 'app_panier_show')]
     public function show(PanierManager $panierManager): Response
     {
-        /** @var \App\Entity\Utilisateur $user */
+        /** @var Utilisateur $user */
         $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $userId = $user->getId();
 
         return $this->render('panier/show.html.twig', [
@@ -24,21 +30,47 @@ class PanierController extends AbstractController
     }
 
     #[Route('/add/{menuId}', name: 'app_panier_add')]
-    public function add(int $menuId, PanierManager $panierManager): Response
-    {
-        /** @var \App\Entity\Utilisateur $user */
+    public function add(
+        int $menuId,
+        PanierManager $panierManager,
+        EntityManagerInterface $em
+    ): Response {
+        /** @var Utilisateur $user */
         $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
 
-        $panierManager->addItem($user->getId(), $menuId, 1);
+        $menu = $em->getRepository(\App\Entity\Menu::class)->find($menuId);
+        if (!$menu) {
+            $this->addFlash('error', 'Menu introuvable.');
+            return $this->redirectToRoute('app_panier_show');
+        }
+
+        $quantite = $menu->getNbPersonnesMin() ?? 1;
+
+        $panierManager->addItem($user->getId(), $menuId, $quantite);
+
+        $redirect = $_GET['redirect'] ?? null;
+        if ($redirect === 'validation') {
+            return $this->redirectToRoute('app_commande_validation');
+        }
 
         return $this->redirectToRoute('app_panier_show');
     }
 
     #[Route('/update/{menuId}/{action}', name: 'app_panier_update')]
-    public function update(int $menuId, string $action, PanierManager $panierManager): Response
-    {
-        /** @var \App\Entity\Utilisateur $user */
+    public function update(
+        int $menuId,
+        string $action,
+        PanierManager $panierManager
+    ): Response {
+        /** @var Utilisateur $user */
         $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $userId = $user->getId();
 
         if ($action === 'plus') {
@@ -53,8 +85,11 @@ class PanierController extends AbstractController
     #[Route('/remove/{menuId}', name: 'app_panier_remove')]
     public function remove(int $menuId, PanierManager $panierManager): Response
     {
-        /** @var \App\Entity\Utilisateur $user */
+        /** @var Utilisateur $user */
         $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
 
         $panierManager->removeItem($user->getId(), $menuId);
 

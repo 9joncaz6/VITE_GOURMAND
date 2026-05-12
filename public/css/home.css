@@ -1,0 +1,220 @@
+/* ===========================
+   PAGE D'ACCUEIL
+   =========================== */
+
+.home {
+    width: min(1100px, 90%);
+    margin: 2.5rem auto 3.5rem;
+}
+
+/* ===========================
+   HERO
+   =========================== */
+
+.hero {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: 2.5rem;
+    margin-bottom: 3.5rem;
+}
+
+.hero-text h1 {
+    font-size: 2.4rem;
+    margin-bottom: 0.8rem;
+}
+
+.hero-text p {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 1.4rem;
+}
+
+.hero-image img {
+    width: 100%;
+    border-radius: 14px;
+    display: block;
+}
+
+/* ===========================
+   PRÉSENTATION — VERSION MOCKUP
+   =========================== */
+
+.presentation {
+    background: var(--white);          /* fond blanc comme le mockup */
+    padding: 3rem 2rem;                /* respiration interne */
+    border-radius: 12px;               /* léger arrondi comme le design */
+    
+    display: grid;
+    grid-template-columns: 1fr 1fr;    /* image à gauche, texte à droite */
+    align-items: center;
+    gap: 2.5rem;
+
+    margin: 3rem 0;                    /* espace autour du bloc */
+}
+
+.presentation-image img {
+    width: 100%;
+    border-radius: 12px;               /* arrondi identique au mockup */
+    display: block;
+}
+
+.presentation-text h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.presentation-text h3 {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.presentation-text p {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+
+/* ===========================
+   CARTES MENUS
+   =========================== */
+
+.menus-preview {
+    margin-bottom: 3rem;
+}
+
+.menus-preview h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.menus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.menu-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-4px);
+}
+
+.menu-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.menu-card h3 {
+    margin: 1rem 0 0.5rem;
+    font-size: 1.3rem;
+}
+
+.menu-card .price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e67e22;
+    margin-bottom: 1rem;
+}
+
+.menu-card .btn-primary {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: #e67e22;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 900px) {
+    .hero,
+    .presentation {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        text-align: center;
+    }
+
+    .presentation-text {
+        text-align: center;
+    }
+
+    .menus-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .menus-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===========================
+   AVIS HOMEPAGE (DESKTOP)
+=========================== */
+
+.home-avis {
+    padding: 40px 0;
+}
+
+.home-avis h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.avis-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.avis-card {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.avis-avatar {
+    width: 50px;
+    height: 50px;
+    background: #ddd;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.avis-content h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.avis-content p {
+    margin: 5px 0 10px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.avis-stars svg {
+    width: 18px;
+    height: 18px;
+}

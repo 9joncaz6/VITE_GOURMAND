@@ -24,17 +24,32 @@ class Commande
     #[ORM\Column(type: 'float')]
     private float $total = 0;
 
-    #[ORM\OneToMany(targetEntity: CommandeItem::class, mappedBy: 'commande', cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(
+        targetEntity: CommandeItem::class,
+        mappedBy: 'commande',
+        cascade: ['persist'],
+        orphanRemoval: true
+    )]
     private Collection $items;
 
     #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
 
+    #[ORM\OneToOne(mappedBy: 'commande', cascade: ['persist', 'remove'])]
+    private ?Avis $avis = null;
+
+    #[ORM\OneToMany(targetEntity: CommandeStatut::class, mappedBy: 'commande', cascade: ['persist', 'remove'])]
+    private Collection $commandeStatuts;
+
+    #[ORM\Column(type: 'float')]
+    private ?float $fraisLivraison = 0;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->items = new ArrayCollection();
+        $this->commandeStatuts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,9 +84,7 @@ class Commande
         return $this;
     }
 
-    /**
-     * @return Collection<int, CommandeItem>
-     */
+    /** ITEMS **/
     public function getItems(): Collection
     {
         return $this->items;
@@ -96,6 +109,7 @@ class Commande
         return $this;
     }
 
+    /** UTILISATEUR **/
     public function getUtilisateur(): ?Utilisateur
     {
         return $this->utilisateur;
@@ -104,6 +118,70 @@ class Commande
     public function setUtilisateur(?Utilisateur $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+        return $this;
+    }
+
+    /** AVIS **/
+    public function getAvis(): ?Avis
+    {
+        return $this->avis;
+    }
+
+    public function setAvis(?Avis $avis): self
+    {
+        if ($avis !== null && $avis->getCommande() !== $this) {
+            $avis->setCommande($this);
+        }
+
+        $this->avis = $avis;
+        return $this;
+    }
+
+    /** COMMANDE STATUTS **/
+    public function getCommandeStatuts(): Collection
+    {
+        return $this->commandeStatuts;
+    }
+
+    public function addCommandeStatut(CommandeStatut $commandeStatut): self
+    {
+        if (!$this->commandeStatuts->contains($commandeStatut)) {
+            $this->commandeStatuts->add($commandeStatut);
+            $commandeStatut->setCommande($this);
+        }
+        return $this;
+    }
+
+    public function removeCommandeStatut(CommandeStatut $commandeStatut): self
+    {
+        if ($this->commandeStatuts->removeElement($commandeStatut)) {
+            if ($commandeStatut->getCommande() === $this) {
+                $commandeStatut->setCommande(null);
+            }
+        }
+        return $this;
+    }
+
+    /** STATUT ACTUEL (calculé via CommandeStatut) **/
+    public function getStatutActuel(): ?string
+    {
+        if ($this->commandeStatuts->isEmpty()) {
+            return $this->status; // fallback
+        }
+
+        $dernier = $this->commandeStatuts->last();
+        return $dernier->getStatut();
+    }
+
+    /** FRAIS LIVRAISON **/
+    public function getFraisLivraison(): ?float
+    {
+        return $this->fraisLivraison;
+    }
+
+    public function setFraisLivraison(float $fraisLivraison): self
+    {
+        $this->fraisLivraison = $fraisLivraison;
         return $this;
     }
 }

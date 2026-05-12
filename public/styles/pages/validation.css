@@ -1,0 +1,109 @@
+/* ================================
+   PAGE VALIDATION COMMANDE — V&G
+   ================================ */
+
+.order-validation-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Titre */
+.validation-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Bloc récap */
+.recap-box {
+    background: #fff;
+    padding: 1.8rem;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+/* Tableau */
+.recap-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+.recap-table th {
+    text-align: left;
+    padding: 0.8rem;
+    font-weight: 600;
+    background: #f7f7f7;
+    border-bottom: 2px solid #eee;
+}
+
+.recap-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #eee;
+}
+
+/* Frais de livraison */
+.delivery-info {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+/* Total */
+.total-box {
+    text-align: right;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+}
+
+/* Boutons */
+.validation-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-primary {
+    padding: 0.8rem 1.4rem;
+    background: #e67e22;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    background: #cf6d1a;
+}
+
+.btn-secondary {
+    padding: 0.8rem 1.4rem;
+    background: #ddd;
+    color: #333;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #ccc;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .validation-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .total-box {
+        text-align: center;
+    }
+}
