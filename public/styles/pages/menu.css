@@ -66,7 +66,7 @@
    ================================ */
 
 .menu-rating {
-    color: #f5c518; /* jaune IMDb */
+    color: #f5c518;
     font-size: 20px;
     margin: 10px 0 15px 0;
 }
@@ -82,7 +82,7 @@
 }
 
 /* ================================
-   BOUTON
+   BOUTON AJOUTER AU PANIER
    ================================ */
 
 .menu-button {
@@ -100,6 +100,29 @@
 .menu-button:hover {
     background: #0069d9;
 }
+
+/* ================================
+   BOUTON COMMANDER (VERSION FINALE)
+   ================================ */
+
+.commander-btn {
+    display: inline-block;
+    background: #ff6f00;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 999px; /* arrondi comme Ajouter au panier */
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.commander-btn:hover {
+    background: #e65f00;
+    transform: translateY(-2px);
+}
+
+
 
 /* ================================
    AVIS
@@ -125,7 +148,6 @@
     font-size: 20px;
 }
 
-/* Avatar gris par défaut */
 .avatar-default {
     width: 45px;
     height: 45px;
@@ -186,5 +208,3 @@
         height: auto;
     }
 }
-
-

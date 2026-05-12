@@ -3,7 +3,7 @@
 {% block title %}{{ menu.titre }}{% endblock %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ asset('styles/pages/menu.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/pages/menu.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -24,9 +24,7 @@
 
         <h2 class="menu-subtitle">Description</h2>
 
-        <p class="menu-description">
-            {{ menu.description }}
-        </p>
+        <p class="menu-description">{{ menu.description }}</p>
 
         {% if moyenne %}
             {% set full = moyenne|round(0, 'floor') %}
@@ -44,32 +42,27 @@
         {% if menu.stockDisponible > 0 %}
 
             <!-- AJOUTER AU PANIER -->
-            <a href="{{ path('app_panier_add', {menuId: menu.id}) }}" 
+            <a href="{{ path('app_panier_add', { menuId: menu.id }) }}"
                class="menu-button">
                 Ajouter au panier
             </a>
 
-           <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'validation'}) }}"
-            class="btn w-100 mt-3"
-            style="
-            background: #ff6f00;
-            color: white;
-            font-weight: 600;
-            padding: 15px 25px;
-            border-radius: 30px;
-            font-size: 1.2rem;
-            box-shadow: 0 3px 8px rgba(255,111,0,0.4);
-            transition: 0.2s;
-            "
-            onmouseover="this.style.opacity='0.9'"
-            onmouseout="this.style.opacity='1'">
-            Commander
-        </a>
+            <!-- COMMANDER (adresse obligatoire) -->
+            {% if app.user and app.user.adressePostale %}
+                <a href="{{ path('app_panier_add', { menuId: menu.id, redirect: 'validation' }) }}"
+                   class="commander-btn w-100 mt-3">
+                    Commander
+                </a>
+            {% else %}
+                <a href="{{ path('app_profil_edit') }}"
+                   class="commander-btn w-100 mt-3">
+                    Commander
+                </a>
+            {% endif %}
 
-
-                {% else %}
-                    <span class="badge bg-danger mt-2">Stock épuisé</span>
-                {% endif %}
+        {% else %}
+            <span class="badge bg-danger mt-2">Stock épuisé</span>
+        {% endif %}
 
     </div>
 
@@ -108,7 +101,8 @@
 {% if aDejaLaisseAvis %}
     <div class="alert alert-info mb-4">
         Vous avez déjà laissé un avis pour ce menu.
-        <a href="{{ path('compte_avis_modifier', { id: avisExistant.id }) }}" class="btn btn-sm btn-warning ms-2">
+        <a href="{{ path('compte_avis_modifier', { id: avisExistant.id }) }}"
+           class="btn btn-sm btn-warning ms-2">
             Modifier mon avis
         </a>
     </div>
@@ -127,12 +121,10 @@
 
             <div class="d-flex align-items-center gap-2 mb-2">
                 <div class="avatar-default"></div>
-
                 {% include 'components/stars.html.twig' with { note: a.note } %}
             </div>
 
             <p class="mt-2">{{ a.commentaire }}</p>
-
             <small class="text-muted">Le {{ a.date|date('d/m/Y') }}</small>
 
         </div>
