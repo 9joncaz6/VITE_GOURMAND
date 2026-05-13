@@ -3,7 +3,7 @@
 {% block title %}Menus{% endblock %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ asset('styles/pages/menu.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/pages/menu.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -15,27 +15,22 @@
 ============================ -->
 <div class="filters">
 
+    <!-- Tous -->
     <a href="{{ path('app_menu_index') }}"
-       class="filter-btn {{ criteria.theme is empty and criteria.regime is empty and criteria.prixMin is empty and criteria.prixMax is empty ? 'active' : '' }}">
+       class="filter-btn {{ criteria.theme is empty and criteria.prixMin is empty and criteria.prixMax is empty ? 'active' : '' }}">
         Tous
     </a>
 
-    <a href="{{ path('app_menu_index', { theme: 1 }) }}"
-       class="filter-btn {{ criteria.theme == 1 ? 'active' : '' }}">
-        Thème 1
-    </a>
+    <!-- Filtres dynamiques par thème -->
+    {% for t in themes %}
+        <a href="{{ path('app_menu_index', { theme: t }) }}"
+           class="filter-btn {{ criteria.theme == t ? 'active' : '' }}">
+            {{ t }}
+        </a>
+    {% endfor %}
 
-    <a href="{{ path('app_menu_index', { theme: 2 }) }}"
-       class="filter-btn {{ criteria.theme == 2 ? 'active' : '' }}">
-        Thème 2
-    </a>
-
-    <a href="{{ path('app_menu_index', { regime: 1 }) }}"
-       class="filter-btn {{ criteria.regime == 1 ? 'active' : '' }}">
-        Régime 1
-    </a>
-
-    <a href="{{ path('app_menu_index', { prixMin: 0, prixMax: 15 }) }}"
+    <!-- Prix -->
+    <a href="{{ path('app_menu_index', { prixMax: 15 }) }}"
        class="filter-btn {{ criteria.prixMax == 15 ? 'active' : '' }}">
         -15€
     </a>
@@ -52,14 +47,12 @@
 
 </div>
 
-
 <!-- ============================
-     LISTE DES MENUS (AJAX)
+     LISTE DES MENUS
 ============================ -->
 <div id="menu-list">
     {% include 'menu/_list.html.twig' with { menus: menus } %}
 </div>
-
 
 <!-- ===========================
      AVIS CLIENTS
@@ -68,7 +61,7 @@
     <h2>Les avis de nos clients</h2>
 
     <div class="avis-grid">
-        {% for avi in avis|slice(0, 3) %}
+        {% for avi in avis %}
             {% include 'components/avis_home_card.html.twig' with { avi: avi } %}
         {% endfor %}
     </div>
