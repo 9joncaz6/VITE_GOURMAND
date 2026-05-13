@@ -1,5 +1,5 @@
 /* ================================
-   LAYOUT EN DEUX COLONNES
+   LAYOUT EN DEUX COLONNES (PAGE SHOW)
    ================================ */
 
 .menu-layout {
@@ -102,7 +102,7 @@
 }
 
 /* ================================
-   BOUTON COMMANDER (VERSION FINALE)
+   BOUTON COMMANDER
    ================================ */
 
 .commander-btn {
@@ -110,7 +110,7 @@
     background: #ff6f00;
     color: white;
     padding: 12px 28px;
-    border-radius: 999px; /* arrondi comme Ajouter au panier */
+    border-radius: 999px;
     font-size: 18px;
     font-weight: 600;
     text-decoration: none;
@@ -121,8 +121,6 @@
     background: #e65f00;
     transform: translateY(-2px);
 }
-
-
 
 /* ================================
    AVIS
@@ -190,7 +188,77 @@
 }
 
 /* ================================
-   RESPONSIVE
+   GRILLE DES MENUS (PAGE INDEX)
+   ================================ */
+
+.menus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+/* ================================
+   CARTE MENU
+   ================================ */
+
+.menu-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: 0.2s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-3px);
+}
+
+.menu-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.menu-info {
+    padding: 15px;
+}
+
+.menu-info h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.menu-info p {
+    margin: 5px 0;
+}
+
+.menu-info .price {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+.menu-info .btn-primary {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.menu-info .btn-primary:hover {
+    background: #0069d9;
+}
+
+/* ================================
+   RESPONSIVE GLOBAL
    ================================ */
 
 @media (max-width: 900px) {
@@ -206,5 +274,21 @@
     .menu-image {
         max-width: 100%;
         height: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .menu-title {
+        font-size: 26px;
+    }
+
+    .menu-subtitle {
+        font-size: 18px;
+    }
+
+    .menu-button,
+    .commander-btn {
+        width: 100%;
+        text-align: center;
     }
 }
