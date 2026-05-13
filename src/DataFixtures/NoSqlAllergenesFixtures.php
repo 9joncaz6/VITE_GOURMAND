@@ -2,13 +2,14 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Menu;
 use App\Repository\MenuRepository;
 use App\Service\NoSQL\AllergenesService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class NoSqlAllergenesFixtures extends Fixture implements FixtureGroupInterface
+class NoSqlAllergenesFixtures extends Fixture implements DependentFixtureInterface
 {
     private array $liste = [
         'gluten',
@@ -29,9 +30,10 @@ class NoSqlAllergenesFixtures extends Fixture implements FixtureGroupInterface
 
     public function load(ObjectManager $manager): void
     {
-        // 🔥 Purge MongoDB avant de réinjecter
+        // 🔥 Purge NoSQL avant réinjection
         $this->service->purge();
 
+        // ✔ Les menus existent maintenant (MenuFixtures a déjà tourné)
         $menus = $this->menuRepo->findAll();
 
         foreach ($menus as $menu) {
@@ -45,12 +47,16 @@ class NoSqlAllergenesFixtures extends Fixture implements FixtureGroupInterface
                 $allergenes[] = $this->liste[$i];
             }
 
+            // ✔ Enregistrement NoSQL
             $this->service->setAllergenesForMenu($menu->getId(), $allergenes);
         }
     }
 
-    public static function getGroups(): array
+    // ✔ Cette fixture DOIT tourner après MenuFixtures
+    public function getDependencies(): array
     {
-        return ['nosql'];
+        return [
+            MenuFixtures::class,
+        ];
     }
 }

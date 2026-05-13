@@ -2,12 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Menu;
 use App\Entity\Plat;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use App\DataFixtures\MenuFixtures;
 
-class PlatFixtures extends Fixture
+class PlatFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -40,12 +41,10 @@ class PlatFixtures extends Fixture
         }
 
         /**
-         * 2) NOUVEAUX PLATS PAR MENU (SANS PRIX)
+         * 2) NOUVEAUX PLATS PAR MENU
          */
         $data = [
-
-            // 🌮 MENU MEXICAIN
-            25 => [
+            0 => [ /* Mexicain */ 
                 ['Nachos au fromage', 'entrée', 'Nachos croustillants gratinés au cheddar.'],
                 ['Soupe tortilla', 'entrée', 'Soupe mexicaine traditionnelle légèrement épicée.'],
                 ['Guacamole maison', 'entrée', 'Avocat frais, citron vert, coriandre.'],
@@ -56,8 +55,7 @@ class PlatFixtures extends Fixture
                 ['Flan mexicain', 'dessert', 'Flan traditionnel au caramel.'],
             ],
 
-            // 🍕 MENU PIZZA
-            26 => [
+            1 => [ /* Pizza */ 
                 ['Bruschetta tomate basilic', 'entrée', 'Pain grillé, tomate fraîche, basilic.'],
                 ['Salade caprese', 'entrée', 'Tomate, mozzarella, basilic, huile d’olive.'],
                 ['Pain à l’ail gratiné', 'entrée', 'Pain grillé au beurre d’ail et fromage.'],
@@ -68,8 +66,7 @@ class PlatFixtures extends Fixture
                 ['Panna cotta vanille', 'dessert', 'Crème vanille et coulis de fruits rouges.'],
             ],
 
-            // 🍜 MENU ASIATIQUE
-            27 => [
+            2 => [ /* Asiatique */ 
                 ['Soupe miso', 'entrée', 'Bouillon miso japonais traditionnel.'],
                 ['Nems au poulet', 'entrée', 'Nems croustillants accompagnés de sauce nuoc-mâm.'],
                 ['Salade thaï', 'entrée', 'Salade fraîche et légèrement épicée.'],
@@ -80,8 +77,7 @@ class PlatFixtures extends Fixture
                 ['Mochi glacé', 'dessert', 'Mochi japonais fourré glace.'],
             ],
 
-            // 🥗 MENU VÉGÉTARIEN
-            28 => [
+            3 => [ /* Végétarien */ 
                 ['Velouté de potiron', 'entrée', 'Soupe crémeuse au potiron.'],
                 ['Salade quinoa avocat', 'entrée', 'Salade fraîche et équilibrée.'],
                 ['Houmous & crudités', 'entrée', 'Houmous maison et légumes croquants.'],
@@ -92,8 +88,7 @@ class PlatFixtures extends Fixture
                 ['Brownie vegan', 'dessert', 'Brownie au chocolat sans produits animaux.'],
             ],
 
-            // 🍔 MENU BURGER
-            29 => [
+            4 => [ /* Burger */ 
                 ['Onion rings', 'entrée', 'Rondelles d’oignon croustillantes.'],
                 ['Frites cheddar', 'entrée', 'Frites nappées de cheddar fondu.'],
                 ['Chicken bites', 'entrée', 'Morceaux de poulet croustillants.'],
@@ -104,8 +99,7 @@ class PlatFixtures extends Fixture
                 ['Cookie XXL', 'dessert', 'Grand cookie moelleux.'],
             ],
 
-            // 🍝 MENU ITALIEN
-            30 => [
+            5 => [ /* Italien */ 
                 ['Carpaccio de bœuf', 'entrée', 'Fines tranches de bœuf marinées.'],
                 ['Antipasti variés', 'entrée', 'Sélection d’antipasti italiens.'],
                 ['Salade César', 'entrée', 'Salade, poulet, parmesan, croûtons.'],
@@ -120,10 +114,10 @@ class PlatFixtures extends Fixture
         /**
          * 3) CRÉATION DES PLATS + ASSOCIATION AUX MENUS
          */
-        foreach ($data as $menuId => $plats) {
+        foreach ($data as $menuIndex => $plats) {
 
-            /** @var Menu $menu */
-            $menu = $manager->getRepository(Menu::class)->find($menuId);
+            /** @var \App\Entity\Menu $menu */
+            $menu = $this->getReference('menu_' . $menuIndex, \App\Entity\Menu::class);
 
             foreach ($plats as [$nom, $type, $description]) {
 
@@ -140,5 +134,12 @@ class PlatFixtures extends Fixture
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            MenuFixtures::class,
+        ];
     }
 }
