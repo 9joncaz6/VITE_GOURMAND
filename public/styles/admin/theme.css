@@ -1,0 +1,204 @@
+/* ============================
+   STRUCTURE DE PAGE
+============================ */
+
+.admin-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+/* ============================
+   CARDS
+============================ */
+
+.admin-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+.form-card {
+    padding: 30px;
+}
+
+/* ============================
+   TABLE THEMES (TES CLASSES)
+============================ */
+
+.table-themes {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.table-themes th,
+.table-themes td {
+    padding: 12px 18px;
+    border-bottom: 1px solid #eee;
+}
+
+.table-themes th {
+    background: #f5f5f5;
+    font-weight: 600;
+    color: #444;
+}
+
+.table-themes tr:hover td {
+    background: #fafafa;
+}
+
+.col-id { width: 80px; }
+.col-nom { width: 300px; }
+.col-actions { width: 260px; }
+
+.table-themes td {
+    vertical-align: middle;
+}
+
+/* ============================
+   TABLE CLEAN (SHOW PAGE)
+============================ */
+
+.clean-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.clean-table th {
+    text-align: left;
+    padding: 12px;
+    background: #f5f5f5;
+    width: 180px;
+    font-weight: 600;
+}
+
+.clean-table td {
+    padding: 12px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+/* ============================
+   ACTIONS
+============================ */
+
+.actions-top {
+    margin-bottom: 20px;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.inline-form {
+    display: inline-block;
+}
+
+/* ============================
+   BOUTONS PREMIUM
+============================ */
+
+.btn-primary,
+.btn-secondary,
+.btn-warning,
+.btn-danger {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+.btn-primary:hover {
+    background: #0069d9;
+}
+
+.btn-secondary {
+    background: #e0e0e0;
+    color: #333;
+}
+.btn-secondary:hover {
+    background: #d5d5d5;
+}
+
+.btn-warning {
+    background: #ffb400;
+    color: #fff;
+}
+.btn-warning:hover {
+    background: #e6a200;
+}
+
+.btn-danger {
+    background: #e63946;
+    color: white;
+}
+.btn-danger:hover {
+    background: #c92f3c;
+}
+
+/* ============================
+   FORMULAIRES
+============================ */
+
+.admin-form .form-group {
+    margin-bottom: 20px;
+}
+
+.admin-form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.admin-form input:focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
+}
+
+/* ============================
+   EMPTY STATE
+============================ */
+
+.empty {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: #777;
+}

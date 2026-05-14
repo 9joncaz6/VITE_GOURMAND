@@ -1,0 +1,22 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Modifier un thème{% endblock %}
+
+{% block body %}
+
+<div class="admin-page">
+
+    <h1 class="page-title">Modifier le thème</h1>
+
+    <div class="admin-card form-card">
+        {{ include('admin/theme/_form.html.twig', { button_label: 'Mettre à jour' }) }}
+    </div>
+
+    <div class="admin-actions">
+        <a href="{{ path('admin_theme_index') }}" class="btn-secondary">← Retour</a>
+        {{ include('admin/theme/_delete_form.html.twig', { theme: theme }) }}
+    </div>
+
+</div>
+
+{% endblock %}

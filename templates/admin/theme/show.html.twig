@@ -1,0 +1,34 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Détails du thème{% endblock %}
+
+{% block body %}
+
+<div class="admin-page">
+
+    <h1 class="page-title">Détails du thème</h1>
+
+    <div class="admin-card">
+        <table class="table clean-table">
+            <tbody>
+                <tr>
+                    <th>ID</th>
+                    <td>{{ theme.id }}</td>
+                </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ theme.nom }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-actions">
+        <a href="{{ path('admin_theme_index') }}" class="btn-secondary">← Retour</a>
+        <a href="{{ path('admin_theme_edit', { id: theme.id }) }}" class="btn-warning">Modifier</a>
+        {{ include('admin/theme/_delete_form.html.twig', { theme: theme }) }}
+    </div>
+
+</div>
+
+{% endblock %}

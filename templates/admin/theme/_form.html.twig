@@ -1,0 +1,11 @@
+{{ form_start(form, { attr: { class: 'admin-form' } }) }}
+
+    <div class="form-fields">
+        {{ form_widget(form) }}
+    </div>
+
+    <button class="btn-primary">
+        {{ button_label|default('Enregistrer') }}
+    </button>
+
+{{ form_end(form) }}

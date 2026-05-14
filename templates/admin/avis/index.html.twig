@@ -2,12 +2,9 @@
 
 {% block title %}Gestion des avis{% endblock %}
 
-
-
 {% block body %}
 
 <h1 class="page-title">Gestion des avis</h1>
-
 
 <form method="get" class="filters">
     <div>
@@ -37,44 +34,48 @@
     <button type="submit" class="btn-secondary">Filtrer</button>
 </form>
 
-
-
-<table class="table-commandes">
+<table class="table-commandes table-avis">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Client</th>
-            <th>Menu</th>
-            <th>Note</th>
-            <th>Date</th>
-            <th>Actions</th>
+            <th class="col-id">ID</th>
+            <th class="col-client">Client</th>
+            <th class="col-menu">Menu</th>
+            <th class="col-note">Note</th>
+            <th class="col-apercu">Aperçu</th>
+            <th class="col-date">Date</th>
+            <th class="col-actions">Actions</th>
         </tr>
     </thead>
 
     <tbody>
         {% for a in avis %}
             <tr>
-                <td>#{{ a.id }}</td>
-                <td>{{ a.utilisateur.email }}</td>
-                <td>{{ a.menu.titre }}</td>
-                <td>{{ a.note }}/5</td>
-                <td>{{ a.date|date('d/m/Y H:i') }}</td>
-                <td>
+                <td class="col-id">#{{ a.id }}</td>
+                <td class="col-client">{{ a.utilisateur.email }}</td>
+                <td class="col-menu">{{ a.menu.titre }}</td>
 
+                <td class="col-note">
+                    {% for i in 1..a.note %} ⭐ {% endfor %}
+                    {% for i in (a.note+1)..5 %} ☆ {% endfor %}
+                </td>
 
-                    <a href="{{ path('admin_avis_show', { id: a.id }) }}" class="btn-secondary">Voir</a>
+                <td class="col-apercu">
+                    {{ a.commentaire|length > 60 
+                        ? a.commentaire|slice(0, 60) ~ '…' 
+                        : a.commentaire 
+                    }}
+                </td>
 
-{% if a.valide %}
-    <a href="{{ path('admin_avis_toggle', { id: a.id }) }}" class="btn-warning">Masquer</a>
-{% else %}
-    <a href="{{ path('admin_avis_toggle', { id: a.id }) }}" class="btn-success">Valider</a>
-{% endif %}
+                <td class="col-date">{{ a.date|date('d/m/Y H:i') }}</td>
 
-<a href="{{ path('admin_avis_delete', { id: a.id }) }}" class="btn-danger"
-   onclick="return confirm('Supprimer cet avis ?')">
-    Supprimer
-</a>
+                <td class="col-actions">
+                    <a href="{{ path('admin_avis_show', { id: a.id }) }}" class="btn-secondary btn-small">Voir</a>
 
+                    <a href="{{ path('admin_avis_delete', { id: a.id }) }}" 
+                       class="btn-danger btn-small"
+                       onclick="return confirm('Supprimer cet avis ?')">
+                        Supprimer
+                    </a>
                 </td>
             </tr>
         {% endfor %}

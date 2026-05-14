@@ -1,0 +1,72 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Theme index{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/admin/theme.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <h1>Theme index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for theme in themes %}
+            <tr>
+                <td>{{ theme.id }}</td>
+                <td>{{ theme.nom }}</td>
+
+                <td>
+
+                    <a href="{{ path('admin_theme_show', { id: theme.id }) }}"
+                       class="btn-secondary btn-small">
+                        Voir
+                    </a>
+
+                    <a href="{{ path('admin_theme_edit', { id: theme.id }) }}"
+                       class="btn-warning btn-small">
+                        Modifier
+                    </a>
+
+                    <form method="post"
+                          action="{{ path('admin_theme_delete', { id: theme.id }) }}"
+                          style="display:inline-block"
+                          onsubmit="return confirm('Supprimer ce thème ?');">
+
+                        <input type="hidden"
+                               name="_token"
+                               value="{{ csrf_token('delete' ~ theme.id) }}">
+
+                        <button class="btn-danger btn-small">
+                            Supprimer
+                        </button>
+                    </form>
+
+                </td>
+            </tr>
+
+        {% else %}
+            <tr>
+                <td colspan="3" class="text-center text-muted">
+                    Aucun thème trouvé.
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin_theme_new') }}" class="btn-primary">
+        ➕ Créer un nouveau thème
+    </a>
+
+{% endblock %}
