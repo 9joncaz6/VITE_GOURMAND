@@ -9,13 +9,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-
-
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[UniqueEntity(fields: ['email'], message: 'Cet email est déjà utilisé.')]
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -47,9 +44,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $actif = true;
 
-    // -------------------------
-    // Relations
-    // -------------------------
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private ?string $resetToken = null;
 
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Commande::class)]
     private Collection $commandes;
@@ -63,80 +59,25 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->avis = new ArrayCollection();
     }
 
-    // -------------------------
-    // Getters / Setters
-    // -------------------------
+    public function getId(): ?int { return $this->id; }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getNom(): ?string { return $this->nom; }
+    public function setNom(string $nom): static { $this->nom = $nom; return $this; }
 
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
+    public function getPrenom(): ?string { return $this->prenom; }
+    public function setPrenom(string $prenom): static { $this->prenom = $prenom; return $this; }
 
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
-        return $this;
-    }
+    public function getEmail(): ?string { return $this->email; }
+    public function setEmail(string $email): static { $this->email = $email; return $this; }
 
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
+    public function getGsm(): ?string { return $this->gsm; }
+    public function setGsm(string $gsm): static { $this->gsm = $gsm; return $this; }
 
-    public function setPrenom(string $prenom): static
-    {
-        $this->prenom = $prenom;
-        return $this;
-    }
+    public function getAdressePostale(): ?string { return $this->adressePostale; }
+    public function setAdressePostale(?string $adressePostale): static { $this->adressePostale = $adressePostale; return $this; }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-        return $this;
-    }
-
-    public function getGsm(): ?string
-    {
-        return $this->gsm;
-    }
-
-    public function setGsm(string $gsm): static
-    {
-        $this->gsm = $gsm;
-        return $this;
-    }
-
-    public function getAdressePostale(): ?string
-    {
-        return $this->adressePostale;
-    }
-
-    public function setAdressePostale(?string $adressePostale): static
-    {
-        $this->adressePostale = $adressePostale;
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): static
-    {
-        $this->password = $password;
-        return $this;
-    }
+    public function getPassword(): ?string { return $this->password; }
+    public function setPassword(string $password): static { $this->password = $password; return $this; }
 
     public function getRoles(): array
     {
@@ -144,50 +85,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $roles[] = 'ROLE_USER';
         return array_unique($roles);
     }
+    public function setRoles(array $roles): static { $this->roles = $roles; return $this; }
 
-    public function setRoles(array $roles): static
-    {
-        $this->roles = $roles;
-        return $this;
-    }
+    public function isActif(): ?bool { return $this->actif; }
+    public function setActif(bool $actif): static { $this->actif = $actif; return $this; }
 
-    public function isActif(): ?bool
-    {
-        return $this->actif;
-    }
+    public function getUserIdentifier(): string { return $this->email; }
+    public function eraseCredentials(): void {}
 
-    public function setActif(bool $actif): static
-    {
-        $this->actif = $actif;
-        return $this;
-    }
+    public function getResetToken(): ?string { return $this->resetToken; }
+    public function setResetToken(?string $resetToken): static { $this->resetToken = $resetToken; return $this; }
 
-    // -------------------------
-    // Security Interface
-    // -------------------------
-
-    public function getUserIdentifier(): string
-    {
-        return $this->email;
-    }
-
-    public function eraseCredentials(): void
-    {
-        // Nettoyage éventuel
-    }
-
-    // -------------------------
-    // Commandes
-    // -------------------------
-
-    /**
-     * @return Collection<int, Commande>
-     */
-    public function getCommandes(): Collection
-    {
-        return $this->commandes;
-    }
-
+    public function getCommandes(): Collection { return $this->commandes; }
     public function addCommande(Commande $commande): static
     {
         if (!$this->commandes->contains($commande)) {
@@ -207,18 +116,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // -------------------------
-    // Avis
-    // -------------------------
-
-    /**
-     * @return Collection<int, Avis>
-     */
-    public function getAvis(): Collection
-    {
-        return $this->avis;
-    }
-
+    public function getAvis(): Collection { return $this->avis; }
     public function addAvi(Avis $avi): static
     {
         if (!$this->avis->contains($avi)) {

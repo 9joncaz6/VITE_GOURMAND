@@ -124,20 +124,4 @@
     border-top: none;
 }
 
-.table-avis th,
-.table-avis td {
-    padding: 12px 18px;
-}
-
-.col-id { width: 60px; }
-.col-client { width: 220px; }
-.col-menu { width: 180px; }
-.col-note { width: 140px; }
-.col-apercu { width: 380px; }
-.col-date { width: 160px; }
-.col-actions { width: 180px; }
-
-.table-avis td {
-    vertical-align: middle;
-}
 

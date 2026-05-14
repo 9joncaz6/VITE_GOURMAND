@@ -3,17 +3,16 @@
 namespace App\Controller;
 
 use App\Form\ContactType;
+use App\Service\EmailService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'app_contact')]
-    public function index(Request $request, MailerInterface $mailer): Response
+    public function index(Request $request, EmailService $emailService): Response
     {
         $form = $this->createForm(ContactType::class);
         $form->handleRequest($request);
@@ -22,18 +21,12 @@ class ContactController extends AbstractController
 
             $data = $form->getData();
 
-            // Envoi de l'email
-            $email = (new Email())
-                ->from($data['email'])
-                ->to('contact@vitegourmand.fr') // destinataire réel
-                ->subject('Nouveau message de contact')
-                ->text(
-                    "Nom : {$data['nom']}\n".
-                    "Email : {$data['email']}\n\n".
-                    "Message :\n{$data['message']}"
-                );
-
-            $mailer->send($email);
+            // Envoi du mail via ton service
+            $emailService->sendContactMessage(
+                $data['nom'],
+                $data['email'],
+                $data['message']
+            );
 
             $this->addFlash('success', 'Votre message a bien été envoyé !');
 

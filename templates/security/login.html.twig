@@ -3,74 +3,43 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-<div style="
-    max-width: 420px;
-    margin: 0 auto;
-    background: var(--white);
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-">
+<div class="auth-container">
 
-    <h1 style="margin-bottom: 1.5rem; font-size: 1.6rem; font-weight: 700;">
-        Connexion
-    </h1>
+    <h1 class="auth-title">Connexion</h1>
 
     {% for message in app.flashes('success') %}
-    <div style="
-        background: #e6ffed;
-        border: 1px solid #b2f5c0;
-        color: #1b7f3a;
-        padding: 0.9rem 1.2rem;
-        border-radius: 10px;
-        margin-bottom: 1rem;
-        font-size: 0.95rem;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    ">
-        {{ message }}
+        <div class="alert-success-custom">
+            {{ message }}
         </div>
-        {% endfor %}
+    {% endfor %}
 
     {% if error %}
-        <div style="
-            background: #ffe0e0;
-            padding: 0.8rem 1rem;
-            border-radius: 8px;
-            color: #b30000;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        ">
+        <div class="alert-error-custom">
             {{ error.messageKey|trans(error.messageData, 'security') }}
         </div>
     {% endif %}
 
     <form method="post">
 
-        <div style="margin-bottom: 1rem;">
+        <div class="auth-field">
             <label>Email</label>
-            <input type="text" name="_username" value="{{ last_username }}" required
-                   style="width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;">
+            <input type="text" name="_username" value="{{ last_username }}" required class="auth-input">
         </div>
 
-        <div style="margin-bottom: 1rem;">
+        <div class="auth-field">
             <label>Mot de passe</label>
-            <input type="password" name="_password" required
-                   style="width: 100%; padding: 0.7rem; border: 1px solid var(--border); border-radius: 8px;">
+            <input type="password" name="_password" required class="auth-input">
         </div>
 
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-
-         <input type="hidden" name="_csrf_token"
-            value="{{ csrf_token('authenticate') }}">
-            <button class="btn-primary" style="width: 100%; margin-top: 1rem;">
-            Se connecter
-            </button>
+        <button class="btn-primary auth-btn">Se connecter</button>
     </form>
 
-    <div style="text-align: center; margin-top: 1rem;">
-        <a href="{{ path('app_register') }}" style="color: var(--primary); font-size: 0.9rem;">
-            Créer un compte
-        </a>
+    <div class="auth-links">
+        <a href="{{ path('app_forgot_password') }}">Mot de passe oublié ?</a>
+        <br>
+        <a href="{{ path('app_register') }}">Créer un compte</a>
     </div>
 
 </div>

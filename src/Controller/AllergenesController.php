@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\NoSQL\AllergeneService;
+use App\Service\NoSQL\AllergenesService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AllergenesController extends AbstractController
 {
     #[Route('/test-mongo', name: 'test_mongo')]
-    public function test(AllergeneService $service): Response
+    public function test(AllergenesService $service): Response
     {
         // Test d’écriture
         $service->setAllergenesForMenu(1, ['gluten', 'soja']);
