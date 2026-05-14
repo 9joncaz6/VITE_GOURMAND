@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/employe/employe_base.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/employe/employe_commandes.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="employe-layout">
+
+    <div class="employe-container">
+        {% block employe_body %}{% endblock %}
+    </div>
+
+</div>
+
+{% endblock %}

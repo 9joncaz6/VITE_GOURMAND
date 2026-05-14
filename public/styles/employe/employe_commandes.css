@@ -1,3 +1,4 @@
+/* TITRE */
 .page-title {
     text-align: center;
     font-size: 32px;
@@ -5,11 +6,13 @@
     margin-bottom: 30px;
 }
 
+/* WRAPPER */
 .table-wrapper {
     max-width: 900px;
     margin: auto;
 }
 
+/* TABLEAU */
 .orders-table {
     width: 100%;
     border-collapse: collapse;
@@ -46,40 +49,46 @@
     text-transform: capitalize;
 }
 
-.badge-en attente {
+/* IMPORTANT : classes correctes (sans espaces, sans accents) */
+.badge-en-attente {
     background: #fff3cd;
     color: #856404;
 }
 
-.badge-en préparation {
+.badge-en-preparation {
     background: #cce5ff;
     color: #004085;
 }
 
-.badge-terminée {
+.badge-terminee {
     background: #d4edda;
     color: #155724;
 }
 
-.badge-annulée {
+.badge-annulee {
     background: #f8d7da;
     color: #721c24;
 }
 
 /* BOUTON VOIR */
-.btn-view {
+.btn-view,
+.btn-primary,
+.btn-small {
     background: #007bff;
     color: white;
     padding: 8px 14px;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 600;
+    display: inline-block;
 }
 
-.btn-view:hover {
+.btn-view:hover,
+.btn-primary:hover {
     background: #0056b3;
 }
 
+/* FILTRES */
 .filters {
     display: flex;
     justify-content: space-between;
@@ -94,6 +103,7 @@
     font-size: 15px;
 }
 
+/* COMPTEURS */
 .counters {
     display: flex;
     gap: 15px;
@@ -120,4 +130,3 @@
     background: #d4edda;
     color: #155724;
 }
-

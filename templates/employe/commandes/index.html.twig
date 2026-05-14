@@ -1,38 +1,38 @@
-{% extends 'base.html.twig' %}
+{% extends 'employe/employe_base.html.twig' %}
 
 {% block title %}Commandes employé{% endblock %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ asset('styles/employe/employe_commandes.css') }}">
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/employe/employe_commandes.css') }}">
 {% endblock %}
 
-{% block body %}
+{% block employe_body %}
 
 <h1 class="page-title">Commandes</h1>
 
-<div class="table-wrapper">
+<div class="employe-card">
 
-<div class="filters">
+    <div class="filters">
 
-    <form method="get" class="filter-form">
-        <select name="statut" onchange="this.form.submit()">
-            <option value="">Tous les statuts</option>
-            <option value="en_attente" {{ statutFiltre == 'en_attente' ? 'selected' }}>En attente</option>
-            <option value="en_preparation" {{ statutFiltre == 'en_preparation' ? 'selected' }}>En préparation</option>
-            <option value="terminee" {{ statutFiltre == 'terminee' ? 'selected' }}>Terminée</option>
-        </select>
-    </form>
+        <form method="get" class="filter-form">
+            <select name="statut" onchange="this.form.submit()">
+                <option value="">Tous les statuts</option>
+                <option value="en_attente" {{ statutFiltre == 'en_attente' ? 'selected' }}>En attente</option>
+                <option value="en_preparation" {{ statutFiltre == 'en_preparation' ? 'selected' }}>En préparation</option>
+                <option value="terminee" {{ statutFiltre == 'terminee' ? 'selected' }}>Terminée</option>
+            </select>
+        </form>
 
-    <div class="counters">
-        <span class="counter counter-attente">En attente : {{ countEnAttente }}</span>
-        <span class="counter counter-prepa">En préparation : {{ countEnPreparation }}</span>
-        <span class="counter counter-terminee">Terminées : {{ countTerminees }}</span>
+        <div class="counters">
+            <span class="counter counter-attente">En attente : {{ countEnAttente }}</span>
+            <span class="counter counter-prepa">En préparation : {{ countEnPreparation }}</span>
+            <span class="counter counter-terminee">Terminées : {{ countTerminees }}</span>
+        </div>
+
     </div>
 
-</div>
-
-
-    <table class="orders-table">
+    <table class="orders-table clean-table">
         <thead>
             <tr>
                 <th>#</th>
@@ -55,7 +55,7 @@
                     </span>
                 </td>
                 <td>
-                    <a href="{{ path('employe_commandes_show', {id: commande.id}) }}" class="btn-view">
+                    <a href="{{ path('employe_commandes_show', {id: commande.id}) }}" class="btn-primary btn-small">
                         Voir
                     </a>
                 </td>
