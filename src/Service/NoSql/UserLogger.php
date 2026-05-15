@@ -2,26 +2,24 @@
 
 namespace App\Service\NoSQL;
 
-use MongoDB\Client;
+use App\Document\UserLog;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class UserLogger
 {
-    private $collection;
-
-    public function __construct()
-    {
-        $client = new Client("mongodb://localhost:27017");
-        $db = $client->selectDatabase('symfony');
-        $this->collection = $db->selectCollection('user_logs');
-    }
+    public function __construct(
+        private DocumentManager $dm
+    ) {}
 
     public function log(int $userId, string $action, array $details = []): void
     {
-        $this->collection->insertOne([
-            'userId' => $userId,
-            'action' => $action,
-            'details' => $details,
-            'date' => new \DateTimeImmutable()
-        ]);
+        $log = new UserLog(
+            $userId,
+            $action,
+            $details
+        );
+
+        $this->dm->persist($log);
+        $this->dm->flush();
     }
 }

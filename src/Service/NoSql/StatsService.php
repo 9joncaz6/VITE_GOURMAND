@@ -2,51 +2,46 @@
 
 namespace App\Service\NoSQL;
 
-use MongoDB\Client;
+use App\Document\Stats;
 use App\Entity\Commande;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class StatsService
 {
-    private $collection;
+    public function __construct(
+        private DocumentManager $dm
+    ) {}
 
-    public function __construct()
-    {
-        $client = new Client("mongodb://localhost:27017");
-        $db = $client->selectDatabase('symfony');
-        $this->collection = $db->selectCollection('stats');
-    }
-
-    /**
-     * Mise à jour complète des stats après une commande
-     */
     public function updateStats(Commande $commande): void
     {
-        foreach ($commande->getItems() as $item) {
+        $collection = $this->dm->getDocumentCollection(Stats::class);
 
-            $menuId = $item->getMenu()->getId();
-            $qte = $item->getQuantite();
+        foreach ($commande->getItems() as $item) {
+            $menuId    = $item->getMenu()->getId();
+            $qte       = $item->getQuantite();
             $totalMenu = $item->getTotal();
 
-            $this->collection->updateOne(
+            // 🔥 Correction : 1 commande = +1 vente
+            $collection->updateOne(
                 ['menuId' => $menuId],
                 [
                     '$inc' => [
-                        'ventes' => $qte,
-                        'revenu' => $totalMenu
-                    ]
+                        'ventes' => 1,        // <-- ici la correction
+                        'revenu' => $totalMenu,
+                    ],
                 ],
                 ['upsert' => true]
             );
         }
 
         // Stat global
-        $this->collection->updateOne(
+        $collection->updateOne(
             ['_id' => 'global'],
             [
                 '$inc' => [
-                    'caTotal' => $commande->getTotal(),
-                    'totalCommandes' => 1
-                ]
+                    'caTotal'        => $commande->getTotal(),
+                    'totalCommandes' => 1,
+                ],
             ],
             ['upsert' => true]
         );
@@ -54,12 +49,14 @@ class StatsService
 
     public function getStats(): array
     {
-        $global = $this->collection->findOne(['_id' => 'global']) ?? [
-            'caTotal' => 0,
-            'totalCommandes' => 0
+        $collection = $this->dm->getDocumentCollection(Stats::class);
+
+        $global = $collection->findOne(['_id' => 'global']) ?? [
+            'caTotal'        => 0,
+            'totalCommandes' => 0,
         ];
 
-        $caTotal = $global['caTotal'] ?? 0;
+        $caTotal        = $global['caTotal'] ?? 0;
         $totalCommandes = $global['totalCommandes'] ?? 0;
 
         $panierMoyen = $totalCommandes > 0
@@ -67,16 +64,17 @@ class StatsService
             : 0;
 
         return [
-            'caTotal' => $caTotal,
+            'caTotal'        => $caTotal,
             'totalCommandes' => $totalCommandes,
-            'panierMoyen' => $panierMoyen
+            'panierMoyen'    => $panierMoyen,
         ];
     }
 
     public function getCommandesParMenu(): array
     {
-        $cursor = $this->collection->find(['menuId' => ['$exists' => true]]);
-        $result = [];
+        $collection = $this->dm->getDocumentCollection(Stats::class);
+        $cursor     = $collection->find(['menuId' => ['$exists' => true]]);
+        $result     = [];
 
         foreach ($cursor as $doc) {
             $result[$doc['menuId']] = $doc['ventes'] ?? 0;
@@ -87,8 +85,9 @@ class StatsService
 
     public function getCaParMenu(): array
     {
-        $cursor = $this->collection->find(['menuId' => ['$exists' => true]]);
-        $result = [];
+        $collection = $this->dm->getDocumentCollection(Stats::class);
+        $cursor     = $collection->find(['menuId' => ['$exists' => true]]);
+        $result     = [];
 
         foreach ($cursor as $doc) {
             $result[$doc['menuId']] = $doc['revenu'] ?? 0;

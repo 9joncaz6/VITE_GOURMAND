@@ -7,6 +7,7 @@ use App\Repository\MenuRepository;
 use App\Repository\AvisRepository;
 use App\Repository\CommandeRepository;
 use App\Service\NoSQL\AllergenesService;
+use App\Service\NoSQL\SearchTracker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,18 +24,14 @@ class MenuPublicController extends AbstractController
         AvisRepository $avisRepository,
         EntityManagerInterface $em
     ): Response {
-
-        // Critères de filtrage
         $criteria = [
             'theme'   => $request->query->get('theme'),
             'prixMin' => $request->query->get('prixMin'),
             'prixMax' => $request->query->get('prixMax'),
         ];
 
-        // Menus filtrés
         $menus = $menuRepository->findByCriteria($criteria);
 
-        // Récupération des thèmes DISTINCTS (ManyToOne → Theme)
         $themes = $em->getRepository(Menu::class)
             ->createQueryBuilder('m')
             ->join('m.theme', 't')
@@ -43,7 +40,6 @@ class MenuPublicController extends AbstractController
             ->getQuery()
             ->getSingleColumnResult();
 
-        // Avis récents
         $avis = $avisRepository->findLatestAvis(3);
 
         return $this->render('menu/index.html.twig', [
@@ -59,25 +55,30 @@ class MenuPublicController extends AbstractController
         Menu $menu,
         AvisRepository $avisRepository,
         CommandeRepository $commandeRepository,
-        AllergenesService $allergeneService
+        AllergenesService $allergeneService,
+        SearchTracker $tracker
     ): Response {
-
+        /** @var \App\Entity\Utilisateur|null $user */
         $user = $this->getUser();
 
-        // Avis du menu
+        // Tracking vue de menu
+        $tracker->track(
+            $user?->getId(),
+            'menu_view:' . $menu->getId(),
+            'menu_show'
+        );
+
         $avis = $avisRepository->findBy(
             ['menu' => $menu],
             ['date' => 'DESC']
         );
 
-        // Moyenne
         $moyenne = null;
         if (count($avis) > 0) {
             $total = array_sum(array_map(fn($a) => $a->getNote(), $avis));
             $moyenne = $total / count($avis);
         }
 
-        // Avis existant
         $avisExistant = null;
         $aDejaLaisseAvis = false;
 
@@ -91,7 +92,6 @@ class MenuPublicController extends AbstractController
             }
         }
 
-        // Peut laisser un avis ?
         $peutLaisserAvis = false;
         $commandeEligible = null;
 
@@ -103,7 +103,6 @@ class MenuPublicController extends AbstractController
             }
         }
 
-        // Allergènes depuis MongoDB
         $allergenesMenu = $allergeneService->getAllergenesForMenu($menu->getId());
 
         return $this->render('menu/show.html.twig', [

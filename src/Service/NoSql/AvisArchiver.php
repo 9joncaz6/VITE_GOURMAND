@@ -2,32 +2,33 @@
 
 namespace App\Service\NoSQL;
 
-use MongoDB\Client;
+use App\Document\AvisArchive;
 use App\Entity\Avis;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class AvisArchiver
 {
-    private $collection;
-
-    public function __construct()
-    {
-        $client = new Client("mongodb://localhost:27017");
-        $db = $client->selectDatabase('symfony');
-        $this->collection = $db->selectCollection('avis_archive');
-    }
+    public function __construct(
+        private DocumentManager $dm
+    ) {}
 
     public function archive(Avis $avis, array $metadata = []): void
     {
-        $this->collection->insertOne([
-            'avisId' => $avis->getId(),
-            'note' => $avis->getNote(),
-            'commentaire' => $avis->getCommentaire(),
-            'valide' => $avis->isValide(),
-            'menuId' => $avis->getMenu()?->getId(),
-            'commandeId' => $avis->getCommande()?->getId(),
+        $meta = array_merge($metadata, [
+            'menuId'        => $avis->getMenu()?->getId(),
+            'commandeId'    => $avis->getCommande()?->getId(),
             'utilisateurId' => $avis->getUtilisateur()?->getId(),
-            'metadata' => $metadata,
-            'dateArchivage' => new \DateTimeImmutable()
         ]);
+
+        $doc = new AvisArchive(
+            $avis->getId(),
+            $avis->getNote(),
+            $avis->getCommentaire(),
+            $avis->isValide(),
+            $meta
+        );
+
+        $this->dm->persist($doc);
+        $this->dm->flush();
     }
 }

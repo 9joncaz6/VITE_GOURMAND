@@ -16,7 +16,6 @@
                     {{ menu.description|slice(0, 80) ~ '...' }}
                 </p>
 
-                <!-- AJOUT DU THÈME -->
                 <p class="menu-theme">
                     <strong>Thème :</strong> {{ menu.theme ? menu.theme.nom : 'Aucun' }}
                 </p>
@@ -29,8 +28,17 @@
                     Stock : {{ menu.stockDisponible }}
                 </p>
 
+                {# --- AFFICHAGE PRIX CORRIGÉ --- #}
+                {% set prixBase = menu.prixBase %}
+                {% set min = menu.nbPersonnesMin %}
+                {% set prixParPersonne = prixBase / min %}
+
                 <p class="price">
-                    Prix TTC {{ menu.prixBase|number_format(2, '.', ' ') }}€
+                    <strong>{{ prixBase|number_format(2, ',', ' ') }} € TTC</strong><br>
+                    <small>
+                        soit {{ prixParPersonne|number_format(2, ',', ' ') }} € / personne  
+                        (min. {{ min }} pers.)
+                    </small>
                 </p>
 
                 <a href="{{ path('app_menu_show', {id: menu.id}) }}" class="btn-primary">

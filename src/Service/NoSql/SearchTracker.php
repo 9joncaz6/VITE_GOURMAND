@@ -2,23 +2,20 @@
 
 namespace App\Service\NoSQL;
 
-use MongoDB\Client;
-use MongoDB\Collection;
-use MongoDB\BSON\UTCDateTime;
+use App\Document\SearchHistory;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class SearchTracker
 {
-    private Collection $collection;
+    private DocumentManager $dm;
 
-    public function __construct()
+    public function __construct(DocumentManager $dm)
     {
-        $client = new Client('mongodb://localhost:27017');
-        $db = $client->selectDatabase('symfony');
-        $this->collection = $db->selectCollection('search_history');
+        $this->dm = $dm;
     }
 
     /**
-     * Enregistre une recherche utilisateur
+     * Tracking générique (recherche, action, page, etc.)
      */
     public function track(?int $userId, string $query = '', ?string $page = null): void
     {
@@ -27,35 +24,38 @@ class SearchTracker
             return;
         }
 
-        $this->collection->insertOne([
-            'userId' => $userId,
-            'query'  => mb_strtolower($query),
-            'page'   => $page,
-            'date' => new \DateTimeImmutable(),
-        ]);
+        $entry = new SearchHistory(
+            $userId ?? 0,
+            mb_strtolower($query),
+            $page
+        );
+
+        $this->dm->persist($entry);
+        $this->dm->flush();
     }
 
     /**
-     * Top recherches
+     * Top recherches / actions
      */
     public function getTopSearches(int $limit = 10): array
     {
+        $collection = $this->dm->getDocumentCollection(SearchHistory::class);
+
         $pipeline = [
             ['$group' => ['_id' => '$query', 'count' => ['$sum' => 1]]],
             ['$sort'  => ['count' => -1]],
             ['$limit' => $limit],
         ];
 
-        return iterator_to_array($this->collection->aggregate($pipeline));
+        return iterator_to_array($collection->aggregate($pipeline));
     }
 
     /**
-     * Recherches d’un utilisateur
+     * Historique d’un utilisateur
      */
     public function getSearchesByUser(int $userId): array
     {
-        return iterator_to_array(
-            $this->collection->find(['userId' => $userId], ['sort' => ['date' => -1]])
-        );
+        return $this->dm->getRepository(SearchHistory::class)
+            ->findBy(['userId' => $userId], ['date' => 'DESC']);
     }
 }

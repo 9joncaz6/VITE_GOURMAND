@@ -47,9 +47,9 @@
                 Ajouter au panier
             </a>
 
-            <!-- COMMANDER (adresse obligatoire) -->
+            <!-- COMMANDER = ajouter + aller au panier -->
             {% if app.user and app.user.adressePostale %}
-                <a href="{{ path('app_panier_add', { menuId: menu.id, redirect: 'validation' }) }}"
+                <a href="{{ path('app_panier_add', { menuId: menu.id, redirect: 'panier' }) }}"
                    class="commander-btn w-100 mt-3">
                     Commander
                 </a>

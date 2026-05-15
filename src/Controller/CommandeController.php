@@ -8,6 +8,7 @@ use App\Entity\CommandeStatut;
 use App\Entity\Utilisateur;
 use App\Service\NoSQL\PanierManager;
 use App\Service\NoSQL\StatsService;
+use App\Service\NoSQL\SearchTracker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,9 +22,10 @@ class CommandeController extends AbstractController
     #[Route('/validation', name: 'app_commande_validation')]
     public function validation(
         PanierManager $panierManager,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        SearchTracker $tracker
     ): Response {
-        /** @var Utilisateur $user */
+        /** @var Utilisateur|null $user */
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
@@ -36,6 +38,27 @@ class CommandeController extends AbstractController
             $this->addFlash('warning', 'Votre panier est vide.');
             return $this->redirectToRoute('app_panier_show');
         }
+
+        // 🔥 Vérification du minimum de personnes
+        foreach ($items as $item) {
+            $menu = $item['menu'];
+            $qte  = $item['quantite'];
+            $min  = $menu->getNbPersonnesMin();
+
+            if ($qte < $min) {
+                $this->addFlash('error',
+                    "Le menu « {$menu->getTitre()} » nécessite au minimum {$min} personnes."
+                );
+                return $this->redirectToRoute('app_panier_show');
+            }
+        }
+
+        // Tracking vue de validation panier
+        $tracker->track(
+            $userId,
+            'cart_view',
+            'commande_validation'
+        );
 
         if (!$user->getAdressePostale()) {
             $this->addFlash('error', 'Veuillez renseigner votre adresse avant de valider la commande.');
@@ -60,9 +83,10 @@ class CommandeController extends AbstractController
         PanierManager $panierManager,
         EntityManagerInterface $em,
         MailerInterface $mailer,
-        StatsService $statsService
+        StatsService $statsService,
+        SearchTracker $tracker
     ): Response {
-        /** @var Utilisateur $user */
+        /** @var Utilisateur|null $user */
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
@@ -81,47 +105,64 @@ class CommandeController extends AbstractController
             return $this->redirectToRoute('app_compte_edit');
         }
 
+        // 🔥 Vérification du minimum de personnes (sécurité)
+        foreach ($items as $item) {
+            $menu = $item['menu'];
+            $qte  = $item['quantite'];
+            $min  = $menu->getNbPersonnesMin();
+
+            if ($qte < $min) {
+                $this->addFlash('error',
+                    "Le menu « {$menu->getTitre()} » nécessite au minimum {$min} personnes."
+                );
+                return $this->redirectToRoute('app_panier_show');
+            }
+        }
+
         $totalMenus = $panierManager->getTotal($userId);
         $livraison  = $this->calculerFraisLivraison($user);
         $totalFinal = $totalMenus + $livraison;
 
         $commande = new Commande();
-$commande->setUtilisateur($user);
-$commande->setTotal($totalFinal);
-$commande->setFraisLivraison($livraison);
+        $commande->setUtilisateur($user);
+        $commande->setTotal($totalFinal);
+        $commande->setFraisLivraison($livraison);
 
-// PAS de setStatut() ici — tu ne l’as jamais eu
-// Le statut initial est géré via CommandeStatut
+        foreach ($items as $item) {
+            $menu = $item['menu'];
+            $qte  = $item['quantite'];
 
-foreach ($items as $item) {
-    $menu = $item['menu'];
-    $qte  = $item['quantite'];
+            $commandeItem = new CommandeItem();
+            $commandeItem->setCommande($commande);
+            $commandeItem->setMenu($menu);
+            $commandeItem->setQuantite($qte);
+            $commandeItem->setPrixUnitaire($menu->getPrixBase());
 
-    $commandeItem = new CommandeItem();
-    $commandeItem->setCommande($commande);
-    $commandeItem->setMenu($menu);
-    $commandeItem->setQuantite($qte);
-    $commandeItem->setPrixUnitaire($menu->getPrixBase());
+            $commande->addItem($commandeItem);
 
-    $commande->addItem($commandeItem);
+            // Mise à jour du stock
+            $menu->setStockDisponible($menu->getStockDisponible() - $qte);
+        }
 
-    // Mise à jour du stock
-    $menu->setStockDisponible($menu->getStockDisponible() - $qte);
-}
+        $statut = new CommandeStatut();
+        $statut->setCommande($commande);
+        $statut->setStatut('en_attente');
+        $statut->setDateMaj(new \DateTimeImmutable());
 
-// Création du statut initial
-$statut = new CommandeStatut();
-$statut->setCommande($commande);
-$statut->setStatut('en_attente');
-$statut->setDateMaj(new \DateTimeImmutable());
+        $em->persist($commande);
+        $em->persist($statut);
+        $em->flush();
 
-$em->persist($commande);
-$em->persist($statut);
-$em->flush();
-
+        // Tracking commande réussie
+        $tracker->track(
+            $userId,
+            'order_success:' . $commande->getId(),
+            'commande_confirmer'
+        );
 
         $statsService->updateStats($commande);
 
+        // Email confirmation
         $email = (new Email())
             ->from('no-reply@vitegourmand.fr')
             ->to($user->getEmail())
@@ -135,6 +176,7 @@ $em->flush();
 
         $mailer->send($email);
 
+        // Nettoyage du panier
         $panierManager->clearPanier($userId);
 
         return $this->redirectToRoute('app_commande_confirmation', [

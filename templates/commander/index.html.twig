@@ -18,8 +18,18 @@
                 {# Description #}
                 <p class="text-muted">{{ menu.description }}</p>
 
-                {# Prix #}
-                <p><strong>Prix :</strong> {{ menu.prixBase }} €</p>
+                {# Prix : total + prix par personne #}
+                {% set prixBase = menu.prixBase %}
+                {% set min = menu.nbPersonnesMin %}
+                {% set prixParPersonne = prixBase / min %}
+
+                <p class="menu-price">
+                    <strong>{{ prixBase|number_format(2, ',', ' ') }} € TTC</strong><br>
+                    <small>
+                        soit {{ prixParPersonne|number_format(2, ',', ' ') }} € / personne  
+                        (min. {{ min }} pers.)
+                    </small>
+                </p>
 
                 {# Ajouter au panier #}
                 <a href="{{ path('app_panier_add', {menuId: menu.id}) }}"

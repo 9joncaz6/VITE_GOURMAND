@@ -15,13 +15,11 @@
 ============================ -->
 <div class="filters">
 
-    <!-- Tous -->
     <a href="{{ path('app_menu_index') }}"
        class="filter-btn {{ criteria.theme is empty and criteria.prixMin is empty and criteria.prixMax is empty ? 'active' : '' }}">
         Tous
     </a>
 
-    <!-- Filtres dynamiques par thème -->
     {% for t in themes %}
         <a href="{{ path('app_menu_index', { theme: t }) }}"
            class="filter-btn {{ criteria.theme == t ? 'active' : '' }}">
@@ -29,7 +27,6 @@
         </a>
     {% endfor %}
 
-    <!-- Prix -->
     <a href="{{ path('app_menu_index', { prixMax: 15 }) }}"
        class="filter-btn {{ criteria.prixMax == 15 ? 'active' : '' }}">
         -15€

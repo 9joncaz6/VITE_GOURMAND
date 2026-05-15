@@ -22,7 +22,6 @@
 
             {% for item in items %}
 
-                {# Gestion intelligente de l'image #}
                 {% set img = item.menu.image 
                     ?? (item.menu.images[0] ?? 'default.jpg') 
                 %}
@@ -38,16 +37,23 @@
                         <p class="price">{{ item.menu.prixBase }} €</p>
 
                         <div class="qty-controls">
-                            <a href="{{ path('app_panier_update', {menuId: item.menu.getId(), action: 'minus'}) }}"
-                               class="qty-btn">−</a>
+
+                            {# BOUTON MOINS #}
+                            <a href="{{ path('app_panier_update', {
+                                menuId: item.menu.id,
+                                quantite: item.quantite - 1
+                            }) }}" class="qty-btn">−</a>
 
                             <span class="qty-value">{{ item.quantite }}</span>
 
-                            <a href="{{ path('app_panier_update', {menuId: item.menu.getId(), action: 'plus'}) }}"
-                               class="qty-btn">+</a>
+                            {# BOUTON PLUS #}
+                            <a href="{{ path('app_panier_update', {
+                                menuId: item.menu.id,
+                                quantite: item.quantite + 1
+                            }) }}" class="qty-btn">+</a>
+
                         </div>
 
-                        {# Calcul sécurisé du sous-total #}
                         {% set prixBase = item.menu.prixBase + 0 %}
                         {% set nbMin = item.menu.nbPersonnesMin + 0 %}
                         {% set qte = item.quantite + 0 %}
@@ -59,7 +65,7 @@
                         </p>
                     </div>
 
-                    <a href="{{ path('app_panier_remove', {menuId: item.menu.getId()}) }}"
+                    <a href="{{ path('app_panier_remove', {menuId: item.menu.id}) }}"
                        class="remove-btn">✕</a>
 
                 </div>

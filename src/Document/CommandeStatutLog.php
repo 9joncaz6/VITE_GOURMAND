@@ -2,27 +2,27 @@
 
 namespace App\Document;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
-#[MongoDB\Document]
-class CommandeStatut
+#[ODM\Document(collection: "commande_statut")]
+class CommandeStatutLog
 {
-    #[MongoDB\Id]
-    private $id;
+    #[ODM\Id]
+    private string $id;
 
-    #[MongoDB\Field(type: "int")]
+    #[ODM\Field(type: "int")]
     private int $commandeId;
 
-    #[MongoDB\Field(type: "string")]
+    #[ODM\Field(type: "string")]
     private string $ancienStatut;
 
-    #[MongoDB\Field(type: "string")]
+    #[ODM\Field(type: "string")]
     private string $nouveauStatut;
 
-    #[MongoDB\Field(type: "date")]
+    #[ODM\Field(type: "date")]
     private \DateTime $date;
 
-    public function getId()
+    public function getId(): ?string
     {
         return $this->id;
     }
