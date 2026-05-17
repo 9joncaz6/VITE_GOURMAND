@@ -19,6 +19,13 @@ class PanierController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        if (!$user->getAdressePostale()) {
+            $this->addFlash('error', 'Veuillez renseigner votre adresse avant de continuer.');
+            return $this->redirectToRoute('app_compte_edit', [
+                'redirect' => 'panier'
+            ]);
+        }
+
         $items = $panierManager->getPanierForTwig($user->getId());
         $total = $panierManager->getTotal($user->getId());
 
@@ -38,12 +45,6 @@ class PanierController extends AbstractController
         }
 
         $panierManager->add($user->getId(), $menuId, 1);
-
-        $redirect = $_GET['redirect'] ?? null;
-
-        if ($redirect === 'panier') {
-            return $this->redirectToRoute('app_panier_show');
-        }
 
         return $this->redirectToRoute('app_panier_show');
     }

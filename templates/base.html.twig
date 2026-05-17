@@ -3,49 +3,40 @@
 <head>
     <meta charset="UTF-8">
 
-    {# ===== TITRE DYNAMIQUE ===== #}
     <title>{% block title %}V & G - Vite et Gourmand{% endblock %}</title>
 
-    {# ===== SEO ===== #}
     <meta name="description" content="V & G - Traiteur artisanal, menus variés, livraison rapide, cuisine maison et service premium. Commandez vos menus en ligne facilement.">
     <meta name="keywords" content="traiteur, livraison repas, cuisine maison, menus, commande en ligne, vite et gourmand, V&G">
     <meta name="author" content="V & G - Vite et Gourmand">
 
-    {# ===== RESPONSIVE ===== #}
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {# ===== OPEN GRAPH ===== #}
     <meta property="og:title" content="V & G - Vite et Gourmand">
     <meta property="og:description" content="Menus variés, cuisine maison, livraison rapide. Découvrez nos menus gourmands.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ app.request.uri }}">
     <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
 
-    {# ===== TWITTER CARDS ===== #}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="V & G - Vite et Gourmand">
     <meta name="twitter:description" content="Menus variés, cuisine maison, livraison rapide. Découvrez nos menus gourmands.">
     <meta name="twitter:image" content="{{ asset('images/og-image.jpg') }}">
 
-    {# ===== FAVICON ===== #}
     <link rel="icon" href="{{ asset('favicon.ico') }}">
 
-    {# ===== CSS PRINCIPAUX ===== #}
     <link rel="stylesheet" href="{{ asset('css/home.css') }}?v=1">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=1">
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v=1">
 
-    {# ===== CSS SECONDAIRES ===== #}
     {% block stylesheets %}{% endblock %}
 </head>
-
 
 <body>
 <div class="page">
 
-    {# ============================
-       HEADER DESKTOP
-       ============================ #}
+    <!-- ============================
+         HEADER DESKTOP
+         ============================ -->
     <header class="header-desktop">
         <div class="header-inner">
 
@@ -82,6 +73,11 @@
                     </a>
 
                 </nav>
+
+                <!-- ICÔNE PANIER -->
+                <a href="{{ path('app_panier_show') }}" class="cart-icon" title="Voir mon panier">
+                    🛒
+                </a>
 
                 <!-- USER MENU -->
                 <div class="user-menu">
@@ -126,9 +122,9 @@
     </header>
 
 
-    {# ============================
-       MENU MOBILE
-       ============================ #}
+    <!-- ============================
+         MENU MOBILE
+         ============================ -->
     <nav class="mobile-menu">
 
         <a href="{{ path('app_home') }}"
@@ -145,6 +141,9 @@
            class="{% if app.request.attributes.get('_route') == 'app_contact' %}active{% endif %}">
             Contacts
         </a>
+
+        <!-- PANIER MOBILE -->
+        <a href="{{ path('app_panier_show') }}">Panier 🛒</a>
 
         {% if app.user %}
 
@@ -168,9 +167,9 @@
     </nav>
 
 
-    {# ============================
-       CONTENU PRINCIPAL
-       ============================ #}
+    <!-- ============================
+         CONTENU PRINCIPAL
+         ============================ -->
     <main>
 
         {% for label, messages in app.flashes %}
@@ -185,9 +184,9 @@
     </main>
 
 
-    {# ============================
-       FOOTER
-       ============================ #}
+    <!-- ============================
+         FOOTER
+         ============================ -->
     <footer>
         <div class="footer-inner">
             <a href="{{ path('app_horaires') }}">Horaires</a>

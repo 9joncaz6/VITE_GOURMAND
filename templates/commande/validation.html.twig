@@ -39,7 +39,9 @@
 
         <p class="address-block">
             {{ user.adressePostale }}<br>
-            <a href="{{ path('app_compte_edit') }}" class="edit-link">Modifier mon adresse</a>
+            <a href="{{ path('app_compte_edit', { redirect: 'validation' }) }}" class="edit-link">
+                Modifier mon adresse
+            </a>
         </p>
 
         <div class="divider"></div>

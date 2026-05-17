@@ -22,9 +22,12 @@ class CompteController extends AbstractController
         return $this->render('compte/index.html.twig');
     }
 
-    #[Route('/edit', name: 'app_compte_edit')]
-    public function edit(Request $request, EntityManagerInterface $em): Response
-    {
+    #[Route('/edit/{redirect}', name: 'app_compte_edit', defaults: ['redirect' => null])]
+    public function edit(
+        Request $request,
+        EntityManagerInterface $em,
+        ?string $redirect
+    ): Response {
         /** @var Utilisateur $user */
         $user = $this->getUser();
 
@@ -39,6 +42,15 @@ class CompteController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Informations mises à jour.');
+
+            if ($redirect === 'panier') {
+                return $this->redirectToRoute('app_panier_show');
+            }
+
+            if ($redirect === 'validation') {
+                return $this->redirectToRoute('app_commande_validation');
+            }
+
             return $this->redirectToRoute('app_compte_index');
         }
 
@@ -150,24 +162,18 @@ class CompteController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        // Supprimer les avis
         foreach ($user->getAvis() as $avis) {
             $em->remove($avis);
         }
 
-        // Supprimer les commandes
         foreach ($user->getCommandes() as $commande) {
             $em->remove($commande);
         }
 
-        // Supprimer l'utilisateur
         $em->remove($user);
         $em->flush();
 
-        // Nettoyer le token de sécurité
         $tokenStorage->setToken(null);
-
-        // Invalider la session
         $request->getSession()->invalidate();
 
         $this->addFlash('success', 'Votre compte a été supprimé avec succès.');

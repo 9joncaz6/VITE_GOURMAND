@@ -38,7 +38,6 @@
 
                         <div class="qty-controls">
 
-                            {# BOUTON MOINS #}
                             <a href="{{ path('app_panier_update', {
                                 menuId: item.menu.id,
                                 quantite: item.quantite - 1
@@ -46,7 +45,6 @@
 
                             <span class="qty-value">{{ item.quantite }}</span>
 
-                            {# BOUTON PLUS #}
                             <a href="{{ path('app_panier_update', {
                                 menuId: item.menu.id,
                                 quantite: item.quantite + 1
@@ -76,6 +74,10 @@
 
         <section class="cart-total">
             <p>Total : <strong>{{ total | number_format(2, ',', ' ') }} €</strong></p>
+
+            <a href="{{ path('app_menu_index') }}" class="btn btn-secondary mt-3">
+                ← Retour aux menus
+            </a>
 
             <a href="{{ path('app_commande_validation') }}" class="btn-primary">
                 Valider la commande

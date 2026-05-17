@@ -12,7 +12,10 @@
 {% endfor %}
 
 <div class="card p-4 shadow-sm">
-    {{ form_start(form) }}
+
+    {{ form_start(form, {
+        action: path('app_compte_edit', { redirect: app.request.get('redirect') })
+    }) }}
 
     <div class="row">
         <div class="col-md-6">

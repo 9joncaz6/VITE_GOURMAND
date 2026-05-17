@@ -14,7 +14,9 @@
 
     <div class="card account-card">
 
-        {{ form_start(form) }}
+        {{ form_start(form, {
+            action: path('app_compte_edit', { redirect: app.request.get('redirect') })
+        }) }}
 
         <div class="form-grid">
 

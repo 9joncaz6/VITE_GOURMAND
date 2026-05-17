@@ -39,7 +39,6 @@ class CommandeController extends AbstractController
             return $this->redirectToRoute('app_panier_show');
         }
 
-        // 🔥 Vérification du minimum de personnes
         foreach ($items as $item) {
             $menu = $item['menu'];
             $qte  = $item['quantite'];
@@ -53,7 +52,6 @@ class CommandeController extends AbstractController
             }
         }
 
-        // Tracking vue de validation panier
         $tracker->track(
             $userId,
             'cart_view',
@@ -62,11 +60,13 @@ class CommandeController extends AbstractController
 
         if (!$user->getAdressePostale()) {
             $this->addFlash('error', 'Veuillez renseigner votre adresse avant de valider la commande.');
-            return $this->redirectToRoute('app_compte_edit');
+            return $this->redirectToRoute('app_compte_edit', [
+                'redirect' => 'validation'
+            ]);
         }
 
         $totalMenus = $panierManager->getTotal($userId);
-        $livraison = $this->calculerFraisLivraison($user);
+        $livraison  = $this->calculerFraisLivraison($user);
         $totalFinal = $totalMenus + $livraison;
 
         return $this->render('commande/validation.html.twig', [
@@ -102,10 +102,11 @@ class CommandeController extends AbstractController
 
         if (!$user->getAdressePostale()) {
             $this->addFlash('error', 'Veuillez renseigner votre adresse avant de confirmer la commande.');
-            return $this->redirectToRoute('app_compte_edit');
+            return $this->redirectToRoute('app_compte_edit', [
+                'redirect' => 'validation'
+            ]);
         }
 
-        // 🔥 Vérification du minimum de personnes (sécurité)
         foreach ($items as $item) {
             $menu = $item['menu'];
             $qte  = $item['quantite'];
@@ -140,7 +141,6 @@ class CommandeController extends AbstractController
 
             $commande->addItem($commandeItem);
 
-            // Mise à jour du stock
             $menu->setStockDisponible($menu->getStockDisponible() - $qte);
         }
 
@@ -153,7 +153,6 @@ class CommandeController extends AbstractController
         $em->persist($statut);
         $em->flush();
 
-        // Tracking commande réussie
         $tracker->track(
             $userId,
             'order_success:' . $commande->getId(),
@@ -162,7 +161,6 @@ class CommandeController extends AbstractController
 
         $statsService->updateStats($commande);
 
-        // Email confirmation
         $email = (new Email())
             ->from('no-reply@vitegourmand.fr')
             ->to($user->getEmail())
@@ -176,7 +174,6 @@ class CommandeController extends AbstractController
 
         $mailer->send($email);
 
-        // Nettoyage du panier
         $panierManager->clearPanier($userId);
 
         return $this->redirectToRoute('app_commande_confirmation', [
@@ -194,9 +191,10 @@ class CommandeController extends AbstractController
 
     private function calculerFraisLivraison(Utilisateur $user): float
     {
-        $adresse = $user->getAdressePostale() ?? '';
+        $adresse  = $user->getAdressePostale() ?? '';
         $distance = $this->calculerDistance($adresse);
         $livraison = 5 + ($distance * 0.59);
+
         return max(5, min($livraison, 25));
     }
 
