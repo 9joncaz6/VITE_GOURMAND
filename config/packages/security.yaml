@@ -20,35 +20,35 @@ security:
             security: false
 
         main:
-            lazy: true
             provider: app_user_provider
 
             # Empêche les comptes inactifs de se connecter
             user_checker: App\Security\UserChecker
 
+            # Authenticator unique
             custom_authenticators:
                 - App\Security\LoginFormAuthenticator
 
+            # IMPORTANT : définir l’entry point
+            entry_point: App\Security\LoginFormAuthenticator
+
             logout:
                 path: app_logout
+                invalidate_session: true
 
     access_control:
 
-        # EMPLOYÉ (et ADMIN grâce à la hiérarchie)
         - { path: ^/employe, roles: ROLE_EMPLOYE }
 
-        # ADMIN
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/menu/new, roles: ROLE_ADMIN }
         - { path: ^/menu/edit, roles: ROLE_ADMIN }
         - { path: ^/menu/delete, roles: ROLE_ADMIN }
 
-        # UTILISATEUR CONNECTÉ
         - { path: ^/panier, roles: ROLE_USER }
         - { path: ^/commande, roles: ROLE_USER }
         - { path: ^/compte, roles: ROLE_USER }
 
-        # PUBLIC
         - { path: ^/commander, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }

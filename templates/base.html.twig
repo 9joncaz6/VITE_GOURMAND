@@ -14,7 +14,7 @@
     {# ===== RESPONSIVE ===== #}
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {# ===== OPEN GRAPH (Facebook, WhatsApp, Messenger) ===== #}
+    {# ===== OPEN GRAPH ===== #}
     <meta property="og:title" content="V & G - Vite et Gourmand">
     <meta property="og:description" content="Menus variés, cuisine maison, livraison rapide. Découvrez nos menus gourmands.">
     <meta property="og:type" content="website">
@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="{{ asset('css/home.css') }}?v=1">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=1">
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v=1">
+
     {# ===== CSS SECONDAIRES ===== #}
     {% block stylesheets %}{% endblock %}
 </head>
@@ -91,6 +92,7 @@
                             <span class="user-icon">👤</span>
                             <span class="user-name">
                                 {{ app.user.prenom }}
+
                                 {% if is_granted('ROLE_ADMIN') %}
                                     <span class="badge-admin">Admin</span>
                                 {% elseif is_granted('ROLE_EMPLOYE') %}
@@ -99,19 +101,15 @@
                             </span>
                         </div>
 
-                        {# ADMIN : lien vers le dashboard #}
                         {% if is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('admin_dashboard') }}" class="admin-link">Dashboard admin</a>
                         {% endif %}
 
-                        {# EMPLOYÉ : uniquement commandes #}
                         {% if is_granted('ROLE_EMPLOYE') and not is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('employe_commandes_index') }}" class="admin-link">Commandes employé</a>
                         {% endif %}
 
-                        {# UTILISATEUR CONNECTÉ #}
                         <a href="{{ path('app_compte_index') }}">Mon compte</a>
-
                         <a href="{{ path('app_logout') }}" class="logout-btn">Déconnexion</a>
 
                     {% else %}
@@ -150,12 +148,10 @@
 
         {% if app.user %}
 
-            {# ADMIN #}
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('admin_dashboard') }}">Dashboard admin</a>
             {% endif %}
 
-            {# EMPLOYÉ #}
             {% if is_granted('ROLE_EMPLOYE') and not is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('employe_commandes_index') }}">Commandes employé</a>
             {% endif %}
@@ -164,7 +160,9 @@
             <a href="{{ path('app_logout') }}">Déconnexion</a>
 
         {% else %}
+
             <a href="{{ path('app_login') }}">Connexion</a>
+
         {% endif %}
 
     </nav>

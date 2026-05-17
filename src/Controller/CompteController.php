@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 #[Route('/compte')]
 class CompteController extends AbstractController
@@ -137,8 +138,11 @@ class CompteController extends AbstractController
     }
 
     #[Route('/supprimer', name: 'app_compte_supprimer')]
-    public function supprimer(Request $request, EntityManagerInterface $em): Response
-    {
+    public function supprimer(
+        Request $request,
+        EntityManagerInterface $em,
+        TokenStorageInterface $tokenStorage
+    ): Response {
         /** @var Utilisateur $user */
         $user = $this->getUser();
 
@@ -160,14 +164,14 @@ class CompteController extends AbstractController
         $em->remove($user);
         $em->flush();
 
-        // 🔥 Invalidation propre de la session
-        $session = $request->getSession();
-        $session->invalidate();
+        // Nettoyer le token de sécurité
+        $tokenStorage->setToken(null);
 
-        // Message premium
+        // Invalider la session
+        $request->getSession()->invalidate();
+
         $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
 
-        // Redirection propre
         return $this->redirectToRoute('app_home');
     }
 }
