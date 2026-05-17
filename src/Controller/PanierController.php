@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Menu;
+use App\Repository\MenuRepository;
 use App\Service\NoSQL\PanierManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,16 +37,39 @@ class PanierController extends AbstractController
         ]);
     }
 
-    #[Route('/add/{menuId}', name: 'app_panier_add')]
-    public function add(int $menuId, PanierManager $panierManager): Response
-    {
+    #[Route('/add/{menuId}/{redirect}', name: 'app_panier_add', defaults: ['redirect' => null])]
+    public function add(
+        int $menuId,
+        ?string $redirect,
+        PanierManager $panierManager,
+        MenuRepository $menuRepository
+    ): Response {
         /** @var \App\Entity\Utilisateur $user */
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
+        // Vérification du menu
+        $menu = $menuRepository->find($menuId);
+        if (!$menu) {
+            $this->addFlash('error', 'Menu introuvable.');
+            return $this->redirectToRoute('app_menu_index');
+        }
+
+        // 🚨 BLOCAGE SI STOCK = 0
+        if ($menu->getStockDisponible() <= 0) {
+            $this->addFlash('error', 'Ce menu est en rupture de stock.');
+            return $this->redirectToRoute('app_menu_show', ['id' => $menuId]);
+        }
+
+        // Ajout au panier
         $panierManager->add($user->getId(), $menuId, 1);
+
+        // Redirection spéciale "Commander maintenant"
+        if ($redirect === 'validation') {
+            return $this->redirectToRoute('app_commande_validation');
+        }
 
         return $this->redirectToRoute('app_panier_show');
     }

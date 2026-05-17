@@ -1,6 +1,6 @@
 /* ================================
    LAYOUT EN DEUX COLONNES (PAGE SHOW)
-   ================================ */
+================================ */
 
 .menu-layout {
     display: flex;
@@ -13,23 +13,43 @@
 
 /* ================================
    COLONNE GAUCHE : IMAGE
-   ================================ */
+================================ */
 
 .menu-left {
     flex: 1;
+    position: relative;
 }
 
-.menu-image {
+.menu-left img {
     width: 100%;
     max-width: 500px;
     height: 350px;
     object-fit: cover;
     border-radius: 12px;
+    filter: grayscale(0%);
+}
+
+.menu-left.out img {
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+.out-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #c62828;
+    color: white;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 4px;
+    z-index: 10;
 }
 
 /* ================================
    COLONNE DROITE : TEXTE
-   ================================ */
+================================ */
 
 .menu-right {
     flex: 1;
@@ -63,7 +83,7 @@
 
 /* ================================
    NOTE MOYENNE
-   ================================ */
+================================ */
 
 .menu-rating {
     color: #f5c518;
@@ -73,7 +93,7 @@
 
 /* ================================
    PRIX
-   ================================ */
+================================ */
 
 .menu-price {
     font-size: 24px;
@@ -82,39 +102,31 @@
 }
 
 /* ================================
-   BOUTON AJOUTER AU PANIER
-   ================================ */
+   BOUTONS
+================================ */
 
-.menu-button {
-    display: inline-block;
-    background: #007bff;
-    color: white;
-    padding: 12px 28px;
-    border-radius: 999px;
-    font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: 0.2s;
-}
-
-.menu-button:hover {
-    background: #0069d9;
-}
-
-/* ================================
-   BOUTON COMMANDER
-   ================================ */
-
+.menu-button,
 .commander-btn {
     display: inline-block;
-    background: #ff6f00;
-    color: white;
     padding: 12px 28px;
     border-radius: 999px;
     font-size: 18px;
     font-weight: 600;
     text-decoration: none;
     transition: 0.2s ease;
+    color: white;
+}
+
+.menu-button {
+    background: #007bff;
+}
+
+.menu-button:hover {
+    background: #0069d9;
+}
+
+.commander-btn {
+    background: #ff6f00;
 }
 
 .commander-btn:hover {
@@ -124,7 +136,7 @@
 
 /* ================================
    AVIS
-   ================================ */
+================================ */
 
 .avis-card {
     background: #f8f8f8;
@@ -155,7 +167,7 @@
 
 /* ================================
    FILTRES
-   ================================ */
+================================ */
 
 .filters {
     display: flex;
@@ -189,7 +201,7 @@
 
 /* ================================
    GRILLE DES MENUS (PAGE INDEX)
-   ================================ */
+================================ */
 
 .menus-grid {
     display: grid;
@@ -200,7 +212,7 @@
 
 /* ================================
    CARTE MENU
-   ================================ */
+================================ */
 
 .menu-card {
     background: #fff;
@@ -209,6 +221,7 @@
     border: 1px solid #e5e5e5;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     transition: 0.2s ease;
+    position: relative;
 }
 
 .menu-card:hover {
@@ -258,8 +271,31 @@
 }
 
 /* ================================
+   RUPTURE DE STOCK (INDEX)
+================================ */
+
+.menu-out {
+    opacity: 0.55;
+    filter: grayscale(100%);
+    pointer-events: none;
+}
+
+.badge-out {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #c62828;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    z-index: 5;
+}
+
+/* ================================
    RESPONSIVE GLOBAL
-   ================================ */
+================================ */
 
 @media (max-width: 900px) {
     .menu-layout {
@@ -271,7 +307,7 @@
         text-align: center;
     }
 
-    .menu-image {
+    .menu-left img {
         max-width: 100%;
         height: auto;
     }

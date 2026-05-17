@@ -16,7 +16,8 @@
     <div class="menu-grid">
 
         {% for menu in menus %}
-            <div class="menu-card">
+
+            <div class="menu-card {% if menu.stockDisponible <= 0 %}menu-out{% endif %}">
 
                 <h3 class="menu-title">{{ menu.titre }}</h3>
 
@@ -34,19 +35,33 @@
                     </span>
                 </div>
 
-                <div class="menu-actions">
-                    <a href="{{ path('app_panier_add', {menuId: menu.id}) }}"
-                       class="btn-secondary">
-                        Ajouter au panier
-                    </a>
+                {% if menu.stockDisponible <= 0 %}
 
-                    <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'validation'}) }}"
-                       class="btn-primary">
-                        Commander maintenant
-                    </a>
-                </div>
+                    <span class="badge-out">Rupture de stock</span>
+
+                    <div class="menu-actions">
+                        <button class="btn-secondary disabled" disabled>Ajouter au panier</button>
+                        <button class="btn-primary disabled" disabled>Commander maintenant</button>
+                    </div>
+
+                {% else %}
+
+                    <div class="menu-actions">
+                        <a href="{{ path('app_panier_add', {menuId: menu.id}) }}"
+                           class="btn-secondary">
+                            Ajouter au panier
+                        </a>
+
+                        <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'validation'}) }}"
+                           class="btn-primary">
+                            Commander maintenant
+                        </a>
+                    </div>
+
+                {% endif %}
 
             </div>
+
         {% endfor %}
 
     </div>

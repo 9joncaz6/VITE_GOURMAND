@@ -11,9 +11,13 @@
 <div class="menu-layout">
 
     <!-- COLONNE GAUCHE : IMAGE -->
-    <div class="menu-left">
+    <div class="menu-left {% if menu.stockDisponible == 0 %}out{% endif %}">
         {% if menu.images is not empty %}
             <img src="{{ asset('uploads/menus/' ~ menu.images[0]) }}" class="menu-image">
+        {% endif %}
+
+        {% if menu.stockDisponible == 0 %}
+            <div class="out-overlay">Rupture de stock</div>
         {% endif %}
     </div>
 
@@ -47,9 +51,9 @@
                 Ajouter au panier
             </a>
 
-            <!-- COMMANDER : redirection vers validation -->
+            <!-- COMMANDER : ajouter + aller à la validation -->
             {% if app.user %}
-                <a href="{{ path('app_commande_validation') }}"
+                <a href="{{ path('app_panier_add', { menuId: menu.id, redirect: 'validation' }) }}"
                    class="commander-btn w-100 mt-3">
                     Commander
                 </a>

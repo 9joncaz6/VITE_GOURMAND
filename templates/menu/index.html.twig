@@ -48,7 +48,56 @@
      LISTE DES MENUS
 ============================ -->
 <div id="menu-list">
-    {% include 'menu/_list.html.twig' with { menus: menus } %}
+
+    <div class="menus-grid">
+
+        {% for menu in menus %}
+
+            <div class="menu-card {% if menu.stockDisponible == 0 %}menu-out{% endif %}">
+
+                <!-- Image -->
+                {% set img = menu.images[0] ?? 'default.jpg' %}
+                <div class="menu-img-wrapper">
+                    <img src="{{ asset('uploads/menus/' ~ img) }}" alt="{{ menu.titre }}">
+
+                    {% if menu.stockDisponible == 0 %}
+                        <span class="badge-out">Rupture de stock</span>
+                    {% endif %}
+                </div>
+
+                <div class="menu-info">
+
+                    <h3>{{ menu.titre }}</h3>
+
+                    <p class="menu-description">
+                        {{ menu.description|slice(0, 80) ~ '...' }}
+                    </p>
+
+                    <p class="menu-min">
+                        Minimum : {{ menu.nbPersonnesMin }} personnes
+                    </p>
+
+                    <p class="menu-stock">
+                        Stock : {{ menu.stockDisponible }}
+                    </p>
+
+                    <p class="price">
+                        Prix TTC {{ menu.prixBase|number_format(2, '.', ' ') }}€
+                    </p>
+
+                    <a href="{{ path('app_menu_show', {id: menu.id}) }}"
+                       class="btn-primary {% if menu.stockDisponible == 0 %}disabled{% endif %}">
+                        Voir détails
+                    </a>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
 </div>
 
 <!-- ===========================
