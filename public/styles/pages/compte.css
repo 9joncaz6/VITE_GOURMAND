@@ -55,6 +55,7 @@
 .compte-card-icon {
     font-size: 2.2rem;
     margin-bottom: 10px;
+    transition: 0.2s ease;
 }
 
 /* Titre */
@@ -107,7 +108,6 @@
     padding: 6px;
 }
 
-
 /* ================================
    CARTE DÉCONNEXION
    ================================ */
@@ -120,6 +120,13 @@
 .logout-card:hover {
     background: #ffdede;
     box-shadow: 0 8px 20px rgba(255,0,0,0.15);
+}
+
+.logout-card .compte-card-icon {
+    background: #ffe5e5;
+    color: #b30000;
+    border-radius: 8px;
+    padding: 6px;
 }
 
 /* ================================
@@ -227,4 +234,71 @@ label {
     .form-grid .full {
         grid-column: span 1;
     }
+}
+
+/* ================================
+   MODALE SUPPRESSION COMPTE
+   ================================ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 14px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    animation: pop 0.25s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+.modal-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-danger {
+    background: #e63946;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-danger:hover {
+    background: #c62828;
+}
+
+.btn-secondary {
+    background: #eee;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background: #ddd;
 }

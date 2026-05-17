@@ -41,11 +41,8 @@
             <p>Consulter l’historique de mes commandes.</p>
         </a>
 
-
         <!-- Supprimer mon compte -->
-        <a href="{{ path('app_compte_supprimer') }}"
-           class="compte-card delete-card"
-           onclick="return confirm('Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible.')">
+        <a href="#" class="compte-card delete-card" id="openDeleteModal">
             <div class="compte-card-icon">🗑️</div>
             <h3>Supprimer mon compte</h3>
             <p>Effacer définitivement mon compte et mes données.</p>
@@ -61,5 +58,34 @@
     </div>
 
 </div>
+
+
+{# ============================
+   MODALE SUPPRESSION COMPTE
+   ============================ #}
+
+<div id="deleteModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2>Supprimer mon compte</h2>
+        <p>Cette action est <strong>définitive</strong> et supprimera toutes vos données.</p>
+
+        <div class="modal-actions">
+            <a href="{{ path('app_compte_supprimer') }}" class="btn-danger">Oui, supprimer</a>
+            <button id="closeDeleteModal" class="btn-secondary">Annuler</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+document.getElementById('openDeleteModal').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('deleteModal').classList.add('active');
+});
+
+document.getElementById('closeDeleteModal').addEventListener('click', function() {
+    document.getElementById('deleteModal').classList.remove('active');
+});
+</script>
 
 {% endblock %}
