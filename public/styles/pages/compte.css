@@ -43,6 +43,7 @@
     box-shadow: 0 4px 14px rgba(0,0,0,0.08);
     transition: all 0.25s ease;
     border: 1px solid #eee;
+    cursor: pointer;
 }
 
 .compte-card:hover {
@@ -82,6 +83,30 @@
     transform: none;
     box-shadow: none;
 }
+
+/* ================================
+   CARTE SUPPRESSION COMPTE
+   ================================ */
+
+.delete-card {
+    border: 1px solid #eee;
+    background: #fff;
+    color: #b30000;
+}
+
+.delete-card:hover {
+    background: #fff8f8;
+    box-shadow: 0 8px 20px rgba(255,0,0,0.10);
+    transform: translateY(-4px);
+}
+
+.delete-card .compte-card-icon {
+    background: #ffe5e5;
+    color: #b30000;
+    border-radius: 8px;
+    padding: 6px;
+}
+
 
 /* ================================
    CARTE DÉCONNEXION

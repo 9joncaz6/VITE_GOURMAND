@@ -2,50 +2,71 @@
 
 {% block title %}Validation de commande{% endblock %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/pages/validation.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<h1>Validation de votre commande</h1>
+<div class="validation-container">
 
-<section class="validation-section">
+    <h1 class="validation-title">Validation de votre commande</h1>
 
-    <h2>Votre panier</h2>
+    <div class="validation-card">
 
-    {% for item in items %}
-        {% set prixBase = item.menu.prixBase + 0 %}
-        {% set nbMin = item.menu.nbPersonnesMin + 0 %}
-        {% set qte = item.quantite + 0 %}
-        {% set sousTotal = (prixBase / nbMin) * qte %}
+        <h2 class="section-title">Votre panier</h2>
 
-        <div class="validation-item">
-            <strong>{{ item.menu.titre }}</strong><br>
-            Quantité : {{ qte }}<br>
-            Sous-total : {{ sousTotal | number_format(2, ',', ' ') }} €
+        {% for item in items %}
+            {% set prixBase = item.menu.prixBase %}
+            {% set nbMin = item.menu.nbPersonnesMin %}
+            {% set qte = item.quantite %}
+            {% set sousTotal = (prixBase / nbMin) * qte %}
+
+            <div class="item-row">
+                <div>
+                    <strong>{{ item.menu.titre }}</strong><br>
+                    <small>Quantité : {{ qte }}</small>
+                </div>
+                <div class="item-price">
+                    {{ sousTotal|number_format(2, ',', ' ') }} €
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="divider"></div>
+
+        <h2 class="section-title">Adresse de livraison</h2>
+
+        <p class="address-block">
+            {{ user.adressePostale }}<br>
+            <a href="{{ path('app_compte_edit') }}" class="edit-link">Modifier mon adresse</a>
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="totals">
+            <div class="line">
+                <span>Total menus</span>
+                <span>{{ totalMenus|number_format(2, ',', ' ') }} €</span>
+            </div>
+
+            <div class="line">
+                <span>Frais de livraison</span>
+                <span>{{ livraison|number_format(2, ',', ' ') }} €</span>
+            </div>
+
+            <div class="line total">
+                <span>Total à payer</span>
+                <span>{{ totalFinal|number_format(2, ',', ' ') }} €</span>
+            </div>
         </div>
-    {% endfor %}
 
-    <hr>
-
-    <h2>Adresse de livraison</h2>
-    <p>
-        {{ user.adressePostale }}<br>
-        <a href="{{ path('app_compte_edit') }}" class="btn btn-secondary btn-sm">
-            Modifier mon adresse
+        <a href="{{ path('app_commande_confirmer') }}" class="btn-primary-large mt-3">
+            Confirmer ma commande
         </a>
-    </p>
 
-    <hr>
+    </div>
 
-    <p>Total menus : <strong>{{ totalMenus | number_format(2, ',', ' ') }} €</strong></p>
-    <p>Frais de livraison : <strong>{{ livraison | number_format(2, ',', ' ') }} €</strong></p>
-
-    <p style="font-size:1.4rem; font-weight:bold;">
-        Total à payer : {{ totalFinal | number_format(2, ',', ' ') }} €
-    </p>
-
-    <a href="{{ path('app_commande_confirmer') }}" class="btn btn-primary">
-        Confirmer ma commande
-    </a>
-
-</section>
+</div>
 
 {% endblock %}

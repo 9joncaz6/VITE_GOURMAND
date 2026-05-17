@@ -2,51 +2,55 @@
 
 {% block title %}Commander{% endblock %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/pages/commander.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<h1 class="mb-4">Commander un menu</h1>
+<div class="commander-container">
 
-<div class="section">
+    <h1 class="commander-title">Commander un menu</h1>
+    <p class="commander-subtitle">Choisissez votre menu et commandez en quelques clics.</p>
+
     <div class="menu-grid">
 
         {% for menu in menus %}
-            <div class="card menu-card">
+            <div class="menu-card">
 
-                {# Titre #}
-                <h3>{{ menu.titre }}</h3>
+                <h3 class="menu-title">{{ menu.titre }}</h3>
 
-                {# Description #}
-                <p class="text-muted">{{ menu.description }}</p>
+                <p class="menu-description">{{ menu.description }}</p>
 
-                {# Prix : total + prix par personne #}
                 {% set prixBase = menu.prixBase %}
                 {% set min = menu.nbPersonnesMin %}
                 {% set prixParPersonne = prixBase / min %}
 
-                <p class="menu-price">
-                    <strong>{{ prixBase|number_format(2, ',', ' ') }} € TTC</strong><br>
-                    <small>
+                <div class="menu-price">
+                    <span class="price-total">{{ prixBase|number_format(2, ',', ' ') }} € TTC</span>
+                    <span class="price-details">
                         soit {{ prixParPersonne|number_format(2, ',', ' ') }} € / personne  
                         (min. {{ min }} pers.)
-                    </small>
-                </p>
+                    </span>
+                </div>
 
-                {# Ajouter au panier #}
-                <a href="{{ path('app_panier_add', {menuId: menu.id}) }}"
-                   class="btn-secondary w-100 mt-2">
-                    Ajouter au panier
-                </a>
+                <div class="menu-actions">
+                    <a href="{{ path('app_panier_add', {menuId: menu.id}) }}"
+                       class="btn-secondary">
+                        Ajouter au panier
+                    </a>
 
-                {# Commander maintenant = ajouter + redirection vers validation #}
-                <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'validation'}) }}"
-                   class="btn-primary w-100 mt-2">
-                    Commander maintenant
-                </a>
+                    <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'validation'}) }}"
+                       class="btn-primary">
+                        Commander maintenant
+                    </a>
+                </div>
 
             </div>
         {% endfor %}
 
     </div>
+
 </div>
 
 {% endblock %}

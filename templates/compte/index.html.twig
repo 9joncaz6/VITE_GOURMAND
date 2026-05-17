@@ -41,13 +41,14 @@
             <p>Consulter l’historique de mes commandes.</p>
         </a>
 
-        <!-- Mes avis -->
-        <a href="{{ path('compte_avis_modifier', { id: 0 }) }}" 
-           class="compte-card disabled-card" 
-           onclick="return false;">
-            <div class="compte-card-icon">⭐</div>
-            <h3>Mes avis</h3>
-            <p>Voir et modifier mes avis (depuis les menus).</p>
+
+        <!-- Supprimer mon compte -->
+        <a href="{{ path('app_compte_supprimer') }}"
+           class="compte-card delete-card"
+           onclick="return confirm('Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible.')">
+            <div class="compte-card-icon">🗑️</div>
+            <h3>Supprimer mon compte</h3>
+            <p>Effacer définitivement mon compte et mes données.</p>
         </a>
 
         <!-- Déconnexion -->

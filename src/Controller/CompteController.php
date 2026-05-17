@@ -66,7 +66,6 @@ class CompteController extends AbstractController
 
             $newPassword = $form->get('plainPassword')->getData();
 
-            // Hash + mise à jour
             $hashed = $hasher->hashPassword($user, $newPassword);
             $user->setPassword($hashed);
 
@@ -82,63 +81,93 @@ class CompteController extends AbstractController
     }
 
     #[Route('/historique', name: 'app_compte_historique')]
-public function historique(EntityManagerInterface $em): Response
-{
-    /** @var Utilisateur $user */
-    $user = $this->getUser();
+    public function historique(EntityManagerInterface $em): Response
+    {
+        /** @var Utilisateur $user */
+        $user = $this->getUser();
 
-    if (!$user) {
-        return $this->redirectToRoute('app_login');
-    }
-
-    // Récupérer toutes les commandes de l'utilisateur
-    $commandes = $em->getRepository(\App\Entity\Commande::class)
-        ->findBy(['utilisateur' => $user], ['createdAt' => 'DESC']);
-
-    return $this->render('compte/historique.html.twig', [
-        'commandes' => $commandes,
-    ]);
-}
-
-#[Route('/commande/{id}', name: 'compte_commandes_show')]
-public function showCommande(
-    \App\Entity\Commande $commande,
-    EntityManagerInterface $em,
-    \App\Repository\AvisRepository $avisRepository
-): Response {
-    /** @var Utilisateur $user */
-    $user = $this->getUser();
-
-    if (!$user || $commande->getUtilisateur() !== $user) {
-        return $this->redirectToRoute('app_login');
-    }
-
-    // --- LOGIQUE POUR LE BOUTON "LAISSER UN AVIS" ---
-    $peutLaisserAvis = false;
-    $menuEligible = null;
-
-    foreach ($commande->getItems() as $item) {
-        $menu = $item->getMenu();
-
-        // Vérifier si l'utilisateur a déjà laissé un avis
-        $avisExistant = $avisRepository->findOneBy([
-            'menu' => $menu,
-            'utilisateur' => $user
-        ]);
-
-        if (!$avisExistant) {
-            $peutLaisserAvis = true;
-            $menuEligible = $menu;
-            break;
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
         }
+
+        $commandes = $em->getRepository(\App\Entity\Commande::class)
+            ->findBy(['utilisateur' => $user], ['createdAt' => 'DESC']);
+
+        return $this->render('compte/historique.html.twig', [
+            'commandes' => $commandes,
+        ]);
     }
 
-    return $this->render('compte/commandes/show.html.twig', [
-        'commande' => $commande,
-        'peutLaisserAvis' => $peutLaisserAvis,
-        'menuEligible' => $menuEligible,
-    ]);
-}
+    #[Route('/commande/{id}', name: 'compte_commandes_show')]
+    public function showCommande(
+        \App\Entity\Commande $commande,
+        EntityManagerInterface $em,
+        \App\Repository\AvisRepository $avisRepository
+    ): Response {
+        /** @var Utilisateur $user */
+        $user = $this->getUser();
 
+        if (!$user || $commande->getUtilisateur() !== $user) {
+            return $this->redirectToRoute('app_login');
+        }
 
+        $peutLaisserAvis = false;
+        $menuEligible = null;
+
+        foreach ($commande->getItems() as $item) {
+            $menu = $item->getMenu();
+
+            $avisExistant = $avisRepository->findOneBy([
+                'menu' => $menu,
+                'utilisateur' => $user
+            ]);
+
+            if (!$avisExistant) {
+                $peutLaisserAvis = true;
+                $menuEligible = $menu;
+                break;
+            }
+        }
+
+        return $this->render('compte/commandes/show.html.twig', [
+            'commande' => $commande,
+            'peutLaisserAvis' => $peutLaisserAvis,
+            'menuEligible' => $menuEligible,
+        ]);
+    }
+
+    #[Route('/supprimer', name: 'app_compte_supprimer')]
+    public function supprimer(Request $request, EntityManagerInterface $em): Response
+    {
+        /** @var Utilisateur $user */
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Supprimer les avis
+        foreach ($user->getAvis() as $avis) {
+            $em->remove($avis);
+        }
+
+        // Supprimer les commandes
+        foreach ($user->getCommandes() as $commande) {
+            $em->remove($commande);
+        }
+
+        // Supprimer l'utilisateur
+        $em->remove($user);
+        $em->flush();
+
+        // 🔥 Invalidation propre de la session
+        $session = $request->getSession();
+        $session->invalidate();
+
+        // Message premium
+        $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
+
+        // Redirection propre
+        return $this->redirectToRoute('app_home');
+    }
 }
