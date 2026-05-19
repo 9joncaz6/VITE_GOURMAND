@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\NoSQL;
+namespace App\Service\NoSql;
 
 use App\Document\Panier;
 use Doctrine\ODM\MongoDB\DocumentManager;

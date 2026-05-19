@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🍽️ Vite & Gourmand  
-### Application Web de Commande de Menus — TP DWWM  
+#  Vite & Gourmand  
+### Application Web de Commande de Menus 
 Développé par **Jonathan CAZAUMAYOU**
 
----
+
 
 ![Status](https://img.shields.io/badge/Status-En%20développement-blue)
 ![Symfony](https://img.shields.io/badge/Symfony-7.0-black)
@@ -16,16 +16,18 @@ Développé par **Jonathan CAZAUMAYOU**
 
 ---
 
-# 🚀 Présentation
+#  Présentation
 
 **Vite & Gourmand** est une application web permettant aux visiteurs de consulter les menus,  
 commander en ligne, laisser des avis, et aux employés/administrateurs de gérer l’activité.
 
 Ce projet a été réalisé dans le cadre du **Titre Professionnel Développeur Web & Web Mobile**.
 
----
+Démo en ligne
+L’application est accessible ici :
+ https://vite-gourmand-2rkl.onrender.com/
 
-# 🧰 Stack Technique
+#  Stack Technique
 
 - **Backend** : Symfony 7 (PHP 8.2)  
 - **Frontend** : Twig, HTML5, CSS3, JavaScript  
@@ -38,15 +40,15 @@ Ce projet a été réalisé dans le cadre du **Titre Professionnel Développeur 
 
 ---
 
-# 🌐 Dépôt GitHub
+#  Dépôt GitHub
 
-👉 https://github.com/9joncaz6/VITE_GOURMAND.git
+ https://github.com/9joncaz6/VITE_GOURMAND.git
 
 ---
 
-# 🛠️ Installation locale
+#  Installation locale
 
-## 1️⃣ Prérequis
+## 1 Prérequis
 
 - PHP 8.2+
 - Composer
@@ -57,7 +59,7 @@ Ce projet a été réalisé dans le cadre du **Titre Professionnel Développeur 
 
 ---
 
-## 2️⃣ Cloner le projet
+## 2 Cloner le projet
 
 ```bash
 git clone https://github.com/9joncaz6/VITE_GOURMAND.git

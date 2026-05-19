@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controller\admin;
+namespace App\Controller\Admin;
 
 use App\Entity\Utilisateur;
 use App\Form\CreateEmployeType;
 use App\Repository\UtilisateurRepository;
 use App\Repository\MenuRepository;
-use App\Service\NoSQL\StatsService;
+use App\Service\NoSqL\StatsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

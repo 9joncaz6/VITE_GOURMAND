@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Menu;
 use App\Repository\MenuRepository;
-use App\Service\NoSQL\PanierManager;
+use App\Service\NoSql\PanierManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

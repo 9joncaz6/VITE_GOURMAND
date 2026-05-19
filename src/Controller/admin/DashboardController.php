@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller\admin;
+namespace App\Controller\Admin;
 
 use App\Repository\CommandeRepository;
 use App\Repository\MenuRepository;
 use App\Repository\UtilisateurRepository;
-use App\Service\NoSQL\StatsService;
+use App\Service\NoSqL\StatsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

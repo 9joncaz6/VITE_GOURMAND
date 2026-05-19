@@ -5,13 +5,13 @@
 
 namespace App\Controller;
 
-use App\Service\NoSQL\AdminLogService;
-use App\Service\NoSQL\UserLogger;
-use App\Service\NoSQL\CommandeLogger;
-use App\Service\NoSQL\AvisArchiver;
-use App\Service\NoSQL\StatsService;
-use App\Service\NoSQL\PanierManager;
-use App\Service\NoSQL\AllergenesService;
+use App\Service\NoSql\AdminLogService;
+use App\Service\NoSql\UserLogger;
+use App\Service\NoSql\CommandeLogger;
+use App\Service\NoSql\AvisArchiver;
+use App\Service\NoSql\StatsService;
+use App\Service\NoSql\PanierManager;
+use App\Service\NoSql\AllergenesService;
 use App\Repository\AvisRepository;
 use App\Repository\CommandeRepository;
 use App\Repository\UtilisateurRepository;

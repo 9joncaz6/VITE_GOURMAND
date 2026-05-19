@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controller\admin;
+namespace App\Controller\Admin;
 
 use App\Entity\Menu;
 use App\Form\MenuType;
 use App\Repository\PlatRepository;
 use App\Repository\MenuRepository;
-use App\Service\NoSQL\AllergenesService;
+use App\Service\NoSql\AllergenesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Repository\MenuRepository;
-use App\Service\NoSQL\StatsService;
+use App\Service\NoSql\StatsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

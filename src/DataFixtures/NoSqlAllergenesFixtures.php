@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Menu;
 use App\Repository\MenuRepository;
-use App\Service\NoSQL\AllergenesService;
+use App\Service\NoSql\AllergenesService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;

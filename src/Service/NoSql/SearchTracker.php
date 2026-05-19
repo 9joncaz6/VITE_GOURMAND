@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\NoSQL;
+namespace App\Service\NoSql;
 
 use App\Document\SearchHistory;
 use Doctrine\ODM\MongoDB\DocumentManager;
