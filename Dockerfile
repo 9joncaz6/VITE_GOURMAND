@@ -5,6 +5,10 @@ RUN apt-get update && apt-get install -y \
     git unzip libicu-dev libzip-dev libonig-dev libxml2-dev \
     && docker-php-ext-install intl pdo pdo_mysql zip
 
+# Install MongoDB extension
+RUN pecl install mongodb-1.21.0 \
+    && docker-php-ext-enable mongodb
+
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
