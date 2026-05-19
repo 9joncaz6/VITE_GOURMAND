@@ -15,6 +15,10 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
+# 👉 Forcer Symfony en prod pendant le build
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 RUN php bin/console cache:warmup --env=prod
