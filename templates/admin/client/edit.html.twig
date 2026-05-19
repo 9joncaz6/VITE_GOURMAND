@@ -1,0 +1,67 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Modifier le client{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/admin/admin_client.css') }}">
+{% endblock %}
+
+{% block admin_body %}
+
+<h1 class="page-title">Modifier le client</h1>
+
+<div class="card form-card">
+    <div class="card-body">
+
+        <div class="client-header">
+            <div class="avatar">
+                {{ client.prenom|first|upper }}{{ client.nom|first|upper }}
+            </div>
+
+            <div>
+                <h2 class="client-name">{{ client.prenom }} {{ client.nom }}</h2>
+                <p class="client-email">{{ client.email }}</p>
+            </div>
+        </div>
+
+        <hr>
+
+        {{ form_start(form) }}
+
+        <div class="form-grid">
+            <div class="form-group">
+                {{ form_label(form.nom) }}
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.prenom) }}
+                {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.gsm) }}
+                {{ form_widget(form.gsm, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            <div class="form-group form-full">
+                {{ form_label(form.adressePostale) }}
+                {{ form_widget(form.adressePostale, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <button class="btn btn-primary mt-3">Enregistrer</button>
+
+        {{ form_end(form) }}
+
+        <a href="{{ path('admin_clients_index') }}" class="btn btn-secondary mt-3">Retour</a>
+
+    </div>
+</div>
+
+{% endblock %}

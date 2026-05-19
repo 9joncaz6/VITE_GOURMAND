@@ -1,0 +1,44 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Client {{ client.id }}{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">Client #{{ client.id }}</h1>
+
+<ul class="list-group mb-4">
+    <li class="list-group-item"><strong>Nom :</strong> {{ client.prenom }} {{ client.nom }}</li>
+    <li class="list-group-item"><strong>Email :</strong> {{ client.email }}</li>
+    <li class="list-group-item"><strong>Adresse :</strong> {{ client.adressePostale }}</li>
+    <li class="list-group-item"><strong>Statut :</strong>
+        {% if client.actif %}
+            <span class="badge bg-success">Actif</span>
+        {% else %}
+            <span class="badge bg-danger">Inactif</span>
+        {% endif %}
+    </li>
+</ul>
+
+<h3>Commandes</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for cmd in client.commandes %}
+        <tr>
+            <td>{{ cmd.id }}</td>
+            <td>{{ cmd.createdAt|date('d/m/Y H:i') }}</td>
+            <td>{{ cmd.total }} €</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="3">Aucune commande</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('admin_clients_index') }}" class="btn btn-secondary mt-3">Retour</a>
+{% endblock %}

@@ -30,6 +30,9 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // 🔥 Rôle par défaut
+            $user->setRoles(['ROLE_USER']);
+
             // Hash du mot de passe
             $hashed = $passwordHasher->hashPassword(
                 $user,

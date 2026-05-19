@@ -34,7 +34,7 @@ security:
 
             logout:
                 path: app_logout
-                invalidate_session: true
+                invalidate_session: false
 
     access_control:
 

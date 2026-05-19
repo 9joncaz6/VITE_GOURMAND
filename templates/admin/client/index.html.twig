@@ -1,0 +1,83 @@
+{% extends 'admin/admin_base.html.twig' %}
+
+{% block title %}Gestion des clients{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/admin/admin_client.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="admin-container">
+
+    <h1>Gestion des clients</h1>
+
+    {# Messages flash #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash flash-{{ label }}">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Actif</th>
+                <th>Commandes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for client in clients %}
+            <tr>
+                <td>{{ client.id }}</td>
+                <td>{{ client.prenom }} {{ client.nom }}</td>
+                <td>{{ client.email }}</td>
+
+                <td>
+                    {% if client.actif %}
+                        <span class="badge badge-success">Actif</span>
+                    {% else %}
+                        <span class="badge badge-danger">Inactif</span>
+                    {% endif %}
+                </td>
+
+                <td>{{ client.commandes|length }}</td>
+
+                <td class="actions">
+
+                    <a href="{{ path('admin_clients_show', { id: client.id }) }}"
+                       class="btn btn-info btn-sm">Voir</a>
+
+                    <a href="{{ path('admin_clients_edit', { id: client.id }) }}"
+                       class="btn btn-warning btn-sm">Modifier</a>
+
+                    <a href="{{ path('admin_clients_toggle', { id: client.id }) }}"
+                       class="btn btn-secondary btn-sm">
+                        {% if client.actif %}
+                            Désactiver
+                        {% else %}
+                            Activer
+                        {% endif %}
+                    </a>
+
+                    {# 🔥 Bouton SUPPRIMER ajouté ici #}
+                    <form action="{{ path('admin_clients_delete', { id: client.id }) }}"
+                          method="post"
+                          onsubmit="return confirm('Supprimer ce client définitivement ?');"
+                          style="display:inline-block">
+
+                        <button class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}
