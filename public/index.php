@@ -6,6 +6,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
+/**
+ * Render Free Hack :
+ * Les variables d'environnement ne sont pas injectées correctement.
+ * On les force ici pour garantir que Symfony les voit.
+ */
+putenv('MONGODB_URL=mongodb+srv://mayjoca789_db_user:n86DcKTrXa8QWAA1@cluster0.f9crcxj.mongodb.net/vitegourmand?retryWrites=true&w=majority&appName=Cluster0');
+putenv('MONGODB_DB=vitegourmand');
+
 $env = getenv('APP_ENV') ?: 'prod';
 $debug = getenv('APP_DEBUG') === '1';
 
