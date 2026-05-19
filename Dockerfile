@@ -21,6 +21,6 @@ ENV APP_DEBUG=0
 
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-RUN php bin/console cache:warmup --env=prod
+
 
 CMD ["php-fpm"]
