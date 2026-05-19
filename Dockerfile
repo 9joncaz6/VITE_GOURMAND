@@ -28,10 +28,6 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
 
-# Now that APP_ENV is defined, we can safely warm the cache
-RUN php bin/console cache:clear --env=prod
-RUN php bin/console cache:warmup --env=prod
-
 # Permissions
 RUN chown -R www-data:www-data /var/www/html/var
 
