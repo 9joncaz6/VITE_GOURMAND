@@ -24,36 +24,30 @@ class AvisController extends AbstractController
 
         $user = $this->getUser();
 
-        // 1) Vérifier que la commande appartient au client connecté
         if ($commande->getUtilisateur() !== $user) {
             $this->addFlash('error', 'Vous ne pouvez pas laisser un avis pour cette commande.');
             return $this->redirectToRoute('app_compte_historique');
         }
 
-        // 2) Vérifier que la commande est terminée
         if ($commande->getStatutActuel() !== 'terminee') {
             $this->addFlash('error', 'Vous ne pouvez laisser un avis que pour une commande terminée.');
             return $this->redirectToRoute('app_compte_historique');
         }
 
-        // 3) Vérifier qu’il n’y a pas déjà un avis
         if ($commande->getAvis()) {
             $this->addFlash('info', 'Vous avez déjà laissé un avis pour cette commande.');
             return $this->redirectToRoute('app_compte_historique');
         }
 
-        // 4) Créer un nouvel avis
         $avis = new Avis();
         $form = $this->createForm(AvisTypeClient::class, $avis);
         $form->handleRequest($request);
 
-        // 5) Traitement du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
 
             $avis->setUtilisateur($user);
             $avis->setCommande($commande);
 
-            // Lier l'avis au menu (premier item de la commande)
             $menu = $commande->getItems()->first()->getMenu();
             $avis->setMenu($menu);
 
@@ -63,7 +57,7 @@ class AvisController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Merci pour votre avis !');
-            return $this->redirectToRoute('app_compte_historique');
+            return $this->redirectToRoute('app_compte_avis');
         }
 
         return $this->render('avis/form.html.twig', [
@@ -77,7 +71,6 @@ class AvisController extends AbstractController
     {
         $user = $this->getUser();
 
-        // Vérifier que l'avis appartient bien à l'utilisateur connecté
         if ($avis->getUtilisateur() !== $user) {
             throw $this->createAccessDeniedException();
         }
@@ -89,12 +82,28 @@ class AvisController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Votre avis a été modifié.');
-            return $this->redirectToRoute('app_compte_historique');
+            return $this->redirectToRoute('app_compte_avis');
         }
 
         return $this->render('avis/modifier.html.twig', [
             'form' => $form->createView(),
             'avis' => $avis,
         ]);
+    }
+
+    #[Route('/compte/avis/{id}/supprimer', name: 'compte_avis_supprimer')]
+    public function supprimer(Avis $avis, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+
+        if ($avis->getUtilisateur() !== $user) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $em->remove($avis);
+        $em->flush();
+
+        $this->addFlash('success', 'Avis supprimé.');
+        return $this->redirectToRoute('app_compte_avis');
     }
 }

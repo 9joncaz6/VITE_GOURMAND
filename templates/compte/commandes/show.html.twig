@@ -3,24 +3,22 @@
 {% block title %}Commande #{{ commande.id }}{% endblock %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ asset('styles/pages/detail.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/pages/commande_show.css') }}">
 {% endblock %}
 
 {% block body %}
 
-<div class="commande-container">
+<a href="{{ path('app_compte_historique') }}" class="btn-back">← Retour</a>
 
-    <a href="{{ path('app_compte_historique') }}" class="btn-retour">← Retour</a>
+<h1 class="page-title">Commande #{{ commande.id }}</h1>
 
-    <h1 class="commande-title">Commande #{{ commande.id }}</h1>
+<div class="commande-wrapper">
 
-    <!-- SECTION INFOS -->
+    <!-- SECTION TIMELINE -->
     <div class="commande-section">
-        <h2>Informations</h2>
+        <h2 class="section-title">Suivi de la commande</h2>
 
-        <!-- TIMELINE DES STATUTS -->
         <div class="timeline">
-
             <div class="step {% if commande.statutActuel in ['en_attente','en_preparation','terminee'] %}active{% endif %}">
                 <span class="dot"></span>
                 <p>Commande passée</p>
@@ -35,11 +33,14 @@
                 <span class="dot"></span>
                 <p>Terminée</p>
             </div>
-
         </div>
+    </div>
 
-        <!-- GRID INFOS -->
-        <div class="commande-infos-grid">
+    <!-- SECTION INFOS -->
+    <div class="commande-section">
+        <h2 class="section-title">Informations</h2>
+
+        <div class="info-grid">
             <div>
                 <span class="label">Date :</span>
                 <span>{{ commande.createdAt|date('d/m/Y H:i') }}</span>
@@ -51,7 +52,7 @@
             </div>
 
             <div>
-                <span class="label">Statut actuel :</span>
+                <span class="label">Statut :</span>
                 <span class="badge statut-{{ commande.statutActuel }}">
                     {{ commande.statutActuel }}
                 </span>
@@ -59,16 +60,23 @@
         </div>
     </div>
 
-    <!-- BOUTON LAISSER UN AVIS -->
+    <!-- BOUTON ANNULER COMMANDE -->
+    {% if commande.statutActuel == 'en_attente' %}
+        <form method="post" action="{{ path('compte_commande_annuler', { id: commande.id }) }}">
+            <button class="btn-cancel">❌ Annuler la commande</button>
+        </form>
+    {% endif %}
+
+    <!-- BOUTON AVIS -->
     {% if commande.statutActuel == 'terminee' and commande.avis is null %}
-    <a href="{{ path('compte_avis', { id: commande.id }) }}" class="btn-avis">
-        ⭐ Laisser un avis
-    </a>
-{% endif %}
+        <a href="{{ path('compte_avis', { id: commande.id }) }}" class="btn-avis">
+            ⭐ Laisser un avis
+        </a>
+    {% endif %}
 
     <!-- SECTION ITEMS -->
     <div class="commande-section">
-        <h2>Menus commandés</h2>
+        <h2 class="section-title">Menus commandés</h2>
 
         <table class="commande-table">
             <thead>
@@ -95,7 +103,7 @@
 
     <!-- SECTION FRAIS -->
     <div class="commande-section">
-        <h2>Frais de livraison</h2>
+        <h2 class="section-title">Frais de livraison</h2>
         <p class="frais">{{ commande.fraisLivraison }} €</p>
     </div>
 

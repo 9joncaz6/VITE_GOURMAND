@@ -302,3 +302,69 @@ label {
 .btn-secondary:hover {
     background: #ddd;
 }
+
+/* ================================
+   MES AVIS — LISTE
+   ================================ */
+
+.avis-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.avis-item {
+    padding: 20px;
+    border-radius: 12px;
+    background: #fafafa;
+    border: 1px solid #eee;
+}
+
+.avis-item h3 {
+    margin: 0 0 5px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.avis-date {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.avis-comment {
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.avis-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary-small {
+    background: #e67e22;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-primary-small:hover {
+    background: #cf6d1d;
+}
+
+.btn-danger-small {
+    background: #e63946;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-danger-small:hover {
+    background: #c62828;
+}
+

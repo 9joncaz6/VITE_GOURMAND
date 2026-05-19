@@ -15,7 +15,7 @@
     <p class="compte-subtitle">
         Bienvenue {{ app.user.prenom }} {{ app.user.nom }}  
         <br>
-        <small class="text-muted">Gérez vos informations, commandes et avis.</small>
+        <small class="text-muted">Gérez vos informations, avis et commandes.</small>
     </p>
 
     <div class="compte-grid">
@@ -40,6 +40,13 @@
             <h3>Mes commandes</h3>
             <p>Consulter l’historique de mes commandes.</p>
         </a>
+
+        <a href="{{ path('app_compte_avis') }}" class="compte-card">
+            <div class="compte-card-icon">⭐</div>
+            <h3>Mes avis</h3>
+            <p>Consulter, modifier ou supprimer mes avis.</p>
+        </a>
+
 
         <!-- Supprimer mon compte -->
         <a href="#" class="compte-card delete-card" id="openDeleteModal">

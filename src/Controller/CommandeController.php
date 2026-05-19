@@ -45,7 +45,8 @@ class CommandeController extends AbstractController
             $min  = $menu->getNbPersonnesMin();
 
             if ($qte < $min) {
-                $this->addFlash('error',
+                $this->addFlash(
+                    'error',
                     "Le menu « {$menu->getTitre()} » nécessite au minimum {$min} personnes."
                 );
                 return $this->redirectToRoute('app_panier_show');
@@ -113,7 +114,8 @@ class CommandeController extends AbstractController
             $min  = $menu->getNbPersonnesMin();
 
             if ($qte < $min) {
-                $this->addFlash('error',
+                $this->addFlash(
+                    'error',
                     "Le menu « {$menu->getTitre()} » nécessite au minimum {$min} personnes."
                 );
                 return $this->redirectToRoute('app_panier_show');

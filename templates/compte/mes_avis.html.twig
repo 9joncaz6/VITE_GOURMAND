@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes avis{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/compte.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<h1 class="page-title">Mes avis</h1>
+
+<div class="account-container">
+
+    <div class="account-card">
+
+        {% if avis is empty %}
+            <p>Vous n'avez encore laissé aucun avis.</p>
+        {% else %}
+            {% for a in avis %}
+                <div class="avis-item">
+                    <h3>{{ a.menu.titre }}</h3>
+                    <p>Note : {{ a.note }}/5</p>
+                    <p>{{ a.commentaire }}</p>
+
+                    <div class="avis-actions">
+                        <a href="{{ path('app_avis_edit', {id: a.id}) }}" class="btn-primary-small">Modifier</a>
+                        <a href="{{ path('app_avis_delete', {id: a.id}) }}" class="btn-danger-small">Supprimer</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+
+    <a href="{{ path('app_compte_index') }}" class="btn-back">← Retour</a>
+
+</div>
+
+{% endblock %}

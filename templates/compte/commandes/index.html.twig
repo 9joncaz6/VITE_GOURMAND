@@ -27,11 +27,13 @@
             <td>{{ commande.id }}</td>
             <td>{{ commande.createdAt|date('d/m/Y H:i') }}</td>
             <td>{{ commande.total|number_format(2, '.', ' ') }} €</td>
+
             <td>
-                <span class="badge badge-{{ commande.statutActuel|lower|replace({' ': '-'}) }}">
-                    {{ commande.statutActuel }}
+                <span class="badge badge-{{ commande.getStatutActuel()|lower|replace({' ': '-'}) }}">
+                    {{ commande.getStatutActuel() }}
                 </span>
             </td>
+
             <td>
                 <a href="{{ path('compte_commandes_show', {id: commande.id}) }}" class="btn btn-primary btn-sm">
                     Voir

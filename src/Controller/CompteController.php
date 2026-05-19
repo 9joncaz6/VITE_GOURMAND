@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Commande;
+use App\Entity\CommandeStatut;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
 use App\Form\ChangePasswordType;
+use App\Repository\AvisRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,9 +31,8 @@ class CompteController extends AbstractController
         EntityManagerInterface $em,
         ?string $redirect
     ): Response {
-        /** @var Utilisateur $user */
+        /** @var Utilisateur|null $user */
         $user = $this->getUser();
-
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
@@ -65,9 +67,8 @@ class CompteController extends AbstractController
         EntityManagerInterface $em,
         UserPasswordHasherInterface $hasher
     ): Response {
-        /** @var Utilisateur $user */
+        /** @var Utilisateur|null $user */
         $user = $this->getUser();
-
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
@@ -76,9 +77,7 @@ class CompteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $newPassword = $form->get('plainPassword')->getData();
-
             $hashed = $hasher->hashPassword($user, $newPassword);
             $user->setPassword($hashed);
 
@@ -96,14 +95,13 @@ class CompteController extends AbstractController
     #[Route('/historique', name: 'app_compte_historique')]
     public function historique(EntityManagerInterface $em): Response
     {
-        /** @var Utilisateur $user */
+        /** @var Utilisateur|null $user */
         $user = $this->getUser();
-
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
-        $commandes = $em->getRepository(\App\Entity\Commande::class)
+        $commandes = $em->getRepository(Commande::class)
             ->findBy(['utilisateur' => $user], ['createdAt' => 'DESC']);
 
         return $this->render('compte/historique.html.twig', [
@@ -113,11 +111,11 @@ class CompteController extends AbstractController
 
     #[Route('/commande/{id}', name: 'compte_commandes_show')]
     public function showCommande(
-        \App\Entity\Commande $commande,
+        Commande $commande,
         EntityManagerInterface $em,
-        \App\Repository\AvisRepository $avisRepository
+        AvisRepository $avisRepository
     ): Response {
-        /** @var Utilisateur $user */
+        /** @var Utilisateur|null $user */
         $user = $this->getUser();
 
         if (!$user || $commande->getUtilisateur() !== $user) {
@@ -132,7 +130,7 @@ class CompteController extends AbstractController
 
             $avisExistant = $avisRepository->findOneBy([
                 'menu' => $menu,
-                'utilisateur' => $user
+                'utilisateur' => $user,
             ]);
 
             if (!$avisExistant) {
@@ -143,9 +141,60 @@ class CompteController extends AbstractController
         }
 
         return $this->render('compte/commandes/show.html.twig', [
-            'commande' => $commande,
-            'peutLaisserAvis' => $peutLaisserAvis,
-            'menuEligible' => $menuEligible,
+            'commande'       => $commande,
+            'peutLaisserAvis'=> $peutLaisserAvis,
+            'menuEligible'   => $menuEligible,
+        ]);
+    }
+
+    #[Route('/commande/{id}/annuler', name: 'compte_commande_annuler', methods: ['POST'])]
+    public function annulerCommande(
+        Commande $commande,
+        EntityManagerInterface $em
+    ): Response {
+        /** @var Utilisateur|null $user */
+        $user = $this->getUser();
+
+        if (!$user || $commande->getUtilisateur() !== $user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if ($commande->getStatutActuel() !== 'en_attente') {
+            $this->addFlash('error', 'Vous ne pouvez plus annuler cette commande.');
+            return $this->redirectToRoute('compte_commandes_show', ['id' => $commande->getId()]);
+        }
+
+        $statut = new CommandeStatut();
+        $statut->setCommande($commande);
+        $statut->setStatut('annulee');
+        $statut->setCommentaire('Commande annulée par le client.');
+        $statut->setDateMaj(new \DateTimeImmutable());
+
+        $commande->setStatus('annulee');
+
+        $em->persist($statut);
+        $em->flush();
+
+        $this->addFlash('success', 'Votre commande a été annulée.');
+        return $this->redirectToRoute('app_compte_historique');
+    }
+
+    #[Route('/avis', name: 'app_compte_avis')]
+    public function mesAvis(AvisRepository $avisRepository): Response
+    {
+        /** @var Utilisateur|null $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $avis = $avisRepository->findBy(
+            ['utilisateur' => $user],
+            ['date' => 'DESC']
+        );
+
+        return $this->render('compte/avis/index.html.twig', [
+            'avis' => $avis,
         ]);
     }
 
@@ -155,9 +204,8 @@ class CompteController extends AbstractController
         EntityManagerInterface $em,
         TokenStorageInterface $tokenStorage
     ): Response {
-        /** @var Utilisateur $user */
+        /** @var Utilisateur|null $user */
         $user = $this->getUser();
-
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
@@ -177,7 +225,6 @@ class CompteController extends AbstractController
         $request->getSession()->invalidate();
 
         $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
-
         return $this->redirectToRoute('app_home');
     }
 }
