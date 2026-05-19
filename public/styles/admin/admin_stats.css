@@ -79,3 +79,19 @@
     background: #d4f8d4;
     color: #0a7a0a;
 }
+
+.btn-reset-stats {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-reset-stats:hover {
+    background: #c9302c;
+}
+

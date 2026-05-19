@@ -10,14 +10,14 @@
 
 <h1 class="page-title">Créer un menu</h1>
 
-<div class="menu-edit-container">
+<div class="menu-create-container">
+
+    {{ form_start(form) }}
 
     <div class="left-column">
 
         <div class="card">
             <h2>Informations générales</h2>
-
-            {{ form_start(form) }}
 
             <div class="form-group">
                 {{ form_label(form.titre) }}
@@ -52,6 +52,13 @@
                     {{ form_widget(form.theme) }}
                 </div>
             </div>
+
+            {# 🟩 ALLERGÈNES ICI — dans la bonne carte #}
+            <div class="form-group">
+                {{ form_label(form.allergenes) }}
+                {{ form_widget(form.allergenes) }}
+            </div>
+
         </div>
 
         <div class="card">
@@ -67,14 +74,14 @@
 
     </div>
 
-</div>
+    <div class="actions">
+        <button class="btn btn-primary">Créer</button>
+        <a href="{{ path('admin_menu_index') }}" class="btn btn-secondary">Retour</a>
+    </div>
 
-<div class="actions">
-    <button class="btn btn-primary">Créer</button>
-    <a href="{{ path('admin_menu_index') }}" class="btn btn-secondary">Retour</a>
-</div>
+    {{ form_end(form) }}
 
-{{ form_end(form) }}
+</div>
 
 {% endblock %}
 

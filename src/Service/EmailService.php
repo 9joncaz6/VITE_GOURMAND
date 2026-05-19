@@ -38,7 +38,7 @@ class EmailService
     {
         $emailMessage = (new Email())
             ->from($fromEmail)
-            ->to('contact@vitegourmand.fr')
+            ->to('jonca@alwaysdata.net')   // ✔ Envoi vers AlwaysData
             ->subject('Nouveau message de contact')
             ->html("
                 <p><strong>Nouveau message de contact :</strong></p>
@@ -53,7 +53,6 @@ class EmailService
 
     public function sendResetPasswordEmail(Utilisateur $user): void
     {
-        // Génération automatique de l’URL ABSOLUE
         $resetLink = $this->router->generate(
             'app_reset_password',
             ['token' => $user->getResetToken()],

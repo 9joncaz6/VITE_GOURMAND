@@ -5,22 +5,8 @@
 
     <title>{% block title %}V & G - Vite et Gourmand{% endblock %}</title>
 
-    <meta name="description" content="V & G - Traiteur artisanal, menus variés, livraison rapide, cuisine maison et service premium. Commandez vos menus en ligne facilement.">
-    <meta name="keywords" content="traiteur, livraison repas, cuisine maison, menus, commande en ligne, vite et gourmand, V&G">
-    <meta name="author" content="V & G - Vite et Gourmand">
-
+    <meta name="description" content="V & G - Traiteur artisanal, menus variés, livraison rapide, cuisine maison et service premium.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <meta property="og:title" content="V & G - Vite et Gourmand">
-    <meta property="og:description" content="Menus variés, cuisine maison, livraison rapide. Découvrez nos menus gourmands.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ app.request.uri }}">
-    <meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="V & G - Vite et Gourmand">
-    <meta name="twitter:description" content="Menus variés, cuisine maison, livraison rapide. Découvrez nos menus gourmands.">
-    <meta name="twitter:image" content="{{ asset('images/og-image.jpg') }}">
 
     <link rel="icon" href="{{ asset('favicon.ico') }}">
 
@@ -32,70 +18,40 @@
 </head>
 
 <body>
+
 <div class="page">
 
-    <!-- ============================
-         HEADER DESKTOP
-         ============================ -->
+    {# ============================
+       HEADER
+       ============================ #}
     <header class="header-desktop">
         <div class="header-inner">
 
-            <!-- LOGO -->
             <div class="logo">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 24 24" class="icon">
-                        <circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="2" fill="none"/>
-                        <path d="M9 10a3 3 0 1 1 6 0c0 1.5-.75 2.25-1.2 2.7-.45.45-.8 1-.8 1.8v.5h-2v-.5c0-.8-.35-1.35-.8-1.8C9.75 12.25 9 11.5 9 10z"
-                              fill="currentColor"/>
-                    </svg>
-                </div>
-                <span class="logo-text">V &amp; G</span>
+                <span class="logo-text">V & G</span>
             </div>
 
-            <!-- NAVIGATION -->
             <div class="right-side">
-
                 <nav class="main-nav">
+                    <a href="{{ path('app_home') }}">Accueil</a>
+                    <a href="{{ path('app_menu_index') }}">Menus</a>
 
-                    <a href="{{ path('app_home') }}"
-                       class="{% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">
-                        Accueil
-                    </a>
-
-                    <a href="{{ path('app_menu_index') }}"
-                       class="{% if app.request.attributes.get('_route') starts with 'app_menu' %}active{% endif %}">
-                        Menus
-                    </a>
-
-                    <a href="{{ path('app_contact') }}"
-                       class="{% if app.request.attributes.get('_route') == 'app_contact' %}active{% endif %}">
-                        Contacts
-                    </a>
-
+                    {# ❌ Contact masqué pour admin & employé #}
+                    {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_EMPLOYE') %}
+                        <a href="{{ path('app_contact') }}">Contacts</a>
+                    {% endif %}
                 </nav>
 
-                <!-- ICÔNE PANIER -->
-                <a href="{{ path('app_panier_show') }}" class="cart-icon" title="Voir mon panier">
-                    🛒
-                </a>
+                {# ❌ Panier masqué pour admin & employé #}
+                {% if is_granted('ROLE_USER') 
+                    and not is_granted('ROLE_ADMIN') 
+                    and not is_granted('ROLE_EMPLOYE') %}
+                    <a href="{{ path('app_panier_show') }}" class="cart-icon">🛒</a>
+                {% endif %}
 
-                <!-- USER MENU -->
                 <div class="user-menu">
-
                     {% if app.user %}
-
-                        <div class="user-info">
-                            <span class="user-icon">👤</span>
-                            <span class="user-name">
-                                {{ app.user.prenom }}
-
-                                {% if is_granted('ROLE_ADMIN') %}
-                                    <span class="badge-admin">Admin</span>
-                                {% elseif is_granted('ROLE_EMPLOYE') %}
-                                    <span class="badge-admin">Employé</span>
-                                {% endif %}
-                            </span>
-                        </div>
+                        <span class="user-name">{{ app.user.prenom }}</span>
 
                         {% if is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('admin_dashboard') }}" class="admin-link">Dashboard admin</a>
@@ -105,105 +61,93 @@
                             <a href="{{ path('employe_commandes_index') }}" class="admin-link">Commandes employé</a>
                         {% endif %}
 
-                        {# ---- Mon compte visible uniquement pour les clients ---- #}
-                        {% if is_granted('ROLE_USER') and not is_granted('ROLE_EMPLOYE') %}
+                        {% if is_granted('ROLE_USER') 
+                            and not is_granted('ROLE_EMPLOYE') 
+                            and not is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('app_compte_index') }}">Mon compte</a>
                         {% endif %}
 
                         <a href="{{ path('app_logout') }}" class="logout-btn">Déconnexion</a>
-
                     {% else %}
-
                         <a href="{{ path('app_login') }}" class="user-icon">👤</a>
-
                     {% endif %}
-
                 </div>
 
             </div>
-
         </div>
     </header>
 
-
-    <!-- ============================
-         MENU MOBILE
-         ============================ -->
+    {# ============================
+       MENU MOBILE
+       ============================ #}
     <nav class="mobile-menu">
+        <a href="{{ path('app_home') }}">Accueil</a>
+        <a href="{{ path('app_menu_index') }}">Menus</a>
 
-        <a href="{{ path('app_home') }}"
-           class="{% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">
-            Accueil
-        </a>
+        {# ❌ Contact masqué pour admin & employé #}
+        {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_EMPLOYE') %}
+            <a href="{{ path('app_contact') }}">Contacts</a>
+        {% endif %}
 
-        <a href="{{ path('app_menu_index') }}"
-           class="{% if app.request.attributes.get('_route') starts with 'app_menu' %}active{% endif %}">
-            Menus
-        </a>
-
-        <a href="{{ path('app_contact') }}"
-           class="{% if app.request.attributes.get('_route') == 'app_contact' %}active{% endif %}">
-            Contacts
-        </a>
-
-        <!-- PANIER MOBILE -->
-        <a href="{{ path('app_panier_show') }}">Panier 🛒</a>
+        {# ❌ Panier masqué pour admin & employé #}
+        {% if is_granted('ROLE_USER') 
+            and not is_granted('ROLE_ADMIN') 
+            and not is_granted('ROLE_EMPLOYE') %}
+            <a href="{{ path('app_panier_show') }}">Panier 🛒</a>
+        {% endif %}
 
         {% if app.user %}
-
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('admin_dashboard') }}">Dashboard admin</a>
             {% endif %}
-
             {% if is_granted('ROLE_EMPLOYE') and not is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('employe_commandes_index') }}">Commandes employé</a>
             {% endif %}
-
-            {% if is_granted('ROLE_USER') and not is_granted('ROLE_EMPLOYE') %}
+            {% if is_granted('ROLE_USER') 
+                and not is_granted('ROLE_EMPLOYE') 
+                and not is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('app_compte_index') }}">Mon compte</a>
             {% endif %}
-
             <a href="{{ path('app_logout') }}">Déconnexion</a>
-
         {% else %}
-
             <a href="{{ path('app_login') }}">Connexion</a>
-
         {% endif %}
-
     </nav>
 
-
-    <!-- ============================
-         CONTENU PRINCIPAL
-         ============================ -->
+    {# ============================
+       CONTENU PRINCIPAL
+       ============================ #}
     <main>
 
         {% for label, messages in app.flashes %}
             {% for message in messages %}
-                <div class="flash flash-{{ label }}">
-                    {{ message }}
-                </div>
+                <div class="flash flash-{{ label }}">{{ message }}</div>
             {% endfor %}
         {% endfor %}
 
         {% block body %}{% endblock %}
     </main>
 
-
-    <!-- ============================
-         FOOTER
-         ============================ -->
+    {# ============================
+       FOOTER
+       ============================ #}
     <footer>
         <div class="footer-inner">
             <a href="{{ path('app_horaires') }}">Horaires</a>
             <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
-            <a href="{{ path('app_contact') }}">Contact</a>
+
+            {# ❌ Contact masqué pour admin & employé #}
+            {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_EMPLOYE') %}
+                <a href="{{ path('app_contact') }}">Contact</a>
+            {% endif %}
         </div>
     </footer>
 
 </div>
 
+{# ============================
+   JAVASCRIPT
+   ============================ #}
 {% block javascripts %}
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('js/menu-filters.js') }}"></script>

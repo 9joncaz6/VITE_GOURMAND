@@ -21,12 +21,12 @@ class StatsService
             $qte       = $item->getQuantite();
             $totalMenu = $item->getTotal();
 
-            // 🔥 Correction : 1 commande = +1 vente
+            // 1 commande = +1 vente
             $collection->updateOne(
                 ['menuId' => $menuId],
                 [
                     '$inc' => [
-                        'ventes' => 1,        // <-- ici la correction
+                        'ventes' => 1,
                         'revenu' => $totalMenu,
                     ],
                 ],
@@ -94,5 +94,23 @@ class StatsService
         }
 
         return $result;
+    }
+
+    /**
+     * 🔥 Réinitialisation complète des statistiques MongoDB
+     */
+    public function resetStats(): void
+    {
+        $collection = $this->dm->getDocumentCollection(Stats::class);
+
+        // Supprime toutes les stats existantes
+        $collection->deleteMany([]);
+
+        // Réinsère un document global vide
+        $collection->insertOne([
+            '_id'            => 'global',
+            'caTotal'        => 0,
+            'totalCommandes' => 0,
+        ]);
     }
 }

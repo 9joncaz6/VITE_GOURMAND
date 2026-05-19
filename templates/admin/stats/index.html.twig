@@ -1,18 +1,21 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/admin_base.html.twig' %}
 
 {% block title %}Statistiques{% endblock %}
 
-{% block stylesheets %}
+{% block admin_styles %}
 <link rel="stylesheet" href="{{ asset('styles/admin/admin_stats.css') }}">
 {% endblock %}
 
-{% block body %}
+{% block admin_body %}
 
 <h1 class="page-title">Statistiques</h1>
 
+<button class="btn-reset-stats" data-bs-toggle="modal" data-bs-target="#resetStatsModal">
+    🔄 Réinitialiser les statistiques
+</button>
+
 <div class="stats-wrapper">
 
-    <!-- CHIFFRES GLOBAUX -->
     <div class="stats-cards">
 
         <div class="stat-card">
@@ -32,7 +35,6 @@
 
     </div>
 
-    <!-- COMMANDES PAR MENU -->
     <h2 class="section-title">Nombre de commandes par menu</h2>
 
     <table class="stats-table">
@@ -56,7 +58,6 @@
         </tbody>
     </table>
 
-    <!-- CA PAR MENU -->
     <h2 class="section-title">Chiffre d'affaires par menu</h2>
 
     <table class="stats-table">
@@ -82,4 +83,36 @@
 
 </div>
 
+{% endblock %}
+
+{% block admin_modals %}
+<div class="modal fade" id="resetStatsModal" tabindex="-1" aria-labelledby="resetStatsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="resetStatsModalLabel">Réinitialiser les statistiques</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p class="mb-0">
+                    Voulez-vous vraiment <strong>réinitialiser toutes les statistiques</strong> ?
+                    <br>
+                    Cette action est irréversible.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+
+                <form action="{{ path('admin_stats_reset') }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token('reset_stats') }}">
+                    <button type="submit" class="btn btn-danger">Oui, réinitialiser</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 {% endblock %}
