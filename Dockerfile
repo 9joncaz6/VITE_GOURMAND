@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     git unzip libicu-dev libzip-dev libonig-dev libxml2-dev libssl-dev \
     && docker-php-ext-install intl pdo pdo_mysql zip
 
-# Install MongoDB extension (now SSL-enabled)
+# Install MongoDB extension (SSL-enabled)
 RUN pecl install mongodb-1.21.0 \
     && docker-php-ext-enable mongodb
 
@@ -31,7 +31,7 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
 # Autoriser .htaccess
 RUN sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
-# 👉 Permissions pour les uploads
+# Permissions pour les uploads
 RUN mkdir -p /var/www/html/public/uploads/menus \
     && chown -R www-data:www-data /var/www/html/public/uploads \
     && chmod -R 775 /var/www/html/public/uploads
