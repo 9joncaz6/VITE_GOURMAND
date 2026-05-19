@@ -28,9 +28,6 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
 
-# Permissions
-RUN chown -R www-data:www-data /var/www/html/var
-
 EXPOSE 80
 
 CMD ["apache2-foreground"]
