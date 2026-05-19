@@ -47,7 +47,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $resetToken = null;
 
-    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Commande::class)]
+    #[ORM\OneToMany(
+        mappedBy: 'utilisateur',
+        targetEntity: Commande::class,
+        cascade: ['remove'],
+        orphanRemoval: true
+    )]
     private Collection $commandes;
 
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Avis::class)]
@@ -141,10 +146,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-
-        // Garantit que chaque utilisateur a au moins ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
@@ -163,7 +165,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->actif;
     }
 
-    // Ajout pour éviter ton soulignement rouge
     public function getActif(): ?bool
     {
         return $this->actif;
@@ -251,10 +252,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function removeAvis(Avis $avis): static
-{
-    if ($this->avis->removeElement($avis)) {
+    {
+        $this->avis->removeElement($avis);
+        return $this;
     }
-    return $this;
-}
-
 }

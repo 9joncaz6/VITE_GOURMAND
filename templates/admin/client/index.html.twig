@@ -2,82 +2,138 @@
 
 {% block title %}Gestion des clients{% endblock %}
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('styles/admin/admin_client.css') }}">
+{# Pas besoin de stylesheets ici, admin_base charge déjà admin_client.css #}
+
+{% block admin_body %}
+
+<h1 class="page-title">Gestion des clients</h1>
+
+{# Messages flash #}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="flash flash-{{ label }}">{{ message }}</div>
+    {% endfor %}
+{% endfor %}
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Actif</th>
+            <th>Commandes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for client in clients %}
+        <tr>
+            <td>{{ client.id }}</td>
+            <td>{{ client.prenom }} {{ client.nom }}</td>
+            <td>{{ client.email }}</td>
+
+            <td>
+                {% if client.actif %}
+                    <span class="badge badge-success">Actif</span>
+                {% else %}
+                    <span class="badge badge-danger">Inactif</span>
+                {% endif %}
+            </td>
+
+            <td>{{ client.commandes|length }}</td>
+
+            <td class="col-actions">
+
+                <a href="{{ path('admin_clients_show', { id: client.id }) }}"
+                   class="btn-secondary btn-small">
+                    Voir
+                </a>
+
+                <a href="{{ path('admin_clients_edit', { id: client.id }) }}"
+                   class="btn-secondary btn-small">
+                    Modifier
+                </a>
+
+                <a href="{{ path('admin_clients_toggle', { id: client.id }) }}"
+                   class="btn-secondary btn-small">
+                    {% if client.actif %}
+                        Désactiver
+                    {% else %}
+                        Activer
+                    {% endif %}
+                </a>
+
+                <form method="post"
+                      action="{{ path('admin_clients_delete', { id: client.id }) }}"
+                      class="delete-form d-inline"
+                      data-client-name="{{ client.prenom }} {{ client.nom }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ client.id) }}">
+                    <button type="submit" class="btn-danger btn-small">Supprimer</button>
+                </form>
+
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}
 
-{% block body %}
-<div class="admin-container">
+{# ============================
+   MODALE GLOBALE
+   ============================ #}
+{% block admin_modals %}
+<div id="delete-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>Confirmer la suppression</h3>
+        <p id="modal-text">Voulez-vous vraiment supprimer ce client ?</p>
 
-    <h1>Gestion des clients</h1>
+        <p class="text-danger fw-bold">
+            ⚠ Cette action supprimera également toutes ses commandes.
+        </p>
 
-    {# Messages flash #}
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="flash flash-{{ label }}">{{ message }}</div>
-        {% endfor %}
-    {% endfor %}
-
-    <table class="admin-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Actif</th>
-                <th>Commandes</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-
-        <tbody>
-        {% for client in clients %}
-            <tr>
-                <td>{{ client.id }}</td>
-                <td>{{ client.prenom }} {{ client.nom }}</td>
-                <td>{{ client.email }}</td>
-
-                <td>
-                    {% if client.actif %}
-                        <span class="badge badge-success">Actif</span>
-                    {% else %}
-                        <span class="badge badge-danger">Inactif</span>
-                    {% endif %}
-                </td>
-
-                <td>{{ client.commandes|length }}</td>
-
-                <td class="actions">
-
-                    <a href="{{ path('admin_clients_show', { id: client.id }) }}"
-                       class="btn btn-info btn-sm">Voir</a>
-
-                    <a href="{{ path('admin_clients_edit', { id: client.id }) }}"
-                       class="btn btn-warning btn-sm">Modifier</a>
-
-                    <a href="{{ path('admin_clients_toggle', { id: client.id }) }}"
-                       class="btn btn-secondary btn-sm">
-                        {% if client.actif %}
-                            Désactiver
-                        {% else %}
-                            Activer
-                        {% endif %}
-                    </a>
-
-                    {# 🔥 Bouton SUPPRIMER ajouté ici #}
-                    <form action="{{ path('admin_clients_delete', { id: client.id }) }}"
-                          method="post"
-                          onsubmit="return confirm('Supprimer ce client définitivement ?');"
-                          style="display:inline-block">
-
-                        <button class="btn btn-danger btn-sm">Supprimer</button>
-                    </form>
-
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
+        <div class="modal-actions">
+            <button id="modal-cancel" class="btn btn-secondary">Annuler</button>
+            <button id="modal-confirm" class="btn btn-danger">Supprimer</button>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block admin_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    let formToSubmit = null;
+
+    const modal = document.getElementById("delete-modal");
+    const confirmBtn = document.getElementById("modal-confirm");
+    const cancelBtn = document.getElementById("modal-cancel");
+    const modalText = document.getElementById("modal-text");
+
+    document.querySelectorAll(".delete-form").forEach(form => {
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            formToSubmit = form;
+
+            const name = form.dataset.clientName;
+            modalText.textContent = "Voulez-vous vraiment supprimer le client : " + name + " ?";
+
+            modal.style.display = "flex";
+        });
+    });
+
+    cancelBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+        formToSubmit = null;
+    });
+
+    confirmBtn.addEventListener("click", () => {
+        if (formToSubmit) formToSubmit.submit();
+    });
+
+});
+</script>
 {% endblock %}
