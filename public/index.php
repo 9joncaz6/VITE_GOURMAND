@@ -2,15 +2,19 @@
 
 use App\Kernel;
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\HttpFoundation\Request;
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-if ($_SERVER['APP_ENV'] !== 'prod') {
+$env = getenv('APP_ENV') ?: 'prod';
+$debug = getenv('APP_DEBUG') === '1';
+
+if ($env !== 'prod') {
     (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
 }
 
-$kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
-$request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
+$kernel = new Kernel($env, $debug);
+$request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);
