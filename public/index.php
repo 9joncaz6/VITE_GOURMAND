@@ -16,6 +16,10 @@ putenv('MONGODB_DB=vitegourmand');
 putenv('DEFAULT_URI=https://vitegourmand.onrender.com');
 putenv('DATABASE_URL=mysql://jonca:1PaxAugusta5@mysql-jonca.alwaysdata.net:3306/jonca_vitegourmand?serverVersion=mariadb-11.4.0&charset=utf8mb4');
 
+// IMPORTANT : on NE met PAS le MAILER_DSN ici
+// Render ne peut pas contacter AlwaysData → timeout → blocage de la commande
+// Le mailer sera désactivé via MAILER_DSN=null://null dans Render
+
 $env = getenv('APP_ENV') ?: 'prod';
 $debug = getenv('APP_DEBUG') === '1';
 
