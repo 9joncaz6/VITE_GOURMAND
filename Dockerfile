@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2
 
 RUN apt-get update && apt-get install -y \
     git unzip libssl-dev pkg-config libicu-dev libzip-dev zip \
@@ -15,12 +15,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
-# 👉 Forcer Symfony en prod pendant le build
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
 
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
+EXPOSE 80
 
-
-CMD ["php-fpm"]
+CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
