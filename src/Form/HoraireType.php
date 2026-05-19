@@ -1,5 +1,7 @@
 <?php
 
+#Inutilisé
+
 namespace App\Form;
 
 use App\Entity\Horaire;
@@ -38,10 +40,10 @@ class HoraireType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    /*public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Horaire::class,
         ]);
-    }
+    }*/
 }

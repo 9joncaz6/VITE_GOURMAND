@@ -33,15 +33,7 @@ class CommandeType extends AbstractType
             ->add('prixTotal', IntegerType::class)
             ->add('statutActuel', TextType::class)
         ;
-        // ❌ On NE met PAS :
-        // - utilisateur
-        // - menu
-        // - avis
-        //
-        // Ces champs doivent être gérés dans le contrôleur :
-        // $commande->setUtilisateur($this->getUser());
-        // $commande->setMenu($menu);
-        // $commande->setAvis($avis);
+   
     }
 
     public function configureOptions(OptionsResolver $resolver): void

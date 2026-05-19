@@ -54,7 +54,7 @@ class Menu
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: Avis::class, cascade: ['remove'])]
     private Collection $avis;
 
-    // ⭐ Non persisté : juste pour l’affichage
+    //  Non persisté : juste pour l’affichage
     private array $allergenes = [];
 
     public function __construct()
@@ -234,7 +234,7 @@ class Menu
         return $this;
     }
 
-    // ⭐ Allergenes (non mappé Doctrine)
+    //  Allergenes (non mappé Doctrine)
     public function getAllergenes(): array
     {
         return $this->allergenes;

@@ -1,5 +1,8 @@
 <?php
 
+
+#Inutilisé
+
 namespace App\Controller;
 
 use App\Service\NoSQL\AdminLogService;
@@ -58,7 +61,7 @@ class TestNoSQLController extends AbstractController
             $statsService->updateStats($commande);
         }
 
-        // 🔥 ici : nouvelle API
+        //  ici : nouvelle API
         $panierManager->add($admin->getId(), 7, 2);
         $allergenesService->addAllergenes(7, "TestAllergene");
 

@@ -36,13 +36,13 @@
                     <a href="{{ path('app_home') }}">Accueil</a>
                     <a href="{{ path('app_menu_index') }}">Menus</a>
 
-                    {# ❌ Contact masqué pour admin & employé #}
+                    {#  Contact masqué pour admin & employé #}
                     {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_EMPLOYE') %}
                         <a href="{{ path('app_contact') }}">Contacts</a>
                     {% endif %}
                 </nav>
 
-                {# ❌ Panier masqué pour admin & employé #}
+                {#  Panier masqué pour admin & employé #}
                 {% if is_granted('ROLE_USER') 
                     and not is_granted('ROLE_ADMIN') 
                     and not is_granted('ROLE_EMPLOYE') %}
@@ -84,12 +84,12 @@
         <a href="{{ path('app_home') }}">Accueil</a>
         <a href="{{ path('app_menu_index') }}">Menus</a>
 
-        {# ❌ Contact masqué pour admin & employé #}
+        {#  Contact masqué pour admin & employé #}
         {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_EMPLOYE') %}
             <a href="{{ path('app_contact') }}">Contacts</a>
         {% endif %}
 
-        {# ❌ Panier masqué pour admin & employé #}
+        {#  Panier masqué pour admin & employé #}
         {% if is_granted('ROLE_USER') 
             and not is_granted('ROLE_ADMIN') 
             and not is_granted('ROLE_EMPLOYE') %}
@@ -136,7 +136,7 @@
             <a href="{{ path('app_horaires') }}">Horaires</a>
             <a href="{{ path('app_mentions_legales') }}">Mentions légales</a>
 
-            {# ❌ Contact masqué pour admin & employé #}
+            {#  Contact masqué pour admin & employé #}
             {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_EMPLOYE') %}
                 <a href="{{ path('app_contact') }}">Contact</a>
             {% endif %}

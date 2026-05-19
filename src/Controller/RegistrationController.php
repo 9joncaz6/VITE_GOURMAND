@@ -30,7 +30,7 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // 🔥 Rôle par défaut
+            //  Rôle par défaut
             $user->setRoles(['ROLE_USER']);
 
             // Hash du mot de passe
@@ -43,7 +43,7 @@ class RegistrationController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            // 🔥 EMAIL DE BIENVENUE
+            //  EMAIL DE BIENVENUE
             $email = (new Email())
                 ->from('no-reply@vitegourmand.fr')
                 ->to($user->getEmail())

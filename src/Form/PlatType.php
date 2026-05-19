@@ -27,8 +27,7 @@ class PlatType extends AbstractType
                 ],
                 'placeholder' => 'Choisir un type',
             ]);
-        // 🚫 description supprimée
-        // 🚫 imageFile supprimée
+ 
     }
 
     public function configureOptions(OptionsResolver $resolver): void

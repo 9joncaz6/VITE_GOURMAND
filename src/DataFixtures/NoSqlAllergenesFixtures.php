@@ -30,7 +30,7 @@ class NoSqlAllergenesFixtures extends Fixture implements DependentFixtureInterfa
 
     public function load(ObjectManager $manager): void
     {
-        // 🔥 Purge NoSQL avant réinjection
+        //  Purge NoSQL avant réinjection
         $this->service->purge();
 
         // ✔ Les menus existent maintenant (MenuFixtures a déjà tourné)
@@ -52,7 +52,7 @@ class NoSqlAllergenesFixtures extends Fixture implements DependentFixtureInterfa
         }
     }
 
-    // ✔ Cette fixture DOIT tourner après MenuFixtures
+    //  Cette fixture DOIT tourner après MenuFixtures
     public function getDependencies(): array
     {
         return [

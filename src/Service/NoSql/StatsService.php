@@ -97,7 +97,7 @@ class StatsService
     }
 
     /**
-     * 🔥 Réinitialisation complète des statistiques MongoDB
+     *  Réinitialisation complète des statistiques MongoDB
      */
     public function resetStats(): void
     {

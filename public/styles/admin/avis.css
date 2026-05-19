@@ -138,7 +138,7 @@
     /* Correction critique */
     z-index: 99999;
 
-    /* Pour forcer l’overlay à sortir de tous les stacking contexts */
+    /* Forcer l’overlay à sortir de tous les stacking contexts */
     isolation: isolate;
 }
 

@@ -12,7 +12,7 @@ class SecurityController extends AbstractController
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // 🔥 Empêche un utilisateur connecté d'accéder à /login
+        //  Empêche un utilisateur connecté d'accéder à /login
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }

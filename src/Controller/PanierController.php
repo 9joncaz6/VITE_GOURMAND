@@ -20,7 +20,7 @@ class PanierController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        // 🚫 Interdiction pour ADMIN ou EMPLOYÉ
+        //  Interdiction pour ADMIN ou EMPLOYÉ
         if ($this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_EMPLOYE')) {
             $this->addFlash('error', 'Les administrateurs et employés ne peuvent pas utiliser le panier.');
             return $this->redirectToRoute('app_menu_index');

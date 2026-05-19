@@ -43,7 +43,7 @@ class MenuType extends AbstractType
                 'label' => 'Thème',
             ])
 
-            // ❌ SUPPRIMÉ : on garde tes checkbox manuelles
+            
             // ->add('plats', EntityType::class, [...])
 
             ->add('allergenes', TextType::class, [

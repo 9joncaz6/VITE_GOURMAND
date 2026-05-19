@@ -20,7 +20,7 @@ class SearchController extends AbstractController
     ): Response {
         $query = $request->query->get('q', '');
 
-        // 🔥 Tracking NoSQL
+        //  Tracking NoSQL
         if (!empty($query)) {
 
             /** @var \App\Entity\Utilisateur|null $user */
@@ -33,7 +33,7 @@ class SearchController extends AbstractController
             );
         }
 
-        // 🔍 Recherche SQL
+        //  Recherche SQL
         $results = $platRepository->createQueryBuilder('p')
             ->where('p.nom LIKE :q')
             ->setParameter('q', "%$query%")

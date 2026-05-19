@@ -48,7 +48,7 @@
 
                     <div class="menu-actions">
 
-                        {# 🚫 ADMIN & EMPLOYÉ BLOQUÉS #}
+                        {#ADMIN & EMPLOYÉ BLOQUÉS #}
                         {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
 
                             <p class="text-muted"><em>Les administrateurs ne peuvent pas commander.</em></p>

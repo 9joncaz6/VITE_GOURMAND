@@ -16,7 +16,7 @@
         Créer un compte
     </h1>
 
-    {# 🔥 Affiche les erreurs globales (dont UniqueEntity) #}
+    {#  Affiche les erreurs globales (dont UniqueEntity) #}
     <div style="color: #b30000; margin-bottom: 1rem; font-size: 0.9rem;">
         {{ form_errors(form) }}
     </div>
@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        {# Champ email + erreurs (🔥 ici s'affiche "Cet email est déjà utilisé") #}
+        {# Champ email + erreurs  #}
         <div style="margin-bottom: 1rem;">
             {{ form_label(form.email) }}
             {{ form_widget(form.email, {

@@ -60,7 +60,7 @@ class EmployeCommandeController extends AbstractController
         // Récupération du statut actuel
         $statutActuel = $commande->getStatutActuel();
 
-        // RÈGLE OPTION A : l’employé ne peut annuler que si en_attente ou en_preparation
+        // L’employé ne peut annuler que si en_attente ou en_preparation
         if ($nouveauStatut === 'annulee') {
             if (!in_array($statutActuel, ['en_attente', 'en_preparation'])) {
                 $this->addFlash('error', 'Vous ne pouvez pas annuler cette commande.');

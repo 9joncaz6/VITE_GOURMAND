@@ -1,5 +1,7 @@
 <?php
 
+#Inutilisé
+
 namespace App\Controller;
 
 use App\Document\SearchHistory;
