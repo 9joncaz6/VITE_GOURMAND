@@ -21,14 +21,18 @@ WORKDIR /var/www/html/
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install PHP dependencies WITHOUT scripts
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Symfony cache warmup
+# Define environment variables for Symfony
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+
+# Now that APP_ENV is defined, we can safely warm the cache
 RUN php bin/console cache:clear --env=prod
 RUN php bin/console cache:warmup --env=prod
 
-# Apache configuration
+# Permissions
 RUN chown -R www-data:www-data /var/www/html/var
 
 EXPOSE 80
