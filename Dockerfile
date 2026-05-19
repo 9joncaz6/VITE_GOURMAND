@@ -14,7 +14,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# 🔥 Définir APP_ENV AVANT toute commande Symfony
+# Définir APP_ENV avant toute commande Symfony
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
 
@@ -25,9 +25,6 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Copier le reste du projet
 COPY . .
-
-# 🔥 Reconstruire le cache prod SANS charger .env
-RUN php bin/console cache:clear --env=prod --no-debug
 
 EXPOSE 80
 
