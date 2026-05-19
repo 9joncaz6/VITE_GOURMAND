@@ -14,20 +14,20 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copier uniquement composer.json pour optimiser le cache Docker
+# 🔥 Définir APP_ENV AVANT toute commande Symfony
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+
+# Copier uniquement composer.json pour optimiser le cache
 COPY composer.json composer.lock ./
 
-# Installer les dépendances sans scripts (Symfony les exécutera ensuite)
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Copier le reste du projet
 COPY . .
 
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
-
-#  IMPORTANT : reconstruire le cache prod pour prendre en compte les putenv()
-RUN php bin/console cache:clear --env=prod
+# 🔥 Reconstruire le cache prod SANS charger .env
+RUN php bin/console cache:clear --env=prod --no-debug
 
 EXPOSE 80
 
