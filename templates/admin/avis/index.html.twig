@@ -2,7 +2,7 @@
 
 {% block title %}Gestion des avis{% endblock %}
 
-{% block body %}
+{% block admin_body %}
 
 <h1 class="page-title">Gestion des avis</h1>
 
@@ -69,17 +69,69 @@
                 <td class="col-date">{{ a.date|date('d/m/Y H:i') }}</td>
 
                 <td class="col-actions">
-                    <a href="{{ path('admin_avis_show', { id: a.id }) }}" class="btn-secondary btn-small">Voir</a>
 
-                    <a href="{{ path('admin_avis_delete', { id: a.id }) }}" 
-                       class="btn-danger btn-small"
-                       onclick="return confirm('Supprimer cet avis ?')">
-                        Supprimer
+                    <a href="{{ path('admin_avis_show', { id: a.id }) }}" 
+                       class="btn-secondary btn-small">
+                        Voir
                     </a>
+
+                    <form method="post"
+                          action="{{ path('admin_avis_delete', { id: a.id }) }}"
+                          class="d-inline delete-form">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ a.id) }}">
+                        <button type="submit" class="btn-danger btn-small">Supprimer</button>
+                    </form>
+
                 </td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
 
+{# ============================
+   MODALE DE SUPPRESSION
+   ============================ #}
+<div id="delete-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>Confirmer la suppression</h3>
+        <p>Voulez-vous vraiment supprimer cet avis ?</p>
+
+        <div class="modal-actions">
+            <button id="modal-cancel" class="btn btn-secondary">Annuler</button>
+            <button id="modal-confirm" class="btn btn-danger">Supprimer</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block admin_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    let formToSubmit = null;
+
+    const modal = document.getElementById("delete-modal");
+    const confirmBtn = document.getElementById("modal-confirm");
+    const cancelBtn = document.getElementById("modal-cancel");
+
+    document.querySelectorAll(".delete-form").forEach(form => {
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            formToSubmit = form;
+            modal.style.display = "flex";
+        });
+    });
+
+    cancelBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+        formToSubmit = null;
+    });
+
+    confirmBtn.addEventListener("click", () => {
+        if (formToSubmit) formToSubmit.submit();
+    });
+
+});
+</script>
 {% endblock %}

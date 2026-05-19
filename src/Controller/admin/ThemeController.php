@@ -45,7 +45,7 @@ final class ThemeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'admin_theme_show', methods: ['GET'])]
+    #[Route('/{id<\d+>}', name: 'admin_theme_show', methods: ['GET'])]
     public function show(Theme $theme): Response
     {
         return $this->render('admin/theme/show.html.twig', [
@@ -53,7 +53,7 @@ final class ThemeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'admin_theme_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id<\d+>}/edit', name: 'admin_theme_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Theme $theme, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ThemeType::class, $theme);
@@ -72,7 +72,7 @@ final class ThemeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'admin_theme_delete', methods: ['POST'])]
+    #[Route('/{id<\d+>}/delete', name: 'admin_theme_delete', methods: ['POST'])]
     public function delete(Request $request, Theme $theme, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$theme->getId(), $request->getPayload()->getString('_token'))) {

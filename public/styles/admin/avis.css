@@ -124,4 +124,33 @@
     border-top: none;
 }
 
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
+    /* Correction critique */
+    z-index: 99999;
+
+    /* Pour forcer l’overlay à sortir de tous les stacking contexts */
+    isolation: isolate;
+}
+
+.modal-box {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    animation: pop 0.2s ease-out;
+
+    /* la modale passe au-dessus de tout */
+    z-index: 100000;
+}

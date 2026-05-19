@@ -2,24 +2,41 @@
 
 {% block title %}Créer un employé{% endblock %}
 
-{% block body %}
+{% block admin_body %}
 
-<h1 class="mb-4">Créer un employé</h1>
+<h1 class="page-title">Créer un employé</h1>
 
 <div class="card p-4 shadow-sm">
 
     {{ form_start(form) }}
 
-        {{ form_row(form.email) }}
-        {{ form_row(form.password) }}
+    {{ form_errors(form) }}
 
-        <button class="btn btn-primary mt-3">Créer l'employé</button>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_row(form.prenom) }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            {{ form_row(form.nom) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_row(form.email) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_row(form.actif) }}
+    </div>
+
+    <button class="btn-success mt-3">Créer l'employé</button>
 
     {{ form_end(form) }}
 
 </div>
 
-<a href="{{ path('admin_employe_list') }}" class="btn btn-secondary mt-3">
+<a href="{{ path('admin_employes_index') }}" class="btn-secondary mt-3 d-inline-block">
     Retour à la liste des employés
 </a>
 

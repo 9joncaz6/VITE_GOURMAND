@@ -19,12 +19,11 @@ class Plat
     #[ORM\Column(length: 150)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 20)]
     private ?string $type = null;
-
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
@@ -61,7 +60,7 @@ class Plat
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
         return $this;
@@ -77,7 +76,6 @@ class Plat
         $this->type = $type;
         return $this;
     }
-
 
     public function getImage(): ?string
     {

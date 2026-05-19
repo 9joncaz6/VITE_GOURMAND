@@ -2,13 +2,101 @@
 
 {% block title %}Créer un menu{% endblock %}
 
-{% block body %}
-<h1>Créer un menu</h1>
+{% block admin_styles %}
+<link rel="stylesheet" href="{{ asset('styles/admin/admin_menu_create.css') }}">
+{% endblock %}
 
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-primary mt-3">Créer</button>
+{% block admin_body %}
+
+<h1 class="page-title">Créer un menu</h1>
+
+<div class="menu-edit-container">
+
+    <div class="left-column">
+
+        <div class="card">
+            <h2>Informations générales</h2>
+
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.titre) }}
+                {{ form_widget(form.titre) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(form.nbPersonnesMin) }}
+                    {{ form_widget(form.nbPersonnesMin) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.prixBase) }}
+                    {{ form_widget(form.prixBase) }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(form.stockDisponible) }}
+                    {{ form_widget(form.stockDisponible) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.theme) }}
+                    {{ form_widget(form.theme) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Image du menu</h2>
+
+            <img id="image-preview" class="menu-preview" style="display:none;">
+
+            <div class="form-group">
+                {{ form_label(form.imageFile) }}
+                {{ form_widget(form.imageFile) }}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="actions">
+    <button class="btn btn-primary">Créer</button>
+    <a href="{{ path('admin_menu_index') }}" class="btn btn-secondary">Retour</a>
+</div>
+
 {{ form_end(form) }}
 
-<a href="{{ path('admin_menu_index') }}" class="btn btn-secondary mt-3">Retour</a>
+{% endblock %}
+
+{% block admin_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.querySelector('input[type="file"]');
+    const preview = document.getElementById('image-preview');
+
+    if (input) {
+        input.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+});
+</script>
 {% endblock %}

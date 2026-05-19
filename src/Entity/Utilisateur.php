@@ -59,44 +59,160 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->avis = new ArrayCollection();
     }
 
-    public function getId(): ?int { return $this->id; }
+    /* ============================
+       GETTERS / SETTERS
+       ============================ */
 
-    public function getNom(): ?string { return $this->nom; }
-    public function setNom(string $nom): static { $this->nom = $nom; return $this; }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
-    public function getPrenom(): ?string { return $this->prenom; }
-    public function setPrenom(string $prenom): static { $this->prenom = $prenom; return $this; }
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
 
-    public function getEmail(): ?string { return $this->email; }
-    public function setEmail(string $email): static { $this->email = $email; return $this; }
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
+        return $this;
+    }
 
-    public function getGsm(): ?string { return $this->gsm; }
-    public function setGsm(string $gsm): static { $this->gsm = $gsm; return $this; }
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
 
-    public function getAdressePostale(): ?string { return $this->adressePostale; }
-    public function setAdressePostale(?string $adressePostale): static { $this->adressePostale = $adressePostale; return $this; }
+    public function setPrenom(string $prenom): static
+    {
+        $this->prenom = $prenom;
+        return $this;
+    }
 
-    public function getPassword(): ?string { return $this->password; }
-    public function setPassword(string $password): static { $this->password = $password; return $this; }
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    public function getGsm(): ?string
+    {
+        return $this->gsm;
+    }
+
+    public function setGsm(?string $gsm): static
+    {
+        $this->gsm = $gsm;
+        return $this;
+    }
+
+    public function getAdressePostale(): ?string
+    {
+        return $this->adressePostale;
+    }
+
+    public function setAdressePostale(?string $adressePostale): static
+    {
+        $this->adressePostale = $adressePostale;
+        return $this;
+    }
+
+    /* ============================
+       PASSWORD & ROLES
+       ============================ */
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+        return $this;
+    }
 
     public function getRoles(): array
     {
         $roles = $this->roles;
+
+        // Garantit que chaque utilisateur a au moins ROLE_USER
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
-    public function setRoles(array $roles): static { $this->roles = $roles; return $this; }
 
-    public function isActif(): ?bool { return $this->actif; }
-    public function setActif(bool $actif): static { $this->actif = $actif; return $this; }
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+        return $this;
+    }
 
-    public function getUserIdentifier(): string { return $this->email; }
-    public function eraseCredentials(): void {}
+    /* ============================
+       ACTIF
+       ============================ */
 
-    public function getResetToken(): ?string { return $this->resetToken; }
-    public function setResetToken(?string $resetToken): static { $this->resetToken = $resetToken; return $this; }
+    public function isActif(): ?bool
+    {
+        return $this->actif;
+    }
 
-    public function getCommandes(): Collection { return $this->commandes; }
+    // Ajout pour éviter ton soulignement rouge
+    public function getActif(): ?bool
+    {
+        return $this->actif;
+    }
+
+    public function setActif(bool $actif): static
+    {
+        $this->actif = $actif;
+        return $this;
+    }
+
+    /* ============================
+       SECURITY INTERFACE
+       ============================ */
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Rien à effacer
+    }
+
+    /* ============================
+       RESET TOKEN
+       ============================ */
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): static
+    {
+        $this->resetToken = $resetToken;
+        return $this;
+    }
+
+    /* ============================
+       RELATIONS : COMMANDES
+       ============================ */
+
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
     public function addCommande(Commande $commande): static
     {
         if (!$this->commandes->contains($commande)) {
@@ -116,19 +232,29 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAvis(): Collection { return $this->avis; }
-    public function addAvi(Avis $avi): static
+    /* ============================
+       RELATIONS : AVIS
+       ============================ */
+
+    public function getAvis(): Collection
     {
-        if (!$this->avis->contains($avi)) {
-            $this->avis->add($avi);
-            $avi->setUtilisateur($this);
+        return $this->avis;
+    }
+
+    public function addAvis(Avis $avis): static
+    {
+        if (!$this->avis->contains($avis)) {
+            $this->avis->add($avis);
+            $avis->setUtilisateur($this);
         }
         return $this;
     }
 
-    public function removeAvi(Avis $avi): static
-    {
-        $this->avis->removeElement($avi);
-        return $this;
+    public function removeAvis(Avis $avis): static
+{
+    if ($this->avis->removeElement($avis)) {
     }
+    return $this;
+}
+
 }

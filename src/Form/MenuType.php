@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Menu;
-use App\Entity\Plat;
 use App\Entity\Theme;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -37,7 +36,6 @@ class MenuType extends AbstractType
                 'label' => 'Stock disponible'
             ])
 
-            // ⭐ AJOUT DU THÈME (OBLIGATOIRE)
             ->add('theme', EntityType::class, [
                 'class' => Theme::class,
                 'choice_label' => 'nom',
@@ -45,14 +43,16 @@ class MenuType extends AbstractType
                 'label' => 'Thème',
             ])
 
-            // ⭐ Regroupement esthétique des plats
-            ->add('plats', EntityType::class, [
-                'class' => Plat::class,
-                'choice_label' => 'nom',
-                'multiple' => true,
-                'expanded' => true,
-                'label' => 'Plats du menu',
-                'group_by' => fn(Plat $plat) => ucfirst($plat->getType()),
+            // ❌ SUPPRIMÉ : on garde tes checkbox manuelles
+            // ->add('plats', EntityType::class, [...])
+
+            ->add('allergenes', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Allergènes (séparés par des virgules)',
+                'attr' => [
+                    'placeholder' => 'ex : gluten, soja, lactose'
+                ]
             ])
 
             ->add('imageFile', FileType::class, [

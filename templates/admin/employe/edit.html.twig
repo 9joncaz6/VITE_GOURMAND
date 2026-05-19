@@ -49,22 +49,12 @@
             <div class="admin-error">{{ form_errors(form.email) }}</div>
         </div>
 
-        {# --- STATUT DU COMPTE --- #}
         <div class="admin-box">
             {{ form_label(form.actif) }}
             <div class="admin-options">
                 {{ form_widget(form.actif) }}
             </div>
             <div class="admin-error">{{ form_errors(form.actif) }}</div>
-        </div>
-
-        {# --- ROLES --- #}
-        <div class="admin-box">
-            {{ form_label(form.roles) }}
-            <div class="admin-options">
-                {{ form_widget(form.roles) }}
-            </div>
-            <div class="admin-error">{{ form_errors(form.roles) }}</div>
         </div>
 
         <button class="admin-submit">Enregistrer</button>

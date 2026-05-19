@@ -36,13 +36,8 @@ class PlatController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Upload image si fournie
-            $image = $form->get('imageFile')->getData();
-            if ($image) {
-                $filename = uniqid('plat_') . '.' . $image->guessExtension();
-                $image->move('uploads/plats', $filename);
-                $plat->setImage($filename);
-            }
+            // Aucun upload d'image pour les plats
+            // L'entité Plat ne possède plus imageFile
 
             $em->persist($plat);
             $em->flush();
@@ -54,7 +49,6 @@ class PlatController extends AbstractController
                 ]);
             }
 
-            // Sinon retour normal vers la liste des plats
             return $this->redirectToRoute('app_plat_index');
         }
 
@@ -73,13 +67,8 @@ class PlatController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Upload image si nouvelle image
-            $image = $form->get('imageFile')->getData();
-            if ($image) {
-                $filename = uniqid('plat_') . '.' . $image->guessExtension();
-                $image->move('uploads/plats', $filename);
-                $plat->setImage($filename);
-            }
+            // Aucun upload d'image pour les plats
+            // L'entité Plat ne possède plus imageFile
 
             $em->flush();
 

@@ -32,11 +32,7 @@ class UtilisateurType extends AbstractType
                 'label' => 'Adresse postale',
                 'required' => false,
             ]);
-        // ❗ On NE met PAS :
-        // - roles
-        // - actif
-        // - password
-        // Ces champs sont gérés par l’admin ou par un formulaire dédié.
+      
     }
 
     public function configureOptions(OptionsResolver $resolver): void

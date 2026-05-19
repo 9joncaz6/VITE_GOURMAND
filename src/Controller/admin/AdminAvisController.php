@@ -20,7 +20,6 @@ class AdminAvisController extends AbstractController
         $note = $request->query->get('note');
         $menuId = $request->query->get('menu');
 
-        // Convertir en int ou null
         $note = $note !== null && $note !== '' ? (int)$note : null;
         $menuId = $menuId !== null && $menuId !== '' ? (int)$menuId : null;
 
@@ -40,17 +39,19 @@ class AdminAvisController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'admin_avis_delete')]
-    public function delete(Avis $avis, EntityManagerInterface $em): Response
+    #[Route('/{id}/delete', name: 'admin_avis_delete', methods: ['POST'])]
+    public function delete(Request $request, Avis $avis, EntityManagerInterface $em): Response
     {
-        $em->remove($avis);
-        $em->flush();
+        if ($this->isCsrfTokenValid('delete'.$avis->getId(), $request->request->get('_token'))) {
+            $em->remove($avis);
+            $em->flush();
+            $this->addFlash('success', 'Avis supprimé.');
+        }
 
-        $this->addFlash('success', 'Avis supprimé.');
         return $this->redirectToRoute('admin_avis_index');
     }
 
-    #[Route('/{id}/toggle', name: 'admin_avis_toggle')]
+    #[Route('/{id}/toggle', name: 'admin_avis_toggle', methods: ['POST'])]
     public function toggle(Avis $avis, EntityManagerInterface $em): Response
     {
         $avis->setValide(!$avis->isValide());

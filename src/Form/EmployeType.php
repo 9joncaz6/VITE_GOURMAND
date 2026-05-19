@@ -4,11 +4,11 @@ namespace App\Form;
 
 use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EmployeType extends AbstractType
 {
@@ -27,16 +27,15 @@ class EmployeType extends AbstractType
             ->add('actif', CheckboxType::class, [
                 'label' => 'Compte actif',
                 'required' => false,
-            ])
-            ->add('roles', ChoiceType::class, [
-                'label' => 'Rôles',
-                'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Employé' => 'ROLE_EMPLOYE',
-                    'Administrateur' => 'ROLE_ADMIN',
-                ],
-                'expanded' => true,
-                'multiple' => true,
             ]);
+        // ❗ Le rôle n’est plus modifiable ici.
+        // ROLE_EMPLOYE sera défini automatiquement dans le contrôleur.
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Utilisateur::class,
+        ]);
     }
 }

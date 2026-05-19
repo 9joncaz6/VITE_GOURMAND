@@ -32,6 +32,7 @@ class AdminCommandeController extends AbstractController
             'countEnAttente' => $repo->countByStatut('en_attente'),
             'countEnPreparation' => $repo->countByStatut('en_preparation'),
             'countTerminees' => $repo->countByStatut('terminee'),
+            'countAnnulees' => $repo->countByStatut('annulee'),
         ]);
     }
 
@@ -72,7 +73,7 @@ class AdminCommandeController extends AbstractController
         $em->persist($statut);
         $em->flush();
 
-        // Email si terminée
+        // Email si terminée (pas si annulée)
         if ($nouveauStatut === 'terminee') {
             $email = (new \Symfony\Component\Mime\Email())
                 ->from('no-reply@vitegourmand.fr')
@@ -92,5 +93,30 @@ class AdminCommandeController extends AbstractController
         return $this->redirectToRoute('admin_commandes_show', [
             'id' => $commande->getId()
         ]);
+    }
+
+    #[Route('/{id}/annuler', name: 'admin_commandes_annuler', methods: ['POST'])]
+    public function annulerCommande(
+        Commande $commande,
+        EntityManagerInterface $em
+    ): Response {
+        // L’admin peut annuler n’importe quand
+
+        $statut = new CommandeStatut();
+        $statut->setCommande($commande);
+        $statut->setStatut('annulee');
+        $statut->setCommentaire('Commande annulée par un administrateur.');
+        $statut->setDateMaj(new \DateTimeImmutable());
+
+        // Mise à jour du statut principal
+        $commande->setStatus('annulee');
+
+        $em->persist($commande);
+        $em->persist($statut);
+        $em->flush();
+
+        $this->addFlash('success', 'Commande annulée avec succès.');
+
+        return $this->redirectToRoute('admin_commandes_index');
     }
 }

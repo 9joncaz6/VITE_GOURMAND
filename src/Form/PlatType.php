@@ -5,8 +5,6 @@ namespace App\Form;
 use App\Entity\Plat;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,10 +18,6 @@ class PlatType extends AbstractType
                 'label' => 'Nom du plat'
             ])
 
-            ->add('description', TextareaType::class, [
-                'label' => 'Description'
-            ])
-
             ->add('type', ChoiceType::class, [
                 'label' => 'Type de plat',
                 'choices' => [
@@ -32,13 +26,9 @@ class PlatType extends AbstractType
                     'Dessert' => 'dessert',
                 ],
                 'placeholder' => 'Choisir un type',
-            ])
-
-            ->add('imageFile', FileType::class, [
-                'mapped' => false,
-                'required' => false,
-                'label' => 'Image du plat'
             ]);
+        // 🚫 description supprimée
+        // 🚫 imageFile supprimée
     }
 
     public function configureOptions(OptionsResolver $resolver): void

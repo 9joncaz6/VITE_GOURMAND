@@ -2,41 +2,119 @@
 
 {% block title %}Menus{% endblock %}
 
-{% block body %}
-<h1>Gestion des menus</h1>
+{% block admin_styles %}
+<link rel="stylesheet" href="{{ asset('styles/admin/admin_menu_index.css') }}">
+{% endblock %}
 
-<div class="d-flex gap-2 mb-3">
+{% block admin_body %}
+
+<h1 class="page-title">Gestion des menus</h1>
+
+<div class="actions-top">
     <a href="{{ path('admin_menu_create') }}" class="btn btn-primary">+ Ajouter un menu</a>
-
-    {# ⭐ Nouveau bouton : créer un plat #}
     <a href="{{ path('app_plat_new') }}" class="btn btn-success">+ Créer un plat</a>
 </div>
 
-<table class="table table-striped align-middle">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Titre</th>
-            <th>Stock</th>
-            <th>Prix</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        {% for menu in menus %}
+<div class="card">
+    <table class="table table-hover align-middle">
+        <thead>
             <tr>
-                <td>{{ menu.id }}</td>
-                <td>{{ menu.titre }}</td>
-                <td>{{ menu.stockDisponible }}</td>
-                <td>{{ menu.prixBase }} €</td>
-                <td>
-                    <a href="{{ path('admin_menu_edit', {id: menu.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
-                    <a href="{{ path('admin_menu_delete', {id: menu.id}) }}" class="btn btn-sm btn-danger"
-                       onclick="return confirm('Supprimer ce menu ?')">Supprimer</a>
-                </td>
+                <th>ID</th>
+                <th>Titre</th>
+                <th>Stock</th>
+                <th>Prix</th>
+                <th class="text-end">Actions</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+
+        <tbody>
+            {% for menu in menus %}
+                <tr>
+                    <td>{{ menu.id }}</td>
+
+                    <td>
+                        <strong>{{ menu.titre }}</strong>
+                    </td>
+
+                    <td>
+                        {% if menu.stockDisponible > 20 %}
+                            <span class="badge bg-success">{{ menu.stockDisponible }}</span>
+                        {% elseif menu.stockDisponible > 0 %}
+                            <span class="badge bg-warning text-dark">{{ menu.stockDisponible }}</span>
+                        {% else %}
+                            <span class="badge bg-danger">Rupture</span>
+                        {% endif %}
+                    </td>
+
+                    <td>{{ menu.prixBase }} €</td>
+
+                    <td class="text-end">
+                        <a href="{{ path('admin_menu_edit', {id: menu.id}) }}" class="btn btn-sm btn-warning">
+                            Modifier
+                        </a>
+
+                        <form method="post"
+                              action="{{ path('admin_menu_delete', {id: menu.id}) }}"
+                              class="d-inline delete-form">
+
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ menu.id) }}">
+
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                Supprimer
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{# ============================
+   MODALE DE SUPPRESSION
+   ============================ #}
+<div id="delete-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>Confirmer la suppression</h3>
+        <p>Voulez-vous vraiment supprimer ce menu ?</p>
+
+        <div class="modal-actions">
+            <button id="modal-cancel" class="btn btn-secondary">Annuler</button>
+            <button id="modal-confirm" class="btn btn-danger">Supprimer</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block admin_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    let formToSubmit = null;
+
+    const modal = document.getElementById("delete-modal");
+    const confirmBtn = document.getElementById("modal-confirm");
+    const cancelBtn = document.getElementById("modal-cancel");
+
+    document.querySelectorAll(".delete-form").forEach(form => {
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            formToSubmit = form;
+            modal.style.display = "flex";
+        });
+    });
+
+    cancelBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+        formToSubmit = null;
+    });
+
+    confirmBtn.addEventListener("click", () => {
+        if (formToSubmit) formToSubmit.submit();
+    });
+
+});
+</script>
 {% endblock %}

@@ -1,33 +1,80 @@
 {% extends 'admin/admin_base.html.twig' %}
 
-{% block title %}Créer un plat{% endblock %}
+{% block title %}Modifier un plat{% endblock %}
 
-{% block body %}
-<h1>Créer un plat</h1>
+{% block admin_body %}
 
-{{ form_start(form) }}
+<h1 class="page-title">Modifier le plat : {{ plat.nom }}</h1>
 
-    {{ form_row(form.nom) }}
-    {{ form_row(form.description) }}
-    {{ form_row(form.type) }}
-    {{ form_row(form.imageFile) }}
+<div class="card" style="max-width: 600px; margin: auto;">
 
-    <button class="btn btn-primary mt-3">Créer</button>
+    {{ form_start(form) }}
 
-{{ form_end(form) }}
+    <div class="form-group mb-3">
+        {{ form_label(form.nom) }}
+        {{ form_widget(form.nom, { attr: { class: 'form-control' } }) }}
+    </div>
 
-<div class="mt-3 d-flex gap-2">
+    <div class="form-group mb-3">
+        {{ form_label(form.type) }}
+        {{ form_widget(form.type, { attr: { class: 'form-select' } }) }}
+    </div>
 
-    {# ⭐ Si on vient d’un menu, on retourne vers ce menu #}
-    {% if app.request.get('menu') %}
-        <a href="{{ path('admin_menu_edit', { id: app.request.get('menu') }) }}" class="btn btn-secondary">
-            Retour au menu
+    <button class="btn btn-success mt-3">Enregistrer</button>
+
+    {{ form_end(form) }}
+
+    <div class="mt-3 d-flex gap-2">
+
+        {% if app.request.get('menu') %}
+            <a href="{{ path('admin_menu_edit', { id: app.request.get('menu') }) }}" class="btn btn-secondary">
+                Retour au menu
+            </a>
+        {% endif %}
+
+        <a href="{{ path('app_plat_index') }}" class="btn btn-outline-secondary">
+            Retour à la liste des plats
         </a>
-    {% endif %}
 
-    <a href="{{ path('app_plat_index') }}" class="btn btn-outline-secondary">
-        Retour à la liste des plats
-    </a>
+        <!-- Bouton pour ouvrir la modale -->
+        <button class="btn btn-danger ms-auto"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteModal">
+            Supprimer ce plat
+        </button>
+
+    </div>
+
+</div>
+
+<!-- MODALE DE SUPPRESSION -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Supprimer ce plat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                Voulez-vous vraiment supprimer <strong>{{ plat.nom }}</strong> ?
+                Cette action est irréversible.
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Annuler
+                </button>
+
+                <form method="post" action="{{ path('app_plat_delete', { id: plat.id }) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ plat.id) }}">
+                    <button type="submit" class="btn btn-danger">Supprimer définitivement</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 {% endblock %}

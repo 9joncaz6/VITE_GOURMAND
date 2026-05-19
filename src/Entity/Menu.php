@@ -36,13 +36,12 @@ class Menu
     private ?Theme $theme = null;
 
     #[ORM\ManyToOne(inversedBy: 'menus')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Regime $regime = null;
 
-    // Plusieurs images (stockées en JSON)
     #[ORM\Column(type: 'json')]
     private array $images = [];
 
-    // Image principale (pour affichage rapide)
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
@@ -55,16 +54,15 @@ class Menu
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: Avis::class, cascade: ['remove'])]
     private Collection $avis;
 
+    // ⭐ Non persisté : juste pour l’affichage
+    private array $allergenes = [];
+
     public function __construct()
     {
         $this->plats = new ArrayCollection();
         $this->images = [];
         $this->avis = new ArrayCollection();
     }
-
-    // -------------------------
-    // Getters / Setters
-    // -------------------------
 
     public function getId(): ?int
     {
@@ -148,10 +146,6 @@ class Menu
         return $this;
     }
 
-    // -------------------------
-    // Plats
-    // -------------------------
-
     /**
      * @return Collection<int, Plat>
      */
@@ -164,19 +158,27 @@ class Menu
     {
         if (!$this->plats->contains($plat)) {
             $this->plats->add($plat);
+            $plat->addMenu($this);
         }
         return $this;
     }
 
     public function removePlat(Plat $plat): static
     {
-        $this->plats->removeElement($plat);
+        if ($this->plats->removeElement($plat)) {
+            $plat->removeMenu($this);
+        }
         return $this;
     }
 
-    // -------------------------
-    // Images multiples
-    // -------------------------
+    public function setPlats(iterable $plats): static
+    {
+        $this->plats->clear();
+        foreach ($plats as $plat) {
+            $this->addPlat($plat);
+        }
+        return $this;
+    }
 
     public function getImages(): array
     {
@@ -188,10 +190,6 @@ class Menu
         $this->images = $images;
         return $this;
     }
-
-    // -------------------------
-    // Image principale
-    // -------------------------
 
     public function getImage(): ?string
     {
@@ -233,6 +231,18 @@ class Menu
                 $avi->setMenu(null);
             }
         }
+        return $this;
+    }
+
+    // ⭐ Allergenes (non mappé Doctrine)
+    public function getAllergenes(): array
+    {
+        return $this->allergenes;
+    }
+
+    public function setAllergenes(array $allergenes): static
+    {
+        $this->allergenes = $allergenes;
         return $this;
     }
 }

@@ -2,18 +2,178 @@
 
 {% block title %}Modifier un menu{% endblock %}
 
-{% block body %}
-<h1>Modifier le menu : {{ menu.titre }}</h1>
+{% block admin_styles %}
+<link rel="stylesheet" href="{{ asset('styles/admin/menu_edit.css') }}">
+{% endblock %}
 
-{# ⭐ Nouveau bouton : créer un plat depuis ce menu #}
+{% block admin_body %}
+
+<h1 class="page-title">Modifier le menu : {{ menu.titre }}</h1>
+
 <a href="{{ path('app_plat_new', { menu: menu.id }) }}" class="btn btn-success mb-3">
     + Créer un plat
 </a>
 
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-success mt-3">Enregistrer</button>
+{{ form_start(form, { 'attr': { 'enctype': 'multipart/form-data' } }) }}
+
+{{ form_errors(form) }}
+{{ form_widget(form.menu_id) }}
+
+<div class="menu-edit-container">
+
+    <div class="left-column">
+
+        <div class="card">
+            <h2>Informations générales</h2>
+
+            <div class="form-group">
+                {{ form_row(form.titre) }}
+                {{ form_errors(form.titre) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_row(form.description) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_row(form.allergenes) }}
+                {{ form_errors(form.allergenes) }}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_row(form.nbPersonnesMin) }}
+                    {{ form_errors(form.nbPersonnesMin) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_row(form.prixBase) }}
+                    {{ form_errors(form.prixBase) }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_row(form.stockDisponible) }}
+                    {{ form_errors(form.stockDisponible) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_row(form.theme) }}
+                    {{ form_errors(form.theme) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Image du menu</h2>
+
+            {% if menu.image %}
+                <img src="{{ asset('uploads/menus/' ~ menu.image) }}" class="menu-preview">
+            {% endif %}
+
+            <div class="form-group">
+                {{ form_row(form.imageFile) }}
+                {{ form_errors(form.imageFile) }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="right-column">
+
+        <div class="card">
+            <h2>Plats du menu</h2>
+
+            {% set entrees = plats|filter(p => p.type == 'entrée') %}
+            {% set plats_principaux = plats|filter(p => p.type == 'plat') %}
+            {% set desserts = plats|filter(p => p.type == 'dessert') %}
+
+            <div class="plats-group">
+
+                {% if entrees|length > 0 %}
+                    <h3>Entrées</h3>
+                    <div class="checkbox-list">
+                        {% for plat in entrees %}
+                            <label class="checkbox-item">
+                                <input type="checkbox"
+                                       name="plats[]"
+                                       value="{{ plat.id }}"
+                                       {% if menu.plats.contains(plat) %}checked{% endif %}>
+                                <span>{{ plat.nom }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if plats_principaux|length > 0 %}
+                    <h3>Plats</h3>
+                    <div class="checkbox-list">
+                        {% for plat in plats_principaux %}
+                            <label class="checkbox-item">
+                                <input type="checkbox"
+                                       name="plats[]"
+                                       value="{{ plat.id }}"
+                                       {% if menu.plats.contains(plat) %}checked{% endif %}>
+                                <span>{{ plat.nom }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if desserts|length > 0 %}
+                    <h3>Desserts</h3>
+                    <div class="checkbox-list">
+                        {% for plat in desserts %}
+                            <label class="checkbox-item">
+                                <input type="checkbox"
+                                       name="plats[]"
+                                       value="{{ plat.id }}"
+                                       {% if menu.plats.contains(plat) %}checked{% endif %}>
+                                <span>{{ plat.nom }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="actions">
+    <button type="submit" class="btn btn-success">Enregistrer</button>
+    <a href="{{ path('admin_menu_index') }}" class="btn btn-secondary">Retour</a>
+</div>
+
 {{ form_end(form) }}
 
-<a href="{{ path('admin_menu_index') }}" class="btn btn-secondary mt-3">Retour</a>
+{% endblock %}
+
+{% block admin_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.querySelector('input[type="file"]');
+    const preview = document.querySelector('.menu-preview');
+
+    if (input) {
+        input.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                if (preview) {
+                    preview.src = event.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+});
+</script>
 {% endblock %}

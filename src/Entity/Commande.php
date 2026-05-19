@@ -162,15 +162,20 @@ class Commande
         return $this;
     }
 
-    /** STATUT ACTUEL (calculé via CommandeStatut) **/
+    /**
+     * Retourne le statut actuel basé sur l’historique
+     */
     public function getStatutActuel(): ?string
     {
         if ($this->commandeStatuts->isEmpty()) {
             return $this->status; // fallback
         }
 
-        $dernier = $this->commandeStatuts->last();
-        return $dernier->getStatut();
+        // Sécurisation : tri explicite par dateMaj
+        $statuts = $this->commandeStatuts->toArray();
+        usort($statuts, fn($a, $b) => $a->getDateMaj() <=> $b->getDateMaj());
+
+        return end($statuts)->getStatut();
     }
 
     /** FRAIS LIVRAISON **/
@@ -183,5 +188,16 @@ class Commande
     {
         $this->fraisLivraison = $fraisLivraison;
         return $this;
+    }
+
+    /** HELPERS MÉTIER **/
+    public function isAnnulee(): bool
+    {
+        return $this->getStatutActuel() === 'annulee';
+    }
+
+    public function isTerminee(): bool
+    {
+        return $this->getStatutActuel() === 'terminee';
     }
 }

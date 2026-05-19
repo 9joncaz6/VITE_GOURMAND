@@ -19,19 +19,27 @@ class AvisTestFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
+        $avisRepo = $manager->getRepository(Avis::class);
+
         // --- CRÉATION DE PLUSIEURS UTILISATEURS ---
         $utilisateurs = [];
 
         for ($i = 1; $i <= 5; $i++) {
-            $user = new Utilisateur();
-            $user->setEmail("avis_user$i@test.com");
-            $user->setNom("Testeur$i");
-            $user->setPrenom("Jean$i");
-            $user->setGsm("060000000$i");
-            $user->setActif(true);
-            $user->setPassword($this->hasher->hashPassword($user, 'password'));
+            $email = "avis_user$i@test.com";
 
-            $manager->persist($user);
+            $user = $manager->getRepository(Utilisateur::class)->findOneBy(['email' => $email]);
+
+            if (!$user) {
+                $user = new Utilisateur();
+                $user->setEmail($email);
+                $user->setNom("Testeur$i");
+                $user->setPrenom("Jean$i");
+                $user->setGsm("060000000$i");
+                $user->setActif(true);
+                $user->setPassword($this->hasher->hashPassword($user, 'password'));
+                $manager->persist($user);
+            }
+
             $utilisateurs[] = $user;
         }
 
@@ -57,8 +65,17 @@ class AvisTestFixtures extends Fixture implements DependentFixtureInterface
 
             for ($i = 0; $i < $nbAvis; $i++) {
 
-                // --- UTILISATEUR AU HASARD ---
                 $user = $utilisateurs[array_rand($utilisateurs)];
+
+                // Vérifier si un avis existe déjà pour ce menu + utilisateur
+                $existing = $avisRepo->findOneBy([
+                    'menu' => $menu,
+                    'utilisateur' => $user
+                ]);
+
+                if ($existing) {
+                    continue;
+                }
 
                 // --- COMMANDE ---
                 $commande = new Commande();
@@ -91,7 +108,6 @@ class AvisTestFixtures extends Fixture implements DependentFixtureInterface
                 $avis->setDate(new \DateTimeImmutable());
                 $manager->persist($avis);
 
-                // Lier l'avis à la commande
                 $commande->setAvis($avis);
             }
         }
@@ -99,7 +115,6 @@ class AvisTestFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    // --- GARANTIR L'ORDRE D'EXÉCUTION ---
     public function getDependencies(): array
     {
         return [

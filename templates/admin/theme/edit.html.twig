@@ -2,21 +2,70 @@
 
 {% block title %}Modifier un thème{% endblock %}
 
-{% block body %}
+{% block admin_body %}
 
 <div class="admin-page">
 
     <h1 class="page-title">Modifier le thème</h1>
 
+    <!-- Carte du formulaire -->
     <div class="admin-card form-card">
         {{ include('admin/theme/_form.html.twig', { button_label: 'Mettre à jour' }) }}
     </div>
 
-    <div class="admin-actions">
-        <a href="{{ path('admin_theme_index') }}" class="btn-secondary">← Retour</a>
-        {{ include('admin/theme/_delete_form.html.twig', { theme: theme }) }}
+    <!-- Actions -->
+    <div class="admin-actions d-flex align-items-center gap-3 mt-4">
+
+        <a href="{{ path('admin_theme_index') }}" class="btn btn-secondary">
+            ← Retour
+        </a>
+
+        <!-- Bouton pour ouvrir la modale -->
+        <button class="btn btn-danger ms-auto"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteModal">
+            Supprimer
+        </button>
+
     </div>
 
+</div>
+
+<!-- MODALE DE SUPPRESSION -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Supprimer ce thème</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                Voulez-vous vraiment supprimer le thème
+                <strong>{{ theme.nom }}</strong> ?
+                Cette action est irréversible.
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Annuler
+                </button>
+
+                <form method="post"
+                      action="{{ path('admin_theme_delete', { id: theme.id }) }}">
+                    <input type="hidden" name="_token"
+                           value="{{ csrf_token('delete' ~ theme.id) }}">
+                    <button type="submit" class="btn btn-danger">
+                        Supprimer définitivement
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
 </div>
 
 {% endblock %}

@@ -105,7 +105,11 @@
                             <a href="{{ path('employe_commandes_index') }}" class="admin-link">Commandes employé</a>
                         {% endif %}
 
-                        <a href="{{ path('app_compte_index') }}">Mon compte</a>
+                        {# ---- Mon compte visible uniquement pour les clients ---- #}
+                        {% if is_granted('ROLE_USER') and not is_granted('ROLE_EMPLOYE') %}
+                            <a href="{{ path('app_compte_index') }}">Mon compte</a>
+                        {% endif %}
+
                         <a href="{{ path('app_logout') }}" class="logout-btn">Déconnexion</a>
 
                     {% else %}
@@ -155,7 +159,10 @@
                 <a href="{{ path('employe_commandes_index') }}">Commandes employé</a>
             {% endif %}
 
-            <a href="{{ path('app_compte_index') }}">Mon compte</a>
+            {% if is_granted('ROLE_USER') and not is_granted('ROLE_EMPLOYE') %}
+                <a href="{{ path('app_compte_index') }}">Mon compte</a>
+            {% endif %}
+
             <a href="{{ path('app_logout') }}">Déconnexion</a>
 
         {% else %}

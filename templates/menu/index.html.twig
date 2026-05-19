@@ -10,23 +10,23 @@
 
 <h1 class="page-title">Menus</h1>
 
-<!-- ============================
-     FILTRES
-============================ -->
 <div class="filters">
 
+    {# Bouton Tous #}
     <a href="{{ path('app_menu_index') }}"
        class="filter-btn {{ criteria.theme is empty and criteria.prixMin is empty and criteria.prixMax is empty ? 'active' : '' }}">
         Tous
     </a>
 
+    {# Filtres par thème #}
     {% for t in themes %}
-        <a href="{{ path('app_menu_index', { theme: t }) }}"
-           class="filter-btn {{ criteria.theme == t ? 'active' : '' }}">
-            {{ t }}
+        <a href="{{ path('app_menu_index', { theme: t.nom }) }}"
+           class="filter-btn {{ criteria.theme == t.nom ? 'active' : '' }}">
+            {{ t.nom }}
         </a>
     {% endfor %}
 
+    {# Filtres prix #}
     <a href="{{ path('app_menu_index', { prixMax: 15 }) }}"
        class="filter-btn {{ criteria.prixMax == 15 ? 'active' : '' }}">
         -15€
@@ -44,9 +44,6 @@
 
 </div>
 
-<!-- ============================
-     LISTE DES MENUS
-============================ -->
 <div id="menu-list">
 
     <div class="menus-grid">
@@ -55,8 +52,8 @@
 
             <div class="menu-card {% if menu.stockDisponible == 0 %}menu-out{% endif %}">
 
-                <!-- Image -->
-                {% set img = menu.images[0] ?? 'default.jpg' %}
+                {% set img = menu.image ?? 'default.jpg' %}
+
                 <div class="menu-img-wrapper">
                     <img src="{{ asset('uploads/menus/' ~ img) }}" alt="{{ menu.titre }}">
 
@@ -85,7 +82,7 @@
                         Prix TTC {{ menu.prixBase|number_format(2, '.', ' ') }}€
                     </p>
 
-                    <a href="{{ path('app_menu_show', {id: menu.id}) }}"
+                    <a href="{{ path('app_menu_show', { id: menu.id }) }}"
                        class="btn-primary {% if menu.stockDisponible == 0 %}disabled{% endif %}">
                         Voir détails
                     </a>
@@ -100,9 +97,6 @@
 
 </div>
 
-<!-- ===========================
-     AVIS CLIENTS
-============================ -->
 <section class="menus-avis">
     <h2>Les avis de nos clients</h2>
 

@@ -7,66 +7,96 @@
     <link rel="stylesheet" href="{{ asset('styles/admin/theme.css') }}">
 {% endblock %}
 
-{% block body %}
+{% block admin_body %}
 
-    <h1>Theme index</h1>
+<h1>Liste des thèmes</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
 
-        <tbody>
-        {% for theme in themes %}
-            <tr>
-                <td>{{ theme.id }}</td>
-                <td>{{ theme.nom }}</td>
+    <tbody>
+    {% for theme in themes %}
+        <tr>
+            <td>{{ theme.id }}</td>
+            <td>{{ theme.nom }}</td>
 
-                <td>
+            <td class="text-end">
 
-                    <a href="{{ path('admin_theme_show', { id: theme.id }) }}"
-                       class="btn-secondary btn-small">
-                        Voir
-                    </a>
+                <a href="{{ path('admin_theme_show', { id: theme.id }) }}"
+                   class="btn btn-secondary btn-sm">
+                    Voir
+                </a>
 
-                    <a href="{{ path('admin_theme_edit', { id: theme.id }) }}"
-                       class="btn-warning btn-small">
-                        Modifier
-                    </a>
+                <a href="{{ path('admin_theme_edit', { id: theme.id }) }}"
+                   class="btn btn-warning btn-sm">
+                    Modifier
+                </a>
 
-                    <form method="post"
-                          action="{{ path('admin_theme_delete', { id: theme.id }) }}"
-                          style="display:inline-block"
-                          onsubmit="return confirm('Supprimer ce thème ?');">
+                <!-- Bouton pour ouvrir la modale -->
+                <button class="btn btn-danger btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteModal{{ theme.id }}">
+                    Supprimer
+                </button>
 
-                        <input type="hidden"
-                               name="_token"
-                               value="{{ csrf_token('delete' ~ theme.id) }}">
+            </td>
+        </tr>
 
-                        <button class="btn-danger btn-small">
-                            Supprimer
+        <!-- MODALE DE SUPPRESSION -->
+        <div class="modal fade" id="deleteModal{{ theme.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">Supprimer ce thème</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        Voulez-vous vraiment supprimer le thème
+                        <strong>{{ theme.nom }}</strong> ?
+                        Cette action est irréversible.
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Annuler
                         </button>
-                    </form>
 
-                </td>
-            </tr>
+                        <form method="post"
+                              action="{{ path('admin_theme_delete', { id: theme.id }) }}">
+                            <input type="hidden" name="_token"
+                                   value="{{ csrf_token('delete' ~ theme.id) }}">
+                            <button type="submit" class="btn btn-danger">
+                                Supprimer définitivement
+                            </button>
+                        </form>
 
-        {% else %}
-            <tr>
-                <td colspan="3" class="text-center text-muted">
-                    Aucun thème trouvé.
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                    </div>
 
-    <a href="{{ path('admin_theme_new') }}" class="btn-primary">
-        ➕ Créer un nouveau thème
-    </a>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <tr>
+            <td colspan="3" class="text-center text-muted">
+                Aucun thème trouvé.
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('admin_theme_new') }}" class="btn btn-primary">
+    ➕ Créer un nouveau thème
+</a>
 
 {% endblock %}

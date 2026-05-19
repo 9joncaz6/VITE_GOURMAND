@@ -20,6 +20,7 @@
                 <option value="en_attente" {{ statutFiltre == 'en_attente' ? 'selected' }}>En attente</option>
                 <option value="en_preparation" {{ statutFiltre == 'en_preparation' ? 'selected' }}>En préparation</option>
                 <option value="terminee" {{ statutFiltre == 'terminee' ? 'selected' }}>Terminée</option>
+                <option value="annulee" {{ statutFiltre == 'annulee' ? 'selected' }}>Annulée</option>
             </select>
         </form>
 
@@ -27,6 +28,7 @@
             <span class="counter counter-attente">En attente : {{ countEnAttente }}</span>
             <span class="counter counter-prepa">En préparation : {{ countEnPreparation }}</span>
             <span class="counter counter-terminee">Terminées : {{ countTerminees }}</span>
+            <span class="counter counter-annulee">Annulées : {{ countAnnulees }}</span>
         </div>
 
     </div>
@@ -44,23 +46,27 @@
 
         <tbody>
         {% for commande in commandes %}
+            {% set statut = commande.statutActuel %}
             <tr>
-                <td>#{{ commande.getId() }}</td>
+                <td>#{{ commande.id }}</td>
                 <td>{{ commande.createdAt|date('d/m/Y H:i') }}</td>
                 <td>{{ commande.total|number_format(2, ',', ' ') }} €</td>
 
                 <td>
-                    {% set statut = commande.statutActuel ?? 'en_attente' %}
                     <span class="badge badge-{{ statut|lower|replace({' ': '-'}) }}">
                         {{ statut }}
                     </span>
                 </td>
 
                 <td>
-                    <a href="{{ path('admin_commandes_show', {id: commande.getId()}) }}" class="btn-view">
+                    <a href="{{ path('admin_commandes_show', {id: commande.id}) }}" class="btn-view">
                         Voir
                     </a>
                 </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">Aucune commande trouvée.</td>
             </tr>
         {% endfor %}
         </tbody>

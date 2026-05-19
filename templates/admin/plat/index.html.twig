@@ -2,7 +2,7 @@
 
 {% block title %}Plats{% endblock %}
 
-{% block body %}
+{% block admin_body %}
 <h1>Gestion des plats</h1>
 
 <a href="{{ path('app_plat_new') }}" class="btn btn-primary mb-3">+ Ajouter un plat</a>
@@ -24,12 +24,54 @@
                 <td>{{ plat.nom }}</td>
                 <td>{{ plat.type }}</td>
                 <td>
-                    <a href="{{ path('app_plat_edit', {id: plat.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
-                    <a href="{{ path('app_plat_delete', {id: plat.id}) }}" class="btn btn-sm btn-danger"
-                       onclick="return confirm('Supprimer ce plat ?')">Supprimer</a>
+                    <a href="{{ path('app_plat_edit', {id: plat.id}) }}" class="btn btn-sm btn-warning">
+                        Modifier
+                    </a>
+
+                    <button class="btn btn-sm btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ plat.id }}">
+                        Supprimer
+                    </button>
                 </td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
+
+{# MODALES EN DEHORS DU TABLEAU #}
+{% for plat in plats %}
+<div class="modal fade" id="deleteModal{{ plat.id }}" tabindex="-1"
+     aria-labelledby="deleteModalLabel{{ plat.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ plat.id }}">
+                    Supprimer le plat
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                Voulez-vous vraiment supprimer <strong>{{ plat.nom }}</strong> ?
+                Cette action est irréversible.
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Annuler
+                </button>
+
+                <form method="post" action="{{ path('app_plat_delete', { id: plat.id }) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ plat.id) }}">
+                    <button type="submit" class="btn btn-danger">Supprimer définitivement</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 {% endblock %}
