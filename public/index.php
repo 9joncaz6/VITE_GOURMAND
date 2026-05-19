@@ -13,7 +13,8 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
  */
 putenv('MONGODB_URL=mongodb+srv://mayjoca789_db_user:n86DcKTrXa8QWAA1@cluster0.f9crcxj.mongodb.net/vitegourmand?retryWrites=true&w=majority&appName=Cluster0');
 putenv('MONGODB_DB=vitegourmand');
-putenv('DEFAULT_URI=https://vitegourmand.onrender.com'); // ← ajoute ton domaine ici
+putenv('DEFAULT_URI=https://vitegourmand.onrender.com');
+putenv('DATABASE_URL=mysql://jonca:1PaxAugusta5@mysql-jonca.alwaysdata.net:3306/jonca_vitegourmand?serverVersion=mariadb-11.4.0&charset=utf8mb4');
 
 $env = getenv('APP_ENV') ?: 'prod';
 $debug = getenv('APP_DEBUG') === '1';
