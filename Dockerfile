@@ -23,8 +23,7 @@ COPY . .
 # Install PHP deps WITHOUT running Symfony scripts
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Build assets (Vite)
-RUN npm install && npm run build
+
 
 # Symfony cache warmup (now that env vars exist)
 RUN php bin/console cache:warmup --env=prod
