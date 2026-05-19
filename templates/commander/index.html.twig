@@ -47,15 +47,42 @@
                 {% else %}
 
                     <div class="menu-actions">
-                        <a href="{{ path('app_panier_add', {menuId: menu.id}) }}"
-                           class="btn-secondary">
-                            Ajouter au panier
-                        </a>
 
-                        <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'validation'}) }}"
-                           class="btn-primary">
-                            Commander maintenant
-                        </a>
+                        {# 🚫 ADMIN & EMPLOYÉ BLOQUÉS #}
+                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
+
+                            <p class="text-muted"><em>Les administrateurs ne peuvent pas commander.</em></p>
+
+                        {% else %}
+
+                            {# CLIENT CONNECTÉ #}
+                            {% if app.user %}
+
+                                <a href="{{ path('app_panier_add', {menuId: menu.id}) }}"
+                                   class="btn-secondary">
+                                    Ajouter au panier
+                                </a>
+
+                                <a href="{{ path('app_panier_add', {menuId: menu.id, redirect: 'validation'}) }}"
+                                   class="btn-primary">
+                                    Commander maintenant
+                                </a>
+
+                            {% else %}
+
+                                {# VISITEUR NON CONNECTÉ #}
+                                <a href="{{ path('app_login') }}" class="btn-secondary">
+                                    Ajouter au panier
+                                </a>
+
+                                <a href="{{ path('app_login') }}" class="btn-primary">
+                                    Commander maintenant
+                                </a>
+
+                            {% endif %}
+
+                        {% endif %}
+
                     </div>
 
                 {% endif %}

@@ -43,21 +43,27 @@
 
         {% if menu.stockDisponible > 0 %}
 
-            <a href="{{ path('app_panier_add', { menuId: menu.id }) }}"
-               class="menu-button">
-                Ajouter au panier
-            </a>
+            {# 🚫 Bouton désactivé pour ADMIN / EMPLOYÉ #}
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
+                <p class="text-muted mt-3"><em>Les administrateurs ne peuvent pas commander.</em></p>
 
-            {% if app.user %}
-                <a href="{{ path('app_panier_add', { menuId: menu.id, redirect: 'validation' }) }}"
-                   class="commander-btn w-100 mt-3">
-                    Commander
-                </a>
             {% else %}
-                <a href="{{ path('app_login') }}"
-                   class="commander-btn w-100 mt-3">
-                    Commander
+                <a href="{{ path('app_panier_add', { menuId: menu.id }) }}"
+                   class="menu-button">
+                    Ajouter au panier
                 </a>
+
+                {% if app.user %}
+                    <a href="{{ path('app_panier_add', { menuId: menu.id, redirect: 'validation' }) }}"
+                       class="commander-btn w-100 mt-3">
+                        Commander
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_login') }}"
+                       class="commander-btn w-100 mt-3">
+                        Commander
+                    </a>
+                {% endif %}
             {% endif %}
 
         {% else %}
