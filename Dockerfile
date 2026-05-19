@@ -28,8 +28,13 @@ ENV APP_DEBUG=0
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
 
-# 👉 Autoriser .htaccess (ESSENTIEL)
+# Autoriser .htaccess
 RUN sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+
+# 👉 Permissions pour les uploads
+RUN mkdir -p /var/www/html/public/uploads/menus \
+    && chown -R www-data:www-data /var/www/html/public/uploads \
+    && chmod -R 775 /var/www/html/public/uploads
 
 EXPOSE 80
 
