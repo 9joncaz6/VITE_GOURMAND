@@ -1,31 +1,32 @@
-FROM php:8.2
+FROM php:8.2-apache
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git unzip libssl-dev pkg-config libicu-dev libzip-dev zip \
-    libpng-dev libjpeg-dev libfreetype6-dev
+    git unzip libicu-dev libzip-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install intl pdo pdo_mysql zip
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd intl pdo pdo_mysql zip
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
 
-RUN pecl install mongodb-1.21.0 \
-    && docker-php-ext-enable mongodb
+# Copy project files
+COPY . /var/www/html/
 
+# Set working directory
+WORKDIR /var/www/html/
+
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Définir APP_ENV avant toute commande Symfony
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
+# Symfony cache warmup
+RUN php bin/console cache:clear --env=prod
+RUN php bin/console cache:warmup --env=prod
 
-# Copier uniquement composer.json pour optimiser le cache
-COPY composer.json composer.lock ./
-
-RUN composer install --no-dev --optimize-autoloader --no-scripts
-
-# Copier le reste du projet
-COPY . .
+# Apache configuration
+RUN chown -R www-data:www-data /var/www/html/var
 
 EXPOSE 80
 
-CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
+CMD ["apache2-foreground"]
