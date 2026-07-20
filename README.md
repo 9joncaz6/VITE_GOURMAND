@@ -95,19 +95,105 @@ https://github.com/9joncaz6/VITE_GOURMAND.git
 
 ---
 
-# Installation locale
 
-## 1. Prérequis
 
-- PHP 8.2+  
-- Composer  
-- MySQL / MariaDB  
-- MongoDB  
-- Symfony CLI (optionnel)  
-- Mailhog (pour les emails en local)  
 
-## 2. Cloner le projet
 
-```bash
+🚀 Installation locale
+Ce guide explique pas à pas comment installer et lancer l’application Vite & Gourmand en local.
+
+1️⃣ Prérequis
+Assurez-vous d’avoir installé :
+
+🔧 Backend
+PHP 8.2+
+
+Composer
+
+Symfony CLI (optionnel mais recommandé)
+
+🗄️ Bases de données
+MySQL / MariaDB
+
+MongoDB (local ou Atlas)
+
+📧 Email local
+Mailhog (recommandé)
+
+🐳 Optionnel
+Docker (si vous souhaitez lancer via conteneur)
+
+2️⃣ Cloner le projet:
 git clone https://github.com/9joncaz6/VITE_GOURMAND.git
+
 cd VITE_GOURMAND
+3️⃣ Installer les dépendances PHP:
+composer install
+
+4️⃣ Configurer l’environnement (.env.local)
+Créez un fichier :
+
+-------------------------------------
+Code
+.env.local
+Et ajoutez :
+
+env
+APP_ENV=dev
+APP_SECRET=your_secret_here
+
+# --- MySQL ---
+DATABASE_URL="mysql://root:root@127.0.0.1:3306/vite_gourmand"
+
+# --- MongoDB (Atlas ou local) ---
+MONGODB_URL="mongodb+srv://mayjoca789_db_user:n86DcKTrXa8QWAA1@cluster0.f9crcxj.mongodb.net/vite_gourmand?retryWrites=true&w=majority"
+MONGODB_DB=vite_gourmand
+
+# --- Mailhog ---
+MAILER_DSN=smtp://127.0.0.1:1025
+-------------------------------------
+
+
+5️⃣ Créer la base MySQL
+Option A — Importer le schéma SQL fourni
+Dans phpMyAdmin / Workbench :
+
+Créez la base :
+CREATE DATABASE vite_gourmand CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+Importez le fichier SQL :
+schema.sql
+(Le fichier contient toutes les tables : utilisateur, menu, plat, commande, avis, etc.)
+
+Option B — Utiliser Doctrine
+symfony console doctrine:database:create
+symfony console doctrine:schema:update --force
+
+
+6️⃣ Configurer MongoDB
+Option A — MongoDB Atlas (déjà configuré dans ton .env)
+
+Option B — MongoDB local
+Lancez MongoDB :
+mongod
+Puis modifiez .env.local :
+
+env
+MONGODB_URL="mongodb://127.0.0.1:27017"
+MONGODB_DB=vite_gourmand
+
+7️⃣ Lancer Mailhog (emails locaux)
+Via Docker :
+bash
+docker run -d -p 8025:8025 -p 1025:1025 mailhog/mailhog
+Interface web :
+👉 http://localhost:8025
+
+8️⃣ Lancer le serveur Symfony
+bash
+symfony server:start
+Ou :
+
+bash
+php -S localhost:8000 -t public
+Application disponible sur :
+👉 http://localhost:8000
